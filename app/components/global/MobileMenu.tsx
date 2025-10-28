@@ -30,9 +30,14 @@ export default function MobileMenu() {
       href: "/blog",
       icon: HiBookmarkAlt,
     },
+    // {
+    //   title: "Photos",
+    //   href: "/photos",
+    //   icon: HiCamera,
+    // },
     {
-      title: "Photos",
-      href: "/photos",
+      title: "Movies",
+      href: "/movies",
       icon: HiCamera,
     },
   ];

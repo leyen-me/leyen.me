@@ -100,3 +100,38 @@ export const singlePostQuery = groq`*[_type == "Post" && slug.current == $slug][
 }`;
 
 export const heroesQuery = groq`*[_type == "heroe"] | order(_createdAt asc) { _id, _createdAt, name, url, met }`;
+
+// Movies queries
+export const moviesQuery = groq`*[_type == "movie"] | order(releaseDate desc){
+  _id,
+  title,
+  "slug": slug.current,
+  mediaType,
+  rating,
+  releaseDate,
+  director,
+  description,
+  externalUrl,
+  coverImage {
+    "image": asset->url,
+    "lqip": asset->metadata.lqip,
+    alt,
+  }
+}`;
+
+export const moviesByTypeQuery = groq`*[_type == "movie" && mediaType == $type] | order(releaseDate desc){
+  _id,
+  title,
+  "slug": slug.current,
+  mediaType,
+  rating,
+  releaseDate,
+  director,
+  description,
+  externalUrl,
+  coverImage {
+    "image": asset->url,
+    "lqip": asset->metadata.lqip,
+    alt,
+  }
+}`;

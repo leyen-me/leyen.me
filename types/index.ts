@@ -97,3 +97,21 @@ export type HeroeType = {
   url: string;
   met: boolean;
 };
+
+export type MovieType = {
+  _id: string;
+  title: string;
+  slug: string;
+  mediaType: "movie" | "tv";
+  coverImage: {
+    image: string;
+    lqip: string;
+    alt: string | null;
+  };
+  rating?: number;
+  releaseDate?: string;
+  director?: string;
+  cast?: string[];
+  description?: string;
+  externalUrl?: string;
+};

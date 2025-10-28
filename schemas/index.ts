@@ -8,6 +8,7 @@ import { youtube } from "./youtube";
 import { table } from "./table";
 import blockContent from "./blockContent";
 import quiz from "./quiz";
+import { movie } from "./movie";
 
 export const schemaTypes = [
   profile,
@@ -16,6 +17,7 @@ export const schemaTypes = [
   post,
   author,
   heroe,
+  movie,
 
   // Reference types
   blockContent,
