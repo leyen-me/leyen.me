@@ -21,19 +21,59 @@ export const metadata: Metadata = {
 export default async function MoviesPage({
   searchParams,
 }: {
-  searchParams: { type?: string };
+  searchParams: { type?: string; sort?: string };
 }) {
   const mediaType = searchParams.type || "all";
+  const sortBy = searchParams.sort || "rating";
   
   // Fetch movies based on type filter
-  const movies: MovieType[] = await sanityFetch({
+  let movies: MovieType[] = await sanityFetch({
     query: mediaType === "all" ? moviesQuery : moviesByTypeQuery,
     qParams: mediaType === "all" ? {} : { type: mediaType },
     tags: ["movie"],
   });
 
+  // Sort movies based on sortBy parameter
+  if (sortBy === "rating") {
+    // Sort by rating (highest first), with unrated movies at the end
+    movies = movies.sort((a, b) => {
+      // If both have ratings, sort by rating (descending)
+      if (a.rating !== undefined && b.rating !== undefined) {
+        return b.rating - a.rating;
+      }
+      // If only a has rating, a comes first
+      if (a.rating !== undefined) {
+        return -1;
+      }
+      // If only b has rating, b comes first
+      if (b.rating !== undefined) {
+        return 1;
+      }
+      // If neither has rating, maintain original order
+      return 0;
+    });
+  } else if (sortBy === "newest") {
+    // Sort by release date (newest first)
+    movies = movies.sort((a, b) => {
+      // If both have release dates, sort by date (descending)
+      if (a.releaseDate && b.releaseDate) {
+        return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime();
+      }
+      // If only a has release date, a comes first
+      if (a.releaseDate) {
+        return -1;
+      }
+      // If only b has release date, b comes first
+      if (b.releaseDate) {
+        return 1;
+      }
+      // If neither has release date, maintain original order
+      return 0;
+    });
+  }
+
   return (
-    <div className="mx-auto max-w-5xl px-6 sm:px-6 lg:px-0">
+    <div className="max-w-7xl mx-auto md:px-16 px-6">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -65,7 +105,7 @@ export default async function MoviesPage({
       />
       
       {/* Media Type Filter */}
-      <MediaTypeFilter mediaType={mediaType} />
+      <MediaTypeFilter mediaType={mediaType} sortBy={sortBy} />
 
       {/* Movies Grid */}
       {movies.length > 0 ? (
