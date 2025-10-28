@@ -33,8 +33,8 @@ export default async function MoviesPage({
   });
 
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12">
-      {/* <script
+    <div className="mx-auto max-w-5xl px-6 sm:px-6 lg:px-0">
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
@@ -58,7 +58,7 @@ export default async function MoviesPage({
             })),
           }),
         }}
-      /> */}
+      />
       <PageHeading
         title="Movies"
         description="A collection of movies and TV shows I've watched and enjoyed."
