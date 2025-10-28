@@ -18,33 +18,33 @@ export function MediaTypeFilter({ mediaType }: { mediaType: string }) {
   };
 
   return (
-    <div className="flex gap-4 mb-8">
+    <div className="flex gap-2 mb-6">
       <button
         onClick={() => updateFilter("all")}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ease-out ${
           mediaType === "all"
-            ? "bg-blue-500 text-white"
-            : "bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700"
+            ? "bg-blue-500 text-white shadow-sm"
+            : "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
         }`}
       >
         All
       </button>
       <button
         onClick={() => updateFilter("movie")}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ease-out ${
           mediaType === "movie"
-            ? "bg-blue-500 text-white"
-            : "bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700"
+            ? "bg-blue-500 text-white shadow-sm"
+            : "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
         }`}
       >
         Movies
       </button>
       <button
         onClick={() => updateFilter("tv")}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ease-out ${
           mediaType === "tv"
-            ? "bg-blue-500 text-white"
-            : "bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700"
+            ? "bg-blue-500 text-white shadow-sm"
+            : "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
         }`}
       >
         TV Shows
