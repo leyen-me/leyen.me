@@ -36,6 +36,11 @@ export default function MobileMenu() {
     //   icon: HiCamera,
     // },
     {
+      title: "Quotes",
+      href: "/quotes",
+      icon: HiCamera,
+    },
+    {
       title: "Movies",
       href: "/movies",
       icon: HiCamera,

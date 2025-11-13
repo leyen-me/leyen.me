@@ -24,6 +24,10 @@ export default function Navbar() {
     //   href: "/photos",
     // },
     {
+      title: "Quotes",
+      href: "/quotes",
+    },
+    {
       title: "Movies",
       href: "/movies",
     },

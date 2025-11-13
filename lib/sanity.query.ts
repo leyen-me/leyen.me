@@ -135,3 +135,24 @@ export const moviesByTypeQuery = groq`*[_type == "movie" && mediaType == $type] 
     alt,
   }
 }`;
+
+// Quotes queries
+export const quotesQuery = groq`*[_type == "quote"] | order(_createdAt desc){
+  _id,
+  _createdAt,
+  quote,
+  author,
+  context,
+  tags
+}`;
+
+export const quotesByTagQuery = groq`*[_type == "quote" && $tag in tags] | order(_createdAt desc){
+  _id,
+  _createdAt,
+  quote,
+  author,
+  context,
+  tags
+}`;
+
+export const allTagsQuery = groq`array::unique(*[_type == "quote"].tags[])`;

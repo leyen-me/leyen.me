@@ -9,6 +9,7 @@ import { table } from "./table";
 import blockContent from "./blockContent";
 import quiz from "./quiz";
 import { movie } from "./movie";
+import { quote } from "./quote";
 
 export const schemaTypes = [
   profile,
@@ -18,6 +19,7 @@ export const schemaTypes = [
   author,
   heroe,
   movie,
+  quote,
 
   // Reference types
   blockContent,

@@ -115,3 +115,12 @@ export type MovieType = {
   description?: string;
   externalUrl?: string;
 };
+
+export type QuoteType = {
+  _id: string;
+  _createdAt: string;
+  quote: string;
+  author: string;
+  context?: string;
+  tags: string[];
+};
