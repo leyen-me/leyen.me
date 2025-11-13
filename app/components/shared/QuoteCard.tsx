@@ -22,7 +22,7 @@ export function QuoteCard({ quote }: { quote: QuoteType }) {
       {/* Quote Text */}
       <blockquote className="mb-6 relative z-10">
         <p className="text-base md:text-lg lg:text-xl font-medium text-gray-900 dark:text-gray-100 leading-[1.75] tracking-[0.01em]">
-          "{quote.quote}"
+          &ldquo;{quote.quote}&rdquo;
         </p>
       </blockquote>
 
