@@ -69,9 +69,11 @@ export default async function QuotesPage({
 
       {/* Quotes Grid - Masonry Layout */}
       {quotes.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 [column-fill:balance]">
           {quotes.map((quote) => (
-            <QuoteCard key={quote._id} quote={quote} />
+            <div key={quote._id} className="break-inside-avoid mb-6">
+              <QuoteCard quote={quote} />
+            </div>
           ))}
         </div>
       ) : (

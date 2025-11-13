@@ -13,7 +13,7 @@ export function QuoteCard({ quote }: { quote: QuoteType }) {
       {/* Context/Theme */}
       {quote.context && (
         <div className="mb-5 relative z-10">
-          <span className="inline-block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+          <span className="inline-block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-[0.1em]">
             {quote.context}
           </span>
         </div>
@@ -21,14 +21,14 @@ export function QuoteCard({ quote }: { quote: QuoteType }) {
 
       {/* Quote Text */}
       <blockquote className="mb-6 relative z-10">
-        <p className="text-lg md:text-xl font-medium text-gray-900 dark:text-gray-100 leading-relaxed tracking-tight">
+        <p className="text-base md:text-lg lg:text-xl font-medium text-gray-900 dark:text-gray-100 leading-[1.75] tracking-[0.01em]">
           "{quote.quote}"
         </p>
       </blockquote>
 
       {/* Author */}
       <div className="mb-5 pb-5 border-b border-gray-100 dark:border-zinc-800 relative z-10">
-        <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 tracking-wide">
           — {quote.author}
         </p>
       </div>
