@@ -14,7 +14,8 @@ export function TagFilter({ tags, selectedTag }: TagFilterProps) {
 
   const updateTag = (tag: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (tag === "all" || tag === selectedTag) {
+    if (tag === selectedTag) {
+      // 如果点击已选中的标签，则取消选择（显示全部）
       params.delete("tag");
     } else {
       params.set("tag", tag);
@@ -27,16 +28,6 @@ export function TagFilter({ tags, selectedTag }: TagFilterProps) {
   return (
     <div className="mb-8">
       <div className="flex flex-wrap gap-2">
-        <button
-          onClick={() => updateTag("all")}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ease-out ${
-            !selectedTag || selectedTag === "all"
-              ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm"
-              : "bg-gray-100 dark:bg-zinc-800/50 text-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700/70"
-          }`}
-        >
-          全部
-        </button>
         {tags.map((tag) => (
           <button
             key={tag}
