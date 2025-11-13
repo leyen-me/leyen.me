@@ -3,7 +3,7 @@ import { sanityFetch } from "@/lib/sanity.client";
 import { quotesQuery, quotesByTagQuery, allTagsQuery } from "@/lib/sanity.query";
 import { QuoteType } from "@/types";
 import PageHeading from "@/app/components/shared/PageHeading";
-import { QuoteCard } from "@/app/components/shared/QuoteCard";
+import { QuotesGrid } from "@/app/components/shared/QuotesGrid";
 import { TagFilter } from "@/app/components/shared/TagFilter";
 import EmptyState from "@/app/components/shared/EmptyState";
 
@@ -67,15 +67,9 @@ export default async function QuotesPage({
       {/* Tag Filter */}
       <TagFilter tags={allTags} selectedTag={selectedTag} />
 
-      {/* Quotes Grid - Masonry Layout */}
+      {/* Quotes Grid - Masonry Layout with Animation */}
       {quotes.length > 0 ? (
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 [column-fill:balance]">
-          {quotes.map((quote) => (
-            <div key={quote._id} className="break-inside-avoid mb-6">
-              <QuoteCard quote={quote} />
-            </div>
-          ))}
-        </div>
+        <QuotesGrid quotes={quotes} />
       ) : (
         <EmptyState value="Quote" />
       )}

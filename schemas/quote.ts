@@ -11,8 +11,7 @@ export const quote = defineType({
       name: "quote",
       title: "Quote",
       type: "text",
-      description: "The actual quote text",
-      validation: (Rule) => Rule.required().min(10),
+      description: "The actual quote text"
     }),
     defineField({
       name: "author",
