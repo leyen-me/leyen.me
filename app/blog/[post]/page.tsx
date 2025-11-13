@@ -13,8 +13,8 @@ import FeaturedPosts from "../../components/pages/FeaturedPosts";
 import { Slide } from "../../animation/Slide";
 import { urlFor } from "@/lib/sanity.image";
 import Buymeacoffee from "@/app/components/shared/Buymeacoffee";
-import Comments from "@/app/components/shared/Comments";
-import { HiCalendar, HiChat } from "react-icons/hi";
+// import Comments from "@/app/components/shared/Comments";
+import { HiCalendar } from "react-icons/hi";
 import { sanityFetch } from "@/lib/sanity.client";
 import { readTime } from "@/app/utils/readTime";
 import PageHeading from "@/app/components/shared/PageHeading";
@@ -122,13 +122,13 @@ export default async function Post({ params }: Props) {
                     : formatDate(post._createdAt)}
                 </time>
               </div>
-              <Link
+              {/* <Link
                 href="#comments"
                 className="flex items-center gap-x-2 dark:text-primary-color text-tertiary-color"
               >
                 <HiChat />
                 <div className="#comments">Comments</div>
-              </Link>
+              </Link> */}
               <div className="flex items-center gap-x-2">
                 <BiSolidTime />
                 <div className="">{readTime(words)}</div>
@@ -219,7 +219,7 @@ export default async function Post({ params }: Props) {
         </Slide>
       </article>
 
-      <section
+      {/* <section
         id="comments"
         className="max-w-3xl mt-10 lg:border-t dark:border-zinc-800 border-zinc-200 lg:py-10 pt-0"
       >
@@ -227,7 +227,7 @@ export default async function Post({ params }: Props) {
           Comments
         </h3>
         <Comments />
-      </section>
+      </section> */}
 
       <section className="max-w-3xl lg:py-10 pt-0">
         <h3 className="lg:text-4xl text-3xl font-semibold tracking-tight mb-8">
