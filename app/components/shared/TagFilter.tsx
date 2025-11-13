@@ -14,10 +14,17 @@ export function TagFilter({ tags, selectedTag }: TagFilterProps) {
 
   const updateTag = (tag: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (tag === selectedTag) {
-      // 如果点击已选中的标签，则取消选择（显示全部）
+    const isFirstTag = tag === tags[0];
+    const isCurrentlySelected = tag === selectedTag;
+    
+    if (isFirstTag && isCurrentlySelected) {
+      // 如果点击的是第一个标签且已经选中，不做任何操作（保持选中）
+      return;
+    } else if (isCurrentlySelected && !isFirstTag) {
+      // 如果点击已选中的标签（且不是第一个），则回到第一个标签
       params.delete("tag");
     } else {
+      // 选择新的标签
       params.set("tag", tag);
     }
     router.push(`${pathname}?${params.toString()}`);

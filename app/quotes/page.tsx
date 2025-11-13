@@ -24,13 +24,14 @@ export default async function QuotesPage({
 }: {
   searchParams: { tag?: string };
 }) {
-  const selectedTag = searchParams.tag;
-
   // Fetch all tags
   const allTags: string[] = await sanityFetch({
     query: allTagsQuery,
     tags: ["quote"],
   });
+
+  // Default to first tag if no tag is selected
+  const selectedTag = searchParams.tag || (allTags.length > 0 ? allTags[0] : undefined);
 
   // Fetch quotes based on tag filter
   let quotes: QuoteType[] = await sanityFetch({

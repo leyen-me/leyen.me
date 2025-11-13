@@ -23,13 +23,14 @@ export default async function MoviesPage({
 }: {
   searchParams: { type?: string; sort?: string };
 }) {
-  const mediaType = searchParams.type || "all";
+  // Default to "movie" if no type is selected
+  const mediaType = searchParams.type || "movie";
   const sortBy = searchParams.sort || "rating";
   
   // Fetch movies based on type filter
   let movies: MovieType[] = await sanityFetch({
-    query: mediaType === "all" ? moviesQuery : moviesByTypeQuery,
-    qParams: mediaType === "all" ? {} : { type: mediaType },
+    query: moviesByTypeQuery,
+    qParams: { type: mediaType } as Record<string, string>,
     tags: ["movie"],
   });
 
