@@ -14,7 +14,7 @@ export default defineType({
       type: "string",
       description:
         "Give your blog post a nice title. Recommend 50 - 70 characters",
-      validation: (Rule) => Rule.required().min(30),
+      validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
       name: "slug",
@@ -32,7 +32,7 @@ export default defineType({
       rows: 4,
       validation: (Rule) => [
         Rule.required()
-          .min(100)
+          .min(1)
           .error("A description of min 100 characters is required"),
       ],
     }),

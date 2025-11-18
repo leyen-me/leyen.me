@@ -28,9 +28,9 @@ export default async function Posts() {
               <article key={post._id}>
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="flex lg:flex-row flex-col lg:items-center items-start gap-8 dark:bg-primary-bg bg-secondary-bg p-6 rounded-lg border dark:border-zinc-800 border-zinc-200 group"
+                  className="flex lg:flex-row flex-col lg:items-stretch items-start gap-8 dark:bg-primary-bg bg-secondary-bg p-6 rounded-lg border dark:border-zinc-800 border-zinc-200 group"
                 >
-                  <div className="relative lg:w-[450px] lg:h-52 w-full h-56 overflow-clip">
+                  <div className="relative lg:w-[320px] lg:aspect-video w-full aspect-video flex-shrink-0 overflow-hidden rounded-md">
                     <Image
                       src={post.coverImage?.image || fallbackImage}
                       className="dark:bg-zinc-800 bg-zinc-100 rounded-md object-cover group-hover:scale-125 duration-300"
@@ -40,14 +40,14 @@ export default async function Posts() {
                       blurDataURL={post.coverImage?.lqip || ""}
                     />
                   </div>
-                  <div className="max-w-lg">
-                    <h2 className="max-w-sm text-2xl font-semibold tracking-tight mb-4">
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <h2 className="text-2xl font-semibold tracking-tight mb-3 line-clamp-2">
                       {post.title}
                     </h2>
-                    <p className="dark:text-zinc-400 text-zinc-600 text-[0.95rem]">
+                    <p className="dark:text-zinc-400 text-zinc-600 text-[0.95rem] mb-4 line-clamp-3 flex-1">
                       {post.description}
                     </p>
-                    <div className="flex items-center gap-x-4 mt-3 text-sm">
+                    <div className="flex items-center gap-x-4 mt-auto text-sm">
                       <div className="flex items-center gap-x-2">
                         <HiCalendar />
                         <time
