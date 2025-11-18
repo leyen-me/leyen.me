@@ -60,6 +60,7 @@ export type ProjectType = {
     lqip: string;
   };
   description: PortableTextBlock[];
+  order?: number;
 };
 
 export type PostType = {

@@ -45,12 +45,13 @@ export const jobQuery = groq`*[_type == "job"] | order(_createdAt desc){
   endDate,
 }`;
 
-export const projectsQuery = groq`*[_type == "project"] | order(_createdAt desc){
+export const projectsQuery = groq`*[_type == "project"] | order(order asc, _createdAt desc){
   _id, 
   name,
   "slug": slug.current,
   tagline,
   "logo": logo.asset->url,
+  order,
 }`;
 
 export const singleProjectQuery = groq`*[_type == "project" && slug.current == $slug][0]{

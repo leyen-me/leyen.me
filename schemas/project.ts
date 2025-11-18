@@ -69,6 +69,13 @@ const project = {
       type: "blockContent",
       description: "Write a full description about this project",
     }),
+    defineField({
+      name: "order",
+      title: "Sort Order",
+      type: "number",
+      description: "Set the display order (lower numbers appear first)",
+      validation: (rule) => rule.integer().min(0),
+    }),
   ],
 };
 
