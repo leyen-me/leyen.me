@@ -46,7 +46,7 @@ export function MediaTypeFilter({ mediaType, sortBy }: { mediaType?: string; sor
               : "bg-gray-100 dark:bg-zinc-800/50 text-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700/70"
           }`}
         >
-          Movies
+          电影
         </button>
         <button
           onClick={() => updateFilter("tv")}
@@ -56,7 +56,7 @@ export function MediaTypeFilter({ mediaType, sortBy }: { mediaType?: string; sor
               : "bg-gray-100 dark:bg-zinc-800/50 text-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700/70"
           }`}
         >
-          TV Shows
+          电视剧
         </button>
       </div>
       
@@ -69,7 +69,7 @@ export function MediaTypeFilter({ mediaType, sortBy }: { mediaType?: string; sor
               : "bg-gray-100 dark:bg-zinc-800/50 text-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700/70"
           }`}
         >
-          By Rating
+          按评分
         </button>
         <button
           onClick={() => updateSort("newest")}
@@ -79,7 +79,7 @@ export function MediaTypeFilter({ mediaType, sortBy }: { mediaType?: string; sor
               : "bg-gray-100 dark:bg-zinc-800/50 text-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700/70"
           }`}
         >
-          By Newest
+          按最新
         </button>
       </div>
     </div>
