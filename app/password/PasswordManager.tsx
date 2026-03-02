@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Slide } from "@/app/animation/Slide";
 import {
   setupVault,
@@ -19,6 +19,7 @@ import {
   BiLinkExternal,
   BiLoaderAlt,
   BiX,
+  BiSearch,
 } from "react-icons/bi";
 import { RiCheckboxCircleFill } from "react-icons/ri";
 
@@ -45,6 +46,22 @@ export default function PasswordManager() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredEntries = useMemo(() => {
+    if (!searchQuery.trim()) return decryptedEntries;
+    const q = searchQuery.trim().toLowerCase();
+    return decryptedEntries.filter((entry) => {
+      const fields = [
+        entry.name,
+        entry.username,
+        entry.password,
+        entry.url,
+        entry.notes,
+      ].filter(Boolean);
+      return fields.some((f) => f.toLowerCase().includes(q));
+    });
+  }, [decryptedEntries, searchQuery]);
 
   const fetchVault = useCallback(async () => {
     try {
@@ -296,10 +313,20 @@ export default function PasswordManager() {
       )}
 
       <Slide delay={0.1}>
-        <div className="mb-6">
+        <div className="mb-6 flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1 max-w-md">
+            <BiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 dark:text-zinc-400 text-lg" />
+            <input
+              type="text"
+              placeholder="搜索名称、用户名、网址、备注..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50 placeholder:text-zinc-400"
+            />
+          </div>
           <button
             onClick={() => setShowAddForm(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 hover:border-primary-color/50 transition font-incognito font-medium"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 hover:border-primary-color/50 transition font-incognito font-medium shrink-0"
           >
             <BiPlus className="text-lg" />
             添加密码
@@ -320,8 +347,14 @@ export default function PasswordManager() {
                 暂无密码记录，点击上方「添加密码」开始添加
               </p>
             </div>
+          ) : filteredEntries.length === 0 ? (
+            <div className="col-span-full dark:bg-primary-bg bg-zinc-100 border border-dashed dark:border-zinc-700 border-zinc-200 rounded-xl px-6 py-12 text-center">
+              <p className="dark:text-zinc-400 text-zinc-600 mb-4">
+                未找到匹配「{searchQuery}」的记录
+              </p>
+            </div>
           ) : (
-            decryptedEntries.map((entry) => (
+            filteredEntries.map((entry) => (
               <EntryCard
                 key={entry._id}
                 entry={entry}
