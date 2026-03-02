@@ -597,6 +597,8 @@ function EntryForm({
     init && init.type === "SECRET" ? init.value ?? "" : ""
   );
   const [saving, setSaving] = useState(false);
+  const [showPasswordField, setShowPasswordField] = useState(true);
+  const [showValueField, setShowValueField] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -679,13 +681,27 @@ function EntryForm({
             onChange={(e) => setUsername(e.target.value)}
             className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50"
           />
-          <input
-            type="password"
-            placeholder="密码"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50"
-          />
+          <div className="relative">
+            <input
+              type={showPasswordField ? "text" : "password"}
+              placeholder="密码"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 pr-10 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPasswordField((v) => !v)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded dark:hover:bg-zinc-700 hover:bg-zinc-200"
+              title={showPasswordField ? "隐藏" : "显示"}
+            >
+              {showPasswordField ? (
+                <BiHide className="text-zinc-500 dark:text-zinc-400" />
+              ) : (
+                <BiShow className="text-zinc-500 dark:text-zinc-400" />
+              )}
+            </button>
+          </div>
           <input
             type="url"
             placeholder="网址"
@@ -711,13 +727,28 @@ function EntryForm({
             className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50"
             required
           />
-          <input
-            type="password"
-            placeholder="Value"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50 font-mono"
-          />
+          <div className="relative">
+            <textarea
+              placeholder="Value"
+              value={showValueField ? value : "\u2022".repeat(Math.max(value.length, 8))}
+              onChange={(e) => showValueField && setValue(e.target.value)}
+              readOnly={!showValueField}
+              rows={4}
+              className="w-full px-4 py-2 pr-10 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50 font-mono resize-y"
+            />
+            <button
+              type="button"
+              onClick={() => setShowValueField((v) => !v)}
+              className="absolute right-2 top-2 p-1 rounded dark:hover:bg-zinc-700 hover:bg-zinc-200"
+              title={showValueField ? "隐藏" : "显示"}
+            >
+              {showValueField ? (
+                <BiHide className="text-zinc-500 dark:text-zinc-400" />
+              ) : (
+                <BiShow className="text-zinc-500 dark:text-zinc-400" />
+              )}
+            </button>
+          </div>
         </>
       )}
       <div className="flex gap-2">
