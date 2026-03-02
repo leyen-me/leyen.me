@@ -307,9 +307,9 @@ export default function PasswordManager() {
           />
         )}
 
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {decryptedEntries.length === 0 && !showAddForm ? (
-            <div className="dark:bg-primary-bg bg-zinc-100 border border-dashed dark:border-zinc-700 border-zinc-200 rounded-xl px-6 py-12 text-center">
+            <div className="col-span-full dark:bg-primary-bg bg-zinc-100 border border-dashed dark:border-zinc-700 border-zinc-200 rounded-xl px-6 py-12 text-center">
               <p className="dark:text-zinc-400 text-zinc-600 mb-4">
                 暂无密码记录，点击上方「添加密码」开始添加
               </p>
@@ -317,12 +317,13 @@ export default function PasswordManager() {
           ) : (
             decryptedEntries.map((entry) =>
                 editingId === entry._id ? (
-                  <EntryForm
-                    key={entry._id}
-                    initialData={entry}
-                    onSave={(data) => handleUpdateEntry(entry._id, data)}
-                    onCancel={() => setEditingId(null)}
-                  />
+                  <div key={entry._id} className="col-span-full">
+                    <EntryForm
+                      initialData={entry}
+                      onSave={(data) => handleUpdateEntry(entry._id, data)}
+                      onCancel={() => setEditingId(null)}
+                    />
+                  </div>
                 ) : (
                   <EntryCard
                     key={entry._id}
