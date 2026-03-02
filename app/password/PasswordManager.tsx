@@ -45,7 +45,10 @@ export default function PasswordManager() {
 
   const fetchVault = useCallback(async () => {
     try {
-      const res = await fetch("/api/password/vault", { cache: "no-store" });
+      const res = await fetch(`/api/password/vault?t=${Date.now()}`, {
+        cache: "no-store",
+        headers: { Pragma: "no-cache" },
+      });
       const data = await res.json();
       if (data.vault) {
         setVault({
@@ -70,7 +73,6 @@ export default function PasswordManager() {
   const decryptAllEntries = useCallback(
     async (password: string, salt: string, entriesList: PasswordEntryType[]) => {
       const decrypted: DecryptedEntry[] = [];
-      let failedCount = 0;
       for (const entry of entriesList) {
         if (!entry.encryptedData) continue;
         try {
@@ -85,11 +87,8 @@ export default function PasswordManager() {
             _createdAt: entry._createdAt,
           });
         } catch {
-          failedCount++;
+          // Skip corrupted entries
         }
-      }
-      if (failedCount > 0) {
-        setError(`有 ${failedCount} 条记录无法解密，可能是用旧版本添加的`);
       }
       setDecryptedEntries(decrypted);
     },
@@ -366,7 +365,7 @@ function EntryForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 rounded-xl p-6 space-y-4"
+      className="dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 rounded-xl p-6 space-y-4 mb-4"
     >
       <input
         type="text"

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { unstable_noStore } from "next/cache";
 import { createClient } from "next-sanity";
 import { projectId, dataset, apiVersion, token } from "@/lib/env.api";
 import {
@@ -18,20 +19,22 @@ const client = createClient({
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  unstable_noStore();
   try {
+    const fetchOptions = { cache: "no-store" as RequestCache };
     const [vault, entries] = await Promise.all([
       client.fetch<{
         _id: string;
         salt: string;
         verificationCipher: string;
-      } | null>(passwordVaultQuery),
+      } | null>(passwordVaultQuery, {}, fetchOptions),
       client.fetch<
         Array<{
           _id: string;
           _createdAt: string;
           encryptedData: string;
         }>
-      >(passwordEntriesQuery),
+      >(passwordEntriesQuery, {}, fetchOptions),
     ]);
 
     return NextResponse.json(
@@ -47,7 +50,8 @@ export async function GET() {
       },
       {
         headers: {
-          "Cache-Control": "no-store, no-cache, must-revalidate",
+          "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+          Pragma: "no-cache",
         },
       }
     );
