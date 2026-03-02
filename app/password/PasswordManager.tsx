@@ -17,6 +17,7 @@ import {
   BiEdit,
   BiCopy,
   BiLinkExternal,
+  BiLoaderAlt,
 } from "react-icons/bi";
 import { RiCheckboxCircleFill } from "react-icons/ri";
 
@@ -41,6 +42,7 @@ export default function PasswordManager() {
   const [decryptedEntries, setDecryptedEntries] = useState<DecryptedEntry[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
 
   const fetchVault = useCallback(async () => {
@@ -198,6 +200,7 @@ export default function PasswordManager() {
 
   const handleDeleteEntry = async (id: string) => {
     if (!confirm("确定要删除这条记录吗？")) return;
+    setDeletingId(id);
     try {
       const res = await fetch(`/api/password/entries/${id}`, {
         method: "DELETE",
@@ -208,6 +211,8 @@ export default function PasswordManager() {
       }
     } catch (err) {
       setError("删除失败");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -332,6 +337,7 @@ export default function PasswordManager() {
                     onDelete={() => handleDeleteEntry(entry._id)}
                     onCopy={copyToClipboard}
                     copyStatus={copyStatus}
+                    deletingId={deletingId}
                   />
                 )
               )
@@ -348,7 +354,7 @@ function EntryForm({
   onCancel,
 }: {
   initialData?: DecryptedEntry;
-  onSave: (data: PasswordEntryData) => void;
+  onSave: (data: PasswordEntryData) => void | Promise<void>;
   onCancel: () => void;
 }) {
   const [name, setName] = useState(initialData?.name ?? "");
@@ -356,11 +362,17 @@ function EntryForm({
   const [password, setPassword] = useState(initialData?.password ?? "");
   const [url, setUrl] = useState(initialData?.url ?? "");
   const [notes, setNotes] = useState(initialData?.notes ?? "");
+  const [saving, setSaving] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
-    onSave({ name: name.trim(), username, password, url, notes });
+    if (!name.trim() || saving) return;
+    setSaving(true);
+    try {
+      await Promise.resolve(onSave({ name: name.trim(), username, password, url, notes }));
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -407,14 +419,23 @@ function EntryForm({
       <div className="flex gap-2">
         <button
           type="submit"
-          className="px-4 py-2 rounded-lg font-incognito font-semibold dark:bg-primary-color bg-secondary-color dark:text-white text-zinc-800"
+          disabled={saving}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg font-incognito font-semibold dark:bg-primary-color bg-secondary-color dark:text-white text-zinc-800 disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          保存
+          {saving ? (
+            <>
+              <BiLoaderAlt className="animate-spin text-lg" />
+              保存中...
+            </>
+          ) : (
+            "保存"
+          )}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 rounded-lg dark:bg-zinc-800 bg-zinc-200 dark:text-white text-zinc-800"
+          disabled={saving}
+          className="px-4 py-2 rounded-lg dark:bg-zinc-800 bg-zinc-200 dark:text-white text-zinc-800 disabled:opacity-70 disabled:cursor-not-allowed"
         >
           取消
         </button>
@@ -429,14 +450,17 @@ function EntryCard({
   onDelete,
   onCopy,
   copyStatus,
+  deletingId,
 }: {
   entry: DecryptedEntry;
   onEdit: () => void;
   onDelete: () => void;
   onCopy: (text: string, id: string) => void;
   copyStatus: string | null;
+  deletingId: string | null;
 }) {
   const [showPassword, setShowPassword] = useState(false);
+  const isDeleting = deletingId === entry._id;
 
   return (
     <div className="dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 rounded-xl p-6">
@@ -505,17 +529,26 @@ function EntryCard({
         <div className="flex gap-2 shrink-0">
           <button
             onClick={onEdit}
-            className="p-2 rounded-lg dark:hover:bg-zinc-700 hover:bg-zinc-200 transition"
+            disabled={isDeleting}
+            className="p-2 rounded-lg dark:hover:bg-zinc-700 hover:bg-zinc-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
             title="编辑"
           >
             <BiEdit />
           </button>
           <button
             onClick={onDelete}
-            className="p-2 rounded-lg dark:hover:bg-zinc-700 hover:bg-zinc-200 text-red-500 transition"
+            disabled={isDeleting}
+            className="flex items-center gap-1.5 p-2 rounded-lg dark:hover:bg-zinc-700 hover:bg-zinc-200 text-red-500 transition disabled:opacity-70 disabled:cursor-not-allowed"
             title="删除"
           >
-            <BiTrash />
+            {isDeleting ? (
+              <>
+                <BiLoaderAlt className="animate-spin text-base" />
+                <span className="text-xs">删除中</span>
+              </>
+            ) : (
+              <BiTrash />
+            )}
           </button>
         </div>
       </div>
