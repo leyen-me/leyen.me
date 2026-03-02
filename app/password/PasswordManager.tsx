@@ -90,6 +90,17 @@ export default function PasswordManager() {
     });
   }, [decryptedEntries, searchQuery]);
 
+  const { passwordEntries, secretEntries } = useMemo(() => {
+    const list = searchQuery.trim() ? filteredEntries : decryptedEntries;
+    const password: DecryptedEntry[] = [];
+    const secret: DecryptedEntry[] = [];
+    for (const e of list) {
+      if (e.type === "PASSWORD") password.push(e);
+      else secret.push(e);
+    }
+    return { passwordEntries: password, secretEntries: secret };
+  }, [searchQuery, filteredEntries, decryptedEntries]);
+
   const fetchVault = useCallback(async () => {
     try {
       const res = await fetch(`/api/password/vault?t=${Date.now()}`, {
@@ -273,11 +284,22 @@ export default function PasswordManager() {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const oldIndex = decryptedEntries.findIndex((e) => e._id === active.id);
-    const newIndex = decryptedEntries.findIndex((e) => e._id === over.id);
-    if (oldIndex === -1 || newIndex === -1) return;
+    const inPassword = passwordEntries.findIndex((e) => e._id === active.id);
+    const inSecret = secretEntries.findIndex((e) => e._id === active.id);
+    const overInPassword = passwordEntries.findIndex((e) => e._id === over.id);
+    const overInSecret = secretEntries.findIndex((e) => e._id === over.id);
 
-    const reordered = arrayMove(decryptedEntries, oldIndex, newIndex);
+    let reordered: DecryptedEntry[];
+    if (inPassword !== -1 && overInPassword !== -1) {
+      const reorderedPassword = arrayMove(passwordEntries, inPassword, overInPassword);
+      reordered = [...reorderedPassword, ...secretEntries];
+    } else if (inSecret !== -1 && overInSecret !== -1) {
+      const reorderedSecret = arrayMove(secretEntries, inSecret, overInSecret);
+      reordered = [...passwordEntries, ...reorderedSecret];
+    } else {
+      return;
+    }
+
     setDecryptedEntries(reordered);
 
     const ids = reordered.map((e) => e._id);
@@ -403,54 +425,91 @@ export default function PasswordManager() {
           />
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="space-y-10">
           {decryptedEntries.length === 0 ? (
-            <div className="col-span-full dark:bg-primary-bg bg-zinc-100 border border-dashed dark:border-zinc-700 border-zinc-200 rounded-xl px-6 py-12 text-center">
+            <div className="dark:bg-primary-bg bg-zinc-100 border border-dashed dark:border-zinc-700 border-zinc-200 rounded-xl px-6 py-12 text-center">
               <p className="dark:text-zinc-400 text-zinc-600 mb-4">
                 暂无密码记录，点击上方「添加密码」开始添加
               </p>
             </div>
           ) : filteredEntries.length === 0 ? (
-            <div className="col-span-full dark:bg-primary-bg bg-zinc-100 border border-dashed dark:border-zinc-700 border-zinc-200 rounded-xl px-6 py-12 text-center">
+            <div className="dark:bg-primary-bg bg-zinc-100 border border-dashed dark:border-zinc-700 border-zinc-200 rounded-xl px-6 py-12 text-center">
               <p className="dark:text-zinc-400 text-zinc-600 mb-4">
                 未找到匹配「{searchQuery}」的记录
               </p>
             </div>
           ) : searchQuery.trim() ? (
-            filteredEntries.map((entry) => (
-              <EntryCard
-                key={entry._id}
-                entry={entry}
-                onEdit={() => setEditingId(entry._id)}
-                onDelete={() => handleDeleteEntry(entry._id)}
-                onCopy={copyToClipboard}
-                copyStatus={copyStatus}
-                deletingId={deletingId}
-              />
-            ))
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredEntries.map((entry) => (
+                <EntryCard
+                  key={entry._id}
+                  entry={entry}
+                  onEdit={() => setEditingId(entry._id)}
+                  onDelete={() => handleDeleteEntry(entry._id)}
+                  onCopy={copyToClipboard}
+                  copyStatus={copyStatus}
+                  deletingId={deletingId}
+                />
+              ))}
+            </div>
           ) : (
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
               onDragEnd={handleDragEnd}
             >
-              <SortableContext
-                items={decryptedEntries.map((e) => e._id)}
-                strategy={rectSortingStrategy}
-              >
-                {decryptedEntries.map((entry) => (
-                  <SortableEntryCard
-                    key={entry._id}
-                    entry={entry}
-                    onEdit={() => setEditingId(entry._id)}
-                    onDelete={() => handleDeleteEntry(entry._id)}
-                    onCopy={copyToClipboard}
-                    copyStatus={copyStatus}
-                    deletingId={deletingId}
-                    disabled={reordering}
-                  />
-                ))}
-              </SortableContext>
+              {passwordEntries.length > 0 && (
+                <section>
+                  <h2 className="text-sm font-medium dark:text-zinc-400 text-zinc-600 mb-3 uppercase tracking-wider">
+                    密码
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <SortableContext
+                      items={passwordEntries.map((e) => e._id)}
+                      strategy={rectSortingStrategy}
+                    >
+                      {passwordEntries.map((entry) => (
+                        <SortableEntryCard
+                          key={entry._id}
+                          entry={entry}
+                          onEdit={() => setEditingId(entry._id)}
+                          onDelete={() => handleDeleteEntry(entry._id)}
+                          onCopy={copyToClipboard}
+                          copyStatus={copyStatus}
+                          deletingId={deletingId}
+                          disabled={reordering}
+                        />
+                      ))}
+                    </SortableContext>
+                  </div>
+                </section>
+              )}
+              {secretEntries.length > 0 && (
+                <section>
+                  <h2 className="text-sm font-medium dark:text-zinc-400 text-zinc-600 mb-3 uppercase tracking-wider">
+                    密钥
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <SortableContext
+                      items={secretEntries.map((e) => e._id)}
+                      strategy={rectSortingStrategy}
+                    >
+                      {secretEntries.map((entry) => (
+                        <SortableEntryCard
+                          key={entry._id}
+                          entry={entry}
+                          onEdit={() => setEditingId(entry._id)}
+                          onDelete={() => handleDeleteEntry(entry._id)}
+                          onCopy={copyToClipboard}
+                          copyStatus={copyStatus}
+                          deletingId={deletingId}
+                          disabled={reordering}
+                        />
+                      ))}
+                    </SortableContext>
+                  </div>
+                </section>
+              )}
             </DndContext>
           )}
         </div>
