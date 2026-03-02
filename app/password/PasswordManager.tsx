@@ -413,8 +413,8 @@ function EntryModal({
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="absolute inset-0 bg-black/50 dark:bg-black/60" aria-hidden />
-      <div className="relative w-full max-w-md dark:bg-primary-bg bg-white rounded-xl shadow-xl border dark:border-zinc-700 border-zinc-200">
+      <div className="absolute inset-0 bg-black/70 dark:bg-black/85" aria-hidden />
+      <div className="relative w-full max-w-md dark:bg-zinc-900 bg-white rounded-xl shadow-xl border dark:border-zinc-700 border-zinc-200">
         <div className="flex items-center justify-between p-4 border-b dark:border-zinc-700 border-zinc-200">
           <h2 className="font-incognito font-semibold text-lg">{title}</h2>
           <button
