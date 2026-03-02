@@ -16,7 +16,6 @@ import {
   BiTrash,
   BiEdit,
   BiCopy,
-  BiLinkExternal,
   BiLoaderAlt,
   BiX,
   BiSearch,
@@ -728,7 +727,7 @@ function EntryCard({
   const isDeleting = deletingId === entry._id;
 
   return (
-    <div className="dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 rounded-xl p-6 transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-lg">
+    <div className="group dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 rounded-xl p-6 transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-lg">
       <div className="flex items-start justify-between gap-4">
         {dragHandleProps && !dragHandleProps.disabled && (
           <button
@@ -742,9 +741,21 @@ function EntryCard({
           </button>
         )}
         <div className="flex-1 min-w-0 overflow-hidden">
-          <h3 className="font-incognito font-semibold text-lg mb-2 dark:text-white text-zinc-800">
-            {entry.name}
-          </h3>
+          {entry.url ? (
+            <a
+              href={entry.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={entry.url}
+              className="font-incognito font-semibold text-lg mb-2 block dark:text-white text-zinc-800 hover:underline"
+            >
+              {entry.name}
+            </a>
+          ) : (
+            <h3 className="font-incognito font-semibold text-lg mb-2 dark:text-white text-zinc-800">
+              {entry.name}
+            </h3>
+          )}
           {entry.username && (
             <div className="flex items-center gap-2 mb-1">
               <span className="text-sm dark:text-zinc-400 text-zinc-600">
@@ -785,25 +796,10 @@ function EntryCard({
               </button>
             </div>
           )}
-          {entry.url && (
-            <a
-              href={entry.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={entry.url}
-              className="flex items-center gap-1 text-sm text-primary-color hover:underline min-w-0 max-w-full overflow-hidden"
-            >
-              <BiLinkExternal className="shrink-0 flex-none" />
-              <span className="truncate min-w-0">{entry.url}</span>
-            </a>
-          )}
-          {entry.notes && (
-            <p className="mt-2 text-sm dark:text-zinc-400 text-zinc-600 truncate" title={entry.notes}>
-              {entry.notes}
-            </p>
-          )}
         </div>
-        <div className="flex gap-2 shrink-0">
+        <div
+          className={`flex gap-2 shrink-0 transition-opacity duration-200 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 ${isDeleting ? "md:!opacity-100" : ""}`}
+        >
           <button
             onClick={onEdit}
             disabled={isDeleting}
