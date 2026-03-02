@@ -10,6 +10,8 @@ import blockContent from "./blockContent";
 import quiz from "./quiz";
 import { movie } from "./movie";
 import { quote } from "./quote";
+import passwordVault from "./passwordVault";
+import passwordEntry from "./passwordEntry";
 
 export const schemaTypes = [
   profile,
@@ -20,6 +22,8 @@ export const schemaTypes = [
   heroe,
   movie,
   quote,
+  passwordVault,
+  passwordEntry,
 
   // Reference types
   blockContent,

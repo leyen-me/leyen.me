@@ -125,3 +125,17 @@ export type QuoteType = {
   context?: string;
   tags: string[];
 };
+
+export type PasswordEntryType = {
+  _id: string;
+  _createdAt: string;
+  encryptedData: string;
+};
+
+export type PasswordEntryData = {
+  name: string;
+  username: string;
+  password: string;
+  url: string;
+  notes: string;
+};

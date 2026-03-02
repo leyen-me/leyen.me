@@ -157,3 +157,16 @@ export const quotesByTagQuery = groq`*[_type == "quote" && $tag in tags] | order
 }`;
 
 export const allTagsQuery = groq`array::unique(*[_type == "quote"].tags[])`;
+
+// Password vault queries
+export const passwordVaultQuery = groq`*[_type == "passwordVault"][0]{
+  _id,
+  salt,
+  verificationCipher
+}`;
+
+export const passwordEntriesQuery = groq`*[_type == "passwordEntry"] | order(_createdAt desc){
+  _id,
+  _createdAt,
+  encryptedData
+}`;
