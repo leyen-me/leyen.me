@@ -741,7 +741,7 @@ function EntryCard({
             <BiGridVertical className="text-lg text-zinc-500 dark:text-zinc-400" />
           </button>
         )}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 overflow-hidden">
           <h3 className="font-incognito font-semibold text-lg mb-2 dark:text-white text-zinc-800">
             {entry.name}
           </h3>
@@ -790,14 +790,15 @@ function EntryCard({
               href={entry.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm text-primary-color hover:underline"
+              title={entry.url}
+              className="flex items-center gap-1 text-sm text-primary-color hover:underline min-w-0 max-w-full overflow-hidden"
             >
-              <BiLinkExternal />
-              {entry.url}
+              <BiLinkExternal className="shrink-0 flex-none" />
+              <span className="truncate min-w-0">{entry.url}</span>
             </a>
           )}
           {entry.notes && (
-            <p className="mt-2 text-sm dark:text-zinc-400 text-zinc-600">
+            <p className="mt-2 text-sm dark:text-zinc-400 text-zinc-600 truncate" title={entry.notes}>
               {entry.notes}
             </p>
           )}
