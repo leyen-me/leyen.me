@@ -130,6 +130,7 @@ export type PasswordEntryType = {
   _id: string;
   _createdAt: string;
   encryptedData: string;
+  order?: number;
 };
 
 export type PasswordEntryData = {

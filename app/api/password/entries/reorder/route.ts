@@ -13,27 +13,27 @@ const client = createClient({
 
 export async function POST(req: NextRequest) {
   try {
-    const { encryptedData, order } = await req.json();
+    const { ids } = await req.json();
 
-    if (!encryptedData || typeof encryptedData !== "string") {
+    if (!Array.isArray(ids) || ids.length === 0) {
       return NextResponse.json(
-        { error: "Missing or invalid encryptedData" },
+        { error: "Missing or invalid ids array" },
         { status: 400 }
       );
     }
 
-    const doc = await client.create({
-      _type: "passwordEntry",
-      encryptedData,
-      order: typeof order === "number" ? order : 0,
+    const transaction = client.transaction();
+    ids.forEach((id: string, index: number) => {
+      transaction.patch(id, { set: { order: index } });
     });
+    await transaction.commit();
 
     revalidateTag("passwordEntry");
-    return NextResponse.json({ success: true, _id: doc._id });
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Failed to create password entry:", error);
+    console.error("Failed to reorder entries:", error);
     return NextResponse.json(
-      { error: "Failed to create entry" },
+      { error: "Failed to reorder" },
       { status: 500 }
     );
   }

@@ -20,8 +20,26 @@ import {
   BiLoaderAlt,
   BiX,
   BiSearch,
+  BiGridVertical,
 } from "react-icons/bi";
 import { RiCheckboxCircleFill } from "react-icons/ri";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 type VaultState = {
   salt: string;
@@ -31,6 +49,7 @@ type VaultState = {
 type DecryptedEntry = PasswordEntryData & {
   _id: string;
   _createdAt: string;
+  order?: number;
 };
 
 export default function PasswordManager() {
@@ -47,6 +66,12 @@ export default function PasswordManager() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [reordering, setReordering] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
   const filteredEntries = useMemo(() => {
     if (!searchQuery.trim()) return decryptedEntries;
@@ -80,7 +105,7 @@ export default function PasswordManager() {
         setIsSetup(true);
       }
     } catch (err) {
-      setError("无法加载保险库");
+      setError("无法加载保险库"); 
     } finally {
       setLoading(false);
     }
@@ -105,6 +130,7 @@ export default function PasswordManager() {
             ...data,
             _id: entry._id,
             _createdAt: entry._createdAt,
+            order: entry.order,
           });
         } catch {
           // Skip corrupted entries
@@ -171,20 +197,21 @@ export default function PasswordManager() {
     if (!vault || !masterPassword) return;
     try {
       const encrypted = await encryptEntry(data, masterPassword, vault.salt);
+      const order = decryptedEntries.length;
       const res = await fetch("/api/password/entries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ encryptedData: encrypted }),
+        body: JSON.stringify({ encryptedData: encrypted, order }),
       });
       const result = await res.json();
       if (result.success) {
         setEntries((prev) => [
           ...prev,
-          { _id: result._id, _createdAt: new Date().toISOString(), encryptedData: encrypted },
+          { _id: result._id, _createdAt: new Date().toISOString(), encryptedData: encrypted, order },
         ]);
         setDecryptedEntries((prev) => [
           ...prev,
-          { ...data, _id: result._id, _createdAt: new Date().toISOString() },
+          { ...data, _id: result._id, _createdAt: new Date().toISOString(), order },
         ]);
         setShowAddForm(false);
       }
@@ -238,6 +265,37 @@ export default function PasswordManager() {
     navigator.clipboard.writeText(text);
     setCopyStatus(id);
     setTimeout(() => setCopyStatus(null), 1500);
+  };
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = decryptedEntries.findIndex((e) => e._id === active.id);
+    const newIndex = decryptedEntries.findIndex((e) => e._id === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const reordered = arrayMove(decryptedEntries, oldIndex, newIndex);
+    setDecryptedEntries(reordered);
+
+    const ids = reordered.map((e) => e._id);
+    setReordering(true);
+    try {
+      const res = await fetch("/api/password/entries/reorder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids }),
+      });
+      if (!res.ok) {
+        setDecryptedEntries(decryptedEntries);
+        setError("排序保存失败");
+      }
+    } catch {
+      setDecryptedEntries(decryptedEntries);
+      setError("排序保存失败");
+    } finally {
+      setReordering(false);
+    }
   };
 
   if (loading) {
@@ -313,6 +371,9 @@ export default function PasswordManager() {
       )}
 
       <Slide delay={0.1}>
+        {reordering && (
+          <p className="mb-2 text-sm text-zinc-500 dark:text-zinc-400">保存排序中...</p>
+        )}
         <div className="mb-6 flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1 max-w-md">
             <BiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 dark:text-zinc-400 text-lg" />
@@ -353,7 +414,7 @@ export default function PasswordManager() {
                 未找到匹配「{searchQuery}」的记录
               </p>
             </div>
-          ) : (
+          ) : searchQuery.trim() ? (
             filteredEntries.map((entry) => (
               <EntryCard
                 key={entry._id}
@@ -365,6 +426,30 @@ export default function PasswordManager() {
                 deletingId={deletingId}
               />
             ))
+          ) : (
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={decryptedEntries.map((e) => e._id)}
+                strategy={rectSortingStrategy}
+              >
+                {decryptedEntries.map((entry) => (
+                  <SortableEntryCard
+                    key={entry._id}
+                    entry={entry}
+                    onEdit={() => setEditingId(entry._id)}
+                    onDelete={() => handleDeleteEntry(entry._id)}
+                    onCopy={copyToClipboard}
+                    copyStatus={copyStatus}
+                    deletingId={deletingId}
+                    disabled={reordering}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
           )}
         </div>
 
@@ -572,13 +657,14 @@ function EntryForm({
   );
 }
 
-function EntryCard({
+function SortableEntryCard({
   entry,
   onEdit,
   onDelete,
   onCopy,
   copyStatus,
   deletingId,
+  disabled,
 }: {
   entry: DecryptedEntry;
   onEdit: () => void;
@@ -586,6 +672,57 @@ function EntryCard({
   onCopy: (text: string, id: string) => void;
   copyStatus: string | null;
   deletingId: string | null;
+  disabled?: boolean;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: entry._id, disabled });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className={isDragging ? "opacity-50" : ""}>
+      <EntryCard
+        entry={entry}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        onCopy={onCopy}
+        copyStatus={copyStatus}
+        deletingId={deletingId}
+        dragHandleProps={{ attributes, listeners, disabled }}
+      />
+    </div>
+  );
+}
+
+function EntryCard({
+  entry,
+  onEdit,
+  onDelete,
+  onCopy,
+  copyStatus,
+  deletingId,
+  dragHandleProps,
+}: {
+  entry: DecryptedEntry;
+  onEdit: () => void;
+  onDelete: () => void;
+  onCopy: (text: string, id: string) => void;
+  copyStatus: string | null;
+  deletingId: string | null;
+  dragHandleProps?: {
+    attributes: object;
+    listeners: object | undefined;
+    disabled?: boolean;
+  };
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const isDeleting = deletingId === entry._id;
@@ -593,6 +730,17 @@ function EntryCard({
   return (
     <div className="dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 rounded-xl p-6 transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-lg">
       <div className="flex items-start justify-between gap-4">
+        {dragHandleProps && !dragHandleProps.disabled && (
+          <button
+            type="button"
+            className="p-1.5 -ml-1 rounded-lg dark:hover:bg-zinc-700 hover:bg-zinc-200 transition cursor-grab active:cursor-grabbing touch-none"
+            aria-label="拖拽排序"
+            {...dragHandleProps.attributes}
+            {...dragHandleProps.listeners}
+          >
+            <BiGridVertical className="text-lg text-zinc-500 dark:text-zinc-400" />
+          </button>
+        )}
         <div className="flex-1 min-w-0">
           <h3 className="font-incognito font-semibold text-lg mb-2 dark:text-white text-zinc-800">
             {entry.name}

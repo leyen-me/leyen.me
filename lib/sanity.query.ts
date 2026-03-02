@@ -165,8 +165,9 @@ export const passwordVaultQuery = groq`*[_type == "passwordVault"][0]{
   verificationCipher
 }`;
 
-export const passwordEntriesQuery = groq`*[_type == "passwordEntry"] | order(_createdAt desc){
+export const passwordEntriesQuery = groq`*[_type == "passwordEntry"] | order(coalesce(order, 999999) asc, _createdAt desc){
   _id,
   _createdAt,
-  encryptedData
+  encryptedData,
+  order
 }`;

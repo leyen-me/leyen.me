@@ -17,6 +17,14 @@ export default defineType({
       type: "text",
       description: "加密后的密码数据 (name, username, password, url, notes)",
     }),
+    defineField({
+      name: "order",
+      title: "Order",
+      type: "number",
+      description: "拖拽排序用，无需手动填写",
+      hidden: true,
+      initialValue: 0,
+    }),
   ],
   preview: {
     prepare() {
