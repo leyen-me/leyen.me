@@ -463,7 +463,7 @@ function EntryCard({
   const isDeleting = deletingId === entry._id;
 
   return (
-    <div className="dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 rounded-xl p-6">
+    <div className="dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 rounded-xl p-6 transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-lg">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           <h3 className="font-incognito font-semibold text-lg mb-2 dark:text-white text-zinc-800">
