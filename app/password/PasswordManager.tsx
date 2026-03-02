@@ -949,7 +949,7 @@ function EntryCard({
                       e.stopPropagation();
                       setShowPassword(!showPassword);
                     }}
-                    className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded shrink-0"
+                    className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded shrink-0 transition-opacity duration-200 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100"
                     title={showPassword ? "隐藏" : "显示"}
                   >
                     {showPassword ? (
@@ -1014,7 +1014,7 @@ function EntryCard({
                       e.stopPropagation();
                       setShowPassword(!showPassword);
                     }}
-                    className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded shrink-0"
+                    className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded shrink-0 transition-opacity duration-200 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100"
                     title={showPassword ? "隐藏密码" : "显示密码"}
                   >
                     {showPassword ? (
