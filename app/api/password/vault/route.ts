@@ -1,31 +1,37 @@
 import { NextResponse } from "next/server";
-import { sanityFetch } from "@/lib/sanity.client";
+import { createClient } from "next-sanity";
+import { projectId, dataset, apiVersion, token } from "@/lib/env.api";
 import {
   passwordVaultQuery,
   passwordEntriesQuery,
 } from "@/lib/sanity.query";
 
+// 使用 useCdn: false 确保获取最新数据，避免 CDN 缓存导致新添加的密码条目查不到
+const client = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  token,
+  useCdn: false,
+});
+
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const [vault, entries] = await Promise.all([
-      sanityFetch<{
+      client.fetch<{
         _id: string;
         salt: string;
         verificationCipher: string;
-      } | null>({
-        query: passwordVaultQuery,
-        tags: ["passwordVault"],
-      }),
-      sanityFetch<
+      } | null>(passwordVaultQuery),
+      client.fetch<
         Array<{
           _id: string;
           _createdAt: string;
           encryptedData: string;
         }>
-      >({
-        query: passwordEntriesQuery,
-        tags: ["passwordEntry"],
-      }),
+      >(passwordEntriesQuery),
     ]);
 
     return NextResponse.json(

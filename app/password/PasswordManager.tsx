@@ -70,7 +70,9 @@ export default function PasswordManager() {
   const decryptAllEntries = useCallback(
     async (password: string, salt: string, entriesList: PasswordEntryType[]) => {
       const decrypted: DecryptedEntry[] = [];
+      let failedCount = 0;
       for (const entry of entriesList) {
+        if (!entry.encryptedData) continue;
         try {
           const data = await decryptEntry(
             entry.encryptedData,
@@ -83,8 +85,11 @@ export default function PasswordManager() {
             _createdAt: entry._createdAt,
           });
         } catch {
-          // Skip corrupted entries
+          failedCount++;
         }
+      }
+      if (failedCount > 0) {
+        setError(`有 ${failedCount} 条记录无法解密，可能是用旧版本添加的`);
       }
       setDecryptedEntries(decrypted);
     },
