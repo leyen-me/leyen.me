@@ -18,6 +18,7 @@ import {
   BiCopy,
   BiLinkExternal,
   BiLoaderAlt,
+  BiX,
 } from "react-icons/bi";
 import { RiCheckboxCircleFill } from "react-icons/ri";
 
@@ -306,45 +307,137 @@ export default function PasswordManager() {
         </div>
 
         {showAddForm && (
-          <EntryForm
+          <AddEntryModal
             onSave={(data) => handleAddEntry(data)}
-            onCancel={() => setShowAddForm(false)}
+            onClose={() => setShowAddForm(false)}
           />
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {decryptedEntries.length === 0 && !showAddForm ? (
+          {decryptedEntries.length === 0 ? (
             <div className="col-span-full dark:bg-primary-bg bg-zinc-100 border border-dashed dark:border-zinc-700 border-zinc-200 rounded-xl px-6 py-12 text-center">
               <p className="dark:text-zinc-400 text-zinc-600 mb-4">
                 暂无密码记录，点击上方「添加密码」开始添加
               </p>
             </div>
           ) : (
-            decryptedEntries.map((entry) =>
-                editingId === entry._id ? (
-                  <div key={entry._id} className="col-span-full">
-                    <EntryForm
-                      initialData={entry}
-                      onSave={(data) => handleUpdateEntry(entry._id, data)}
-                      onCancel={() => setEditingId(null)}
-                    />
-                  </div>
-                ) : (
-                  <EntryCard
-                    key={entry._id}
-                    entry={entry}
-                    onEdit={() => setEditingId(entry._id)}
-                    onDelete={() => handleDeleteEntry(entry._id)}
-                    onCopy={copyToClipboard}
-                    copyStatus={copyStatus}
-                    deletingId={deletingId}
-                  />
-                )
-              )
+            decryptedEntries.map((entry) => (
+              <EntryCard
+                key={entry._id}
+                entry={entry}
+                onEdit={() => setEditingId(entry._id)}
+                onDelete={() => handleDeleteEntry(entry._id)}
+                onCopy={copyToClipboard}
+                copyStatus={copyStatus}
+                deletingId={deletingId}
+              />
+            ))
           )}
         </div>
+
+        {editingId && (() => {
+          const entry = decryptedEntries.find((e) => e._id === editingId);
+          if (!entry) return null;
+          return (
+            <EditEntryModal
+              key={editingId}
+              entry={entry}
+              onSave={(data) => handleUpdateEntry(entry._id, data)}
+              onClose={() => setEditingId(null)}
+            />
+          );
+        })()}
       </Slide>
     </div>
+  );
+}
+
+function EntryModal({
+  title,
+  initialData,
+  onSave,
+  onClose,
+}: {
+  title: string;
+  initialData?: DecryptedEntry;
+  onSave: (data: PasswordEntryData) => void | Promise<void>;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div className="absolute inset-0 bg-black/50 dark:bg-black/60" aria-hidden />
+      <div className="relative w-full max-w-md dark:bg-primary-bg bg-white rounded-xl shadow-xl border dark:border-zinc-700 border-zinc-200">
+        <div className="flex items-center justify-between p-4 border-b dark:border-zinc-700 border-zinc-200">
+          <h2 className="font-incognito font-semibold text-lg">{title}</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-2 rounded-lg dark:hover:bg-zinc-700 hover:bg-zinc-200 transition"
+            aria-label="关闭"
+          >
+            <BiX className="text-xl" />
+          </button>
+        </div>
+        <div className="p-6">
+          <EntryForm
+            initialData={initialData}
+            onSave={onSave}
+            onCancel={onClose}
+            embedded
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AddEntryModal({
+  onSave,
+  onClose,
+}: {
+  onSave: (data: PasswordEntryData) => void | Promise<void>;
+  onClose: () => void;
+}) {
+  return (
+    <EntryModal
+      title="添加密码"
+      onSave={onSave}
+      onClose={onClose}
+    />
+  );
+}
+
+function EditEntryModal({
+  entry,
+  onSave,
+  onClose,
+}: {
+  entry: DecryptedEntry;
+  onSave: (data: PasswordEntryData) => void | Promise<void>;
+  onClose: () => void;
+}) {
+  return (
+    <EntryModal
+      title="编辑密码"
+      initialData={entry}
+      onSave={onSave}
+      onClose={onClose}
+    />
   );
 }
 
@@ -352,10 +445,12 @@ function EntryForm({
   initialData,
   onSave,
   onCancel,
+  embedded,
 }: {
   initialData?: DecryptedEntry;
   onSave: (data: PasswordEntryData) => void | Promise<void>;
   onCancel: () => void;
+  embedded?: boolean;
 }) {
   const [name, setName] = useState(initialData?.name ?? "");
   const [username, setUsername] = useState(initialData?.username ?? "");
@@ -378,7 +473,7 @@ function EntryForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 rounded-xl p-6 space-y-4 mb-4"
+      className={`space-y-4 ${embedded ? "p-0" : "dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 rounded-xl p-6 mb-4"}`}
     >
       <input
         type="text"
