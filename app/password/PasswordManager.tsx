@@ -7,9 +7,8 @@ import {
   verifyMasterPassword,
   encryptEntry,
   decryptEntry,
-  type PasswordEntryData,
 } from "@/lib/password-crypto";
-import type { PasswordEntryType } from "@/types";
+import type { PasswordEntryType, PasswordEntryData } from "@/types";
 import {
   BiLockAlt,
   BiPlus,
@@ -77,14 +76,17 @@ export default function PasswordManager() {
     if (!searchQuery.trim()) return decryptedEntries;
     const q = searchQuery.trim().toLowerCase();
     return decryptedEntries.filter((entry) => {
-      const fields = [
-        entry.name,
-        entry.username,
-        entry.password,
-        entry.url,
-        entry.notes,
-      ].filter(Boolean);
-      return fields.some((f) => f.toLowerCase().includes(q));
+      const fields =
+        entry.type === "SECRET"
+          ? [entry.key, entry.value].filter(Boolean)
+          : [
+              entry.name,
+              entry.username,
+              entry.password,
+              entry.url,
+              entry.notes,
+            ].filter(Boolean);
+      return fields.some((f) => String(f).toLowerCase().includes(q));
     });
   }, [decryptedEntries, searchQuery]);
 
@@ -146,7 +148,7 @@ export default function PasswordManager() {
     setError("");
     if (!masterPassword.trim()) {
       setError("请输入主密码");
-      return;
+      return; 
     }
 
     if (isSetup) {
@@ -533,7 +535,7 @@ function AddEntryModal({
 }) {
   return (
     <EntryModal
-      title="添加密码"
+      title="添加"
       onSave={onSave}
       onClose={onClose}
     />
@@ -551,7 +553,7 @@ function EditEntryModal({
 }) {
   return (
     <EntryModal
-      title="编辑密码"
+      title="编辑"
       initialData={entry}
       onSave={onSave}
       onClose={onClose}
@@ -570,19 +572,58 @@ function EntryForm({
   onCancel: () => void;
   embedded?: boolean;
 }) {
-  const [name, setName] = useState(initialData?.name ?? "");
-  const [username, setUsername] = useState(initialData?.username ?? "");
-  const [password, setPassword] = useState(initialData?.password ?? "");
-  const [url, setUrl] = useState(initialData?.url ?? "");
-  const [notes, setNotes] = useState(initialData?.notes ?? "");
+  const init = initialData as PasswordEntryData | undefined;
+  const initialType = (init?.type ?? "PASSWORD") as "PASSWORD" | "SECRET";
+  const [entryType, setEntryType] = useState<"PASSWORD" | "SECRET">(initialType);
+  const [name, setName] = useState(
+    init && init.type === "PASSWORD" ? init.name ?? "" : ""
+  );
+  const [username, setUsername] = useState(
+    init && init.type === "PASSWORD" ? init.username ?? "" : ""
+  );
+  const [password, setPassword] = useState(
+    init && init.type === "PASSWORD" ? init.password ?? "" : ""
+  );
+  const [url, setUrl] = useState(
+    init && init.type === "PASSWORD" ? init.url ?? "" : ""
+  );
+  const [notes, setNotes] = useState(
+    init && init.type === "PASSWORD" ? init.notes ?? "" : ""
+  );
+  const [key, setKey] = useState(
+    init && init.type === "SECRET" ? init.key ?? "" : ""
+  );
+  const [value, setValue] = useState(
+    init && init.type === "SECRET" ? init.value ?? "" : ""
+  );
   const [saving, setSaving] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || saving) return;
+    if (saving) return;
+    if (entryType === "SECRET") {
+      if (!key.trim()) return;
+    } else {
+      if (!name.trim()) return;
+    }
     setSaving(true);
     try {
-      await Promise.resolve(onSave({ name: name.trim(), username, password, url, notes }));
+      if (entryType === "SECRET") {
+        await Promise.resolve(
+          onSave({ type: "SECRET", key: key.trim(), value })
+        );
+      } else {
+        await Promise.resolve(
+          onSave({
+            type: "PASSWORD",
+            name: name.trim(),
+            username,
+            password,
+            url,
+            notes,
+          })
+        );
+      }
     } finally {
       setSaving(false);
     }
@@ -593,42 +634,92 @@ function EntryForm({
       onSubmit={handleSubmit}
       className={`space-y-4 ${embedded ? "p-0" : "dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 rounded-xl p-6 mb-4"}`}
     >
-      <input
-        type="text"
-        placeholder="名称 *"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50"
-        required
-      />
-      <input
-        type="text"
-        placeholder="用户名 / 邮箱"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50"
-      />
-      <input
-        type="password"
-        placeholder="密码"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50"
-      />
-      <input
-        type="url"
-        placeholder="网址"
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-        className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50"
-      />
-      <textarea
-        placeholder="备注"
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-        rows={2}
-        className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50 resize-none"
-      />
+      <div className="flex items-center gap-4">
+        <span className="text-sm dark:text-zinc-400 text-zinc-600">分类</span>
+        <div className="flex rounded-lg bg-zinc-200 dark:bg-zinc-700 p-1">
+          <button
+            type="button"
+            onClick={() => setEntryType("PASSWORD")}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition ${
+              entryType === "PASSWORD"
+                ? "bg-white dark:bg-zinc-900 shadow dark:text-white text-zinc-800"
+                : "dark:text-zinc-400 text-zinc-600 hover:text-zinc-800 dark:hover:text-white"
+            }`}
+          >
+            PASSWORD
+          </button>
+          <button
+            type="button"
+            onClick={() => setEntryType("SECRET")}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition ${
+              entryType === "SECRET"
+                ? "bg-white dark:bg-zinc-900 shadow dark:text-white text-zinc-800"
+                : "dark:text-zinc-400 text-zinc-600 hover:text-zinc-800 dark:hover:text-white"
+            }`}
+          >
+            SECRET
+          </button>
+        </div>
+      </div>
+
+      {entryType === "PASSWORD" ? (
+        <>
+          <input
+            type="text"
+            placeholder="名称 *"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50"
+            required
+          />
+          <input
+            type="text"
+            placeholder="用户名 / 邮箱"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50"
+          />
+          <input
+            type="password"
+            placeholder="密码"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50"
+          />
+          <input
+            type="url"
+            placeholder="网址"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50"
+          />
+          <textarea
+            placeholder="备注"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            rows={2}
+            className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50 resize-none"
+          />
+        </>
+      ) : (
+        <>
+          <input
+            type="text"
+            placeholder="Key *"
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
+            className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Value"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            className="w-full px-4 py-2 rounded-lg dark:bg-zinc-900 bg-white border dark:border-zinc-700 border-zinc-200 dark:text-white text-zinc-800 focus:outline-none focus:ring-2 focus:ring-primary-color/50 font-mono"
+          />
+        </>
+      )}
       <div className="flex gap-2">
         <button
           type="submit"
@@ -742,67 +833,109 @@ function EntryCard({
           </button>
         )}
         <div className="flex-1 min-w-0 overflow-hidden">
-          {entry.url ? (
-            <a
-              href={entry.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={entry.url}
-              className="font-incognito font-semibold text-lg mb-2 block dark:text-white text-zinc-800 hover:underline"
-            >
-              {entry.name}
-            </a>
+          {entry.type === "SECRET" ? (
+            <>
+              <h3 className="font-incognito font-semibold text-lg mb-2 dark:text-white text-zinc-800 truncate" title={entry.key}>
+                {entry.key}
+              </h3>
+              {entry.value && (
+                <div className="flex items-center gap-2 mb-1">
+                  <button
+                    type="button"
+                    onClick={() => onCopy(entry.value, `copy-${entry._id}-value`)}
+                    className="flex items-center gap-2 min-w-0 text-left cursor-pointer hover:opacity-80 transition-opacity"
+                    title="点击复制"
+                  >
+                    <span className="text-sm font-mono truncate">
+                      {showPassword ? entry.value : "••••••••"}
+                    </span>
+                    {copyStatus === `copy-${entry._id}-value` ? (
+                      <RiCheckboxCircleFill className="text-secondary-color text-sm shrink-0" />
+                    ) : null}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowPassword(!showPassword);
+                    }}
+                    className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded shrink-0"
+                    title={showPassword ? "隐藏" : "显示"}
+                  >
+                    {showPassword ? (
+                      <BiHide className="text-sm text-zinc-500 dark:text-zinc-400" />
+                    ) : (
+                      <BiShow className="text-sm text-zinc-500 dark:text-zinc-400" />
+                    )}
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
-            <h3 className="font-incognito font-semibold text-lg mb-2 dark:text-white text-zinc-800">
-              {entry.name}
-            </h3>
-          )}
-          {entry.username && (
-            <button
-              type="button"
-              onClick={() => onCopy(entry.username, `copy-${entry._id}-user`)}
-              className="flex items-center gap-2 min-w-0 text-left cursor-pointer hover:opacity-80 transition-opacity mb-1"
-              title="点击复制"
-            >
-              <span className="text-sm dark:text-zinc-400 text-zinc-600 truncate">
-                {entry.username}
-              </span>
-              {copyStatus === `copy-${entry._id}-user` ? (
-                <RiCheckboxCircleFill className="text-secondary-color text-sm shrink-0" />
-              ) : null}
-            </button>
-          )}
-          {entry.password && (
-            <div className="flex items-center gap-2 mb-1">
-              <button
-                type="button"
-                onClick={() => onCopy(entry.password, `copy-${entry._id}-pass`)}
-                className="flex items-center gap-2 min-w-0 text-left cursor-pointer hover:opacity-80 transition-opacity"
-                title="点击复制"
-              >
-                <span className="text-sm font-mono truncate">
-                  {showPassword ? entry.password : "••••••••"}
-                </span>
-                {copyStatus === `copy-${entry._id}-pass` ? (
-                  <RiCheckboxCircleFill className="text-secondary-color text-sm shrink-0" />
-                ) : null}
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowPassword(!showPassword);
-                }}
-                className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded shrink-0"
-                title={showPassword ? "隐藏密码" : "显示密码"}
-              >
-                {showPassword ? (
-                  <BiHide className="text-sm text-zinc-500 dark:text-zinc-400" />
-                ) : (
-                  <BiShow className="text-sm text-zinc-500 dark:text-zinc-400" />
-                )}
-              </button>
-            </div>
+            <>
+              {"url" in entry && entry.url ? (
+                <a
+                  href={entry.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={entry.url}
+                  className="font-incognito font-semibold text-lg mb-2 block dark:text-white text-zinc-800 hover:underline"
+                >
+                  {entry.name}
+                </a>
+              ) : (
+                <h3 className="font-incognito font-semibold text-lg mb-2 dark:text-white text-zinc-800">
+                  {entry.name}
+                </h3>
+              )}
+              {"username" in entry && entry.username && (
+                <button
+                  type="button"
+                  onClick={() => onCopy(entry.username, `copy-${entry._id}-user`)}
+                  className="flex items-center gap-2 min-w-0 text-left cursor-pointer hover:opacity-80 transition-opacity mb-1"
+                  title="点击复制"
+                >
+                  <span className="text-sm dark:text-zinc-400 text-zinc-600 truncate">
+                    {entry.username}
+                  </span>
+                  {copyStatus === `copy-${entry._id}-user` ? (
+                    <RiCheckboxCircleFill className="text-secondary-color text-sm shrink-0" />
+                  ) : null}
+                </button>
+              )}
+              {"password" in entry && entry.password && (
+                <div className="flex items-center gap-2 mb-1">
+                  <button
+                    type="button"
+                    onClick={() => onCopy(entry.password, `copy-${entry._id}-pass`)}
+                    className="flex items-center gap-2 min-w-0 text-left cursor-pointer hover:opacity-80 transition-opacity"
+                    title="点击复制"
+                  >
+                    <span className="text-sm font-mono truncate">
+                      {showPassword ? entry.password : "••••••••"}
+                    </span>
+                    {copyStatus === `copy-${entry._id}-pass` ? (
+                      <RiCheckboxCircleFill className="text-secondary-color text-sm shrink-0" />
+                    ) : null}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowPassword(!showPassword);
+                    }}
+                    className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded shrink-0"
+                    title={showPassword ? "隐藏密码" : "显示密码"}
+                  >
+                    {showPassword ? (
+                      <BiHide className="text-sm text-zinc-500 dark:text-zinc-400" />
+                    ) : (
+                      <BiShow className="text-sm text-zinc-500 dark:text-zinc-400" />
+                    )}
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
         <div

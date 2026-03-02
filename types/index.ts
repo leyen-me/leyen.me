@@ -133,10 +133,17 @@ export type PasswordEntryType = {
   order?: number;
 };
 
-export type PasswordEntryData = {
-  name: string;
-  username: string;
-  password: string;
-  url: string;
-  notes: string;
-};
+export type PasswordEntryData =
+  | {
+      type: "PASSWORD";
+      name: string;
+      username: string;
+      password: string;
+      url: string;
+      notes: string;
+    }
+  | {
+      type: "SECRET";
+      key: string;
+      value: string;
+    };

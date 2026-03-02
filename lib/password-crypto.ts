@@ -3,18 +3,14 @@
  * 主密码仅存在于内存，永不发送到服务器
  */
 
+import type { PasswordEntryData } from "@/types";
+
 const PBKDF2_ITERATIONS = 310000;
 const SALT_LENGTH = 16;
 const IV_LENGTH = 12;
 const KEY_LENGTH = 256;
 
-export interface PasswordEntryData {
-  name: string;
-  username: string;
-  password: string;
-  url: string;
-  notes: string;
-}
+export type { PasswordEntryData };
 
 async function deriveKey(
   password: string,
@@ -162,5 +158,9 @@ export async function decryptEntry(
   );
 
   const decoder = new TextDecoder();
-  return JSON.parse(decoder.decode(decrypted)) as PasswordEntryData;
+  const parsed = JSON.parse(decoder.decode(decrypted)) as Record<string, unknown>;
+  if (!parsed.type) {
+    parsed.type = "PASSWORD";
+  }
+  return parsed as PasswordEntryData;
 }
