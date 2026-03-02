@@ -32,7 +32,7 @@ async function deriveKey(
   return crypto.subtle.deriveKey(
     {
       name: "PBKDF2",
-      salt,
+      salt: salt as BufferSource,
       iterations: PBKDF2_ITERATIONS,
       hash: "SHA-256",
     },
@@ -71,8 +71,8 @@ export async function setupVault(masterPassword: string): Promise<{
   );
 
   const combined = new Uint8Array(iv.length + ciphertext.byteLength);
-  combined.set(iv);
-  combined.set(new Uint8Array(ciphertext));
+  combined.set(iv, 0);
+  combined.set(new Uint8Array(ciphertext), iv.length);
 
   return {
     salt,
@@ -133,8 +133,8 @@ export async function encryptEntry(
   );
 
   const combined = new Uint8Array(iv.length + ciphertext.byteLength);
-  combined.set(iv);
-  combined.set(new Uint8Array(ciphertext));
+  combined.set(iv, 0);
+  combined.set(new Uint8Array(ciphertext), iv.length);
 
   return btoa(String.fromCharCode.apply(null, Array.from(combined)));
 }

@@ -28,16 +28,23 @@ export async function GET() {
       }),
     ]);
 
-    return NextResponse.json({
-      vault: vault
-        ? {
-            _id: vault._id,
-            salt: vault.salt,
-            verificationCipher: vault.verificationCipher,
-          }
-        : null,
-      entries,
-    });
+    return NextResponse.json(
+      {
+        vault: vault
+          ? {
+              _id: vault._id,
+              salt: vault.salt,
+              verificationCipher: vault.verificationCipher,
+            }
+          : null,
+        entries,
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate",
+        },
+      }
+    );
   } catch (error) {
     console.error("Failed to fetch password vault:", error);
     return NextResponse.json(

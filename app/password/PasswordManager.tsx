@@ -45,7 +45,7 @@ export default function PasswordManager() {
 
   const fetchVault = useCallback(async () => {
     try {
-      const res = await fetch("/api/password/vault");
+      const res = await fetch("/api/password/vault", { cache: "no-store" });
       const data = await res.json();
       if (data.vault) {
         setVault({
@@ -115,11 +115,25 @@ export default function PasswordManager() {
         setError("设置失败，请重试");
       }
     } else if (vault) {
-      const valid = await verifyMasterPassword(
+      let valid = await verifyMasterPassword(
         masterPassword,
         vault.salt,
         vault.verificationCipher
       );
+      // 备用验证：若 verificationCipher 校验失败，尝试解密第一条记录
+      // 解决 fetch 缓存或 Sanity 返回数据异常导致的校验失败
+      if (!valid && entries.length > 0) {
+        try {
+          await decryptEntry(
+            entries[0].encryptedData,
+            masterPassword,
+            vault.salt
+          );
+          valid = true;
+        } catch {
+          // 解密也失败，密码确实错误
+        }
+      }
       if (valid) {
         setVerified(true);
         await decryptAllEntries(masterPassword, vault.salt, entries);
