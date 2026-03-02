@@ -31,10 +31,6 @@ export default function Navbar() {
       title: "Movies",
       href: "/movies",
     },
-    {
-      title: "Password",
-      href: "/password",
-    },
   ];
 
   return (

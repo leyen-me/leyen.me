@@ -10,7 +10,6 @@ import {
   HiOutlineX,
   HiUser,
 } from "react-icons/hi";
-import { BiLockAlt } from "react-icons/bi";
 import Logo from "../../../public/logo.png";
 
 export default function MobileMenu() {
@@ -45,11 +44,6 @@ export default function MobileMenu() {
       title: "Movies",
       href: "/movies",
       icon: HiCamera,
-    },
-    {
-      title: "Password",
-      href: "/password",
-      icon: BiLockAlt,
     },
   ];
 
