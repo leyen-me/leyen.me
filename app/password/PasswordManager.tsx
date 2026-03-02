@@ -15,11 +15,12 @@ import {
   BiPlus,
   BiTrash,
   BiEdit,
-  BiCopy,
   BiLoaderAlt,
   BiX,
   BiSearch,
   BiGridVertical,
+  BiShow,
+  BiHide,
 } from "react-icons/bi";
 import { RiCheckboxCircleFill } from "react-icons/ri";
 import {
@@ -757,41 +758,48 @@ function EntryCard({
             </h3>
           )}
           {entry.username && (
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-sm dark:text-zinc-400 text-zinc-600">
+            <button
+              type="button"
+              onClick={() => onCopy(entry.username, `copy-${entry._id}-user`)}
+              className="flex items-center gap-2 min-w-0 text-left cursor-pointer hover:opacity-80 transition-opacity mb-1"
+              title="点击复制"
+            >
+              <span className="text-sm dark:text-zinc-400 text-zinc-600 truncate">
                 {entry.username}
               </span>
-              <button
-                onClick={() => onCopy(entry.username, `copy-${entry._id}-user`)}
-                className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded"
-              >
-                {copyStatus === `copy-${entry._id}-user` ? (
-                  <RiCheckboxCircleFill className="text-secondary-color text-sm" />
-                ) : (
-                  <BiCopy className="text-sm" />
-                )}
-              </button>
-            </div>
+              {copyStatus === `copy-${entry._id}-user` ? (
+                <RiCheckboxCircleFill className="text-secondary-color text-sm shrink-0" />
+              ) : null}
+            </button>
           )}
           {entry.password && (
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-sm font-mono">
-                {showPassword ? entry.password : "••••••••"}
-              </span>
               <button
-                onClick={() => setShowPassword(!showPassword)}
-                className="text-xs dark:text-zinc-400 text-zinc-600 hover:underline"
+                type="button"
+                onClick={() => onCopy(entry.password, `copy-${entry._id}-pass`)}
+                className="flex items-center gap-2 min-w-0 text-left cursor-pointer hover:opacity-80 transition-opacity"
+                title="点击复制"
               >
-                {showPassword ? "隐藏" : "显示"}
+                <span className="text-sm font-mono truncate">
+                  {showPassword ? entry.password : "••••••••"}
+                </span>
+                {copyStatus === `copy-${entry._id}-pass` ? (
+                  <RiCheckboxCircleFill className="text-secondary-color text-sm shrink-0" />
+                ) : null}
               </button>
               <button
-                onClick={() => onCopy(entry.password, `copy-${entry._id}-pass`)}
-                className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded"
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowPassword(!showPassword);
+                }}
+                className="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded shrink-0"
+                title={showPassword ? "隐藏密码" : "显示密码"}
               >
-                {copyStatus === `copy-${entry._id}-pass` ? (
-                  <RiCheckboxCircleFill className="text-secondary-color text-sm" />
+                {showPassword ? (
+                  <BiHide className="text-sm text-zinc-500 dark:text-zinc-400" />
                 ) : (
-                  <BiCopy className="text-sm" />
+                  <BiShow className="text-sm text-zinc-500 dark:text-zinc-400" />
                 )}
               </button>
             </div>
