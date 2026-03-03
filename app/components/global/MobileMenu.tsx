@@ -68,7 +68,7 @@ export default function MobileMenu() {
         <RxHamburgerMenu className="text-xl" />
       </button>
       <div
-        className={`md:hidden fixed left-0 top-0 z-10 h-full w-full transform duration-[600ms] ease-[cubic-bezier(0.7,0,0,1)] dark:bg-zinc-900 bg-white ${
+        className={`md:hidden fixed left-0 top-0 z-50 h-full w-full transform duration-[600ms] ease-[cubic-bezier(0.7,0,0,1)] dark:bg-zinc-900 bg-white ${
           navShow ? "translate-x-0 rounded-none" : "translate-x-full"
         }`}
       >
