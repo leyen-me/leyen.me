@@ -65,7 +65,7 @@ function CameraTracker({
     <OrbitControls
       ref={controlsRef}
       target={CAMERA_CONFIG.target}
-      enableZoom={false}
+      enableZoom={true}
       enablePan={false}
       enableRotate={true}
       minPolarAngle={Math.PI / 4}

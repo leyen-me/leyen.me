@@ -6,9 +6,10 @@ interface SlideProps extends AnimationProps {
   children: React.ReactNode;
   delay?: number;
   className?: string;
+  pClassName?: string;
 }
 
-export const Slide = ({ children, className, delay }: SlideProps) => {
+export const Slide = ({ children, pClassName, className, delay }: SlideProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInview = useInView(ref as RefObject<Element>, { once: true });
   const controls = useAnimation();
@@ -34,6 +35,8 @@ export const Slide = ({ children, className, delay }: SlideProps) => {
       }}
       animate={controls}
       initial="start"
+      //@ts-expect-error - className is not a valid prop for motion.div
+      className={pClassName} 
     >
       <div className={className}>{children}</div>
     </motion.div>

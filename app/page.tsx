@@ -29,7 +29,7 @@ export default async function Home() {
             <Social type="social" />
           </Slide>
         </div>
-        <Slide delay={0.14}>
+        <Slide delay={0.14} pClassName="w-full">
           <Hero3D />
         </Slide>
       </section>
