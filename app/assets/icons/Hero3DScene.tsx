@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useTheme } from "next-themes";
 import { Canvas, useThree, useFrame } from "@react-three/fiber";
-import { useGLTF, OrbitControls } from "@react-three/drei";
+import { useGLTF, OrbitControls, Environment } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
 // 调试用：集中管理参数，便于查看和调整
@@ -110,22 +110,22 @@ export default function Hero3DScene() {
         dpr={isMobile ? 1 : [1, 2]}
       >
         <color attach="background" args={[bgColor]} />
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[5, 5, 5]} intensity={1.2} />
-        <directionalLight position={[-3, 2, -2]} intensity={0.4} />
-        <pointLight position={[0, 3, 2]} intensity={0.8} color="#f59e0b" />
+        {/* HDR 环境光：金属/玻璃材质的反射和全局光照 */}
+        <Environment preset="sunset" environmentIntensity={0.8} />
+        {/* 暖色点缀光 */}
+        <pointLight position={[2, 2, 2]} intensity={0.5} color="#f59e0b" />
         <Model />
         <CameraTracker onUpdate={setLiveCamera} />
       </Canvas>
 
       {/* 调试开关：点击显示/隐藏参数 */}
-      <button
+      {/* <button
         type="button"
         onClick={() => setShowDebug((v) => !v)}
         className="absolute top-2 right-2 z-10 px-2 py-1 text-xs rounded bg-zinc-800/80 text-zinc-200 hover:bg-zinc-700/80 transition-colors"
       >
         {showDebug ? "隐藏参数" : "显示参数"}
-      </button>
+      </button> */}
 
       {showDebug && (
         <div className="absolute bottom-2 left-2 right-2 z-10 p-3 rounded-lg bg-zinc-900/95 text-zinc-200 text-xs font-mono overflow-auto max-h-[40%]">
