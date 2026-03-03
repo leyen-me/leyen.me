@@ -14,7 +14,7 @@ const Hero3DScene = dynamic(() => import("./Hero3DScene"), {
 
 export default function Hero3D() {
   return (
-    <div className="lg:w-[450px] w-full min-w-0 max-w-full h-[260px] sm:h-[320px] lg:h-[350px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-lg ">
+    <div className="lg:w-[450px] w-full min-w-0 max-w-full h-[260px] sm:h-[320px] lg:h-[350px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
       <Suspense
         fallback={
           <div className="w-full h-full bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
