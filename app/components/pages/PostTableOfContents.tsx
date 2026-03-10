@@ -128,7 +128,7 @@ export default function PostTableOfContents({
           {indicatorStyle ? (
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute rounded-r-xl bg-zinc-100/85 shadow-[inset_2px_0_0_0_rgba(24,24,27,0.92)] transition-[top,left,width,height,background-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[top,left,width,height] dark:bg-zinc-800/75 dark:shadow-[inset_2px_0_0_0_rgba(244,244,245,0.96)]"
+              className="pointer-events-none absolute rounded-r-0 bg-zinc-200/50 shadow-[inset_2px_0_0_0_rgba(24,24,27,0.92)] transition-[top,left,width,height,background-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[top,left,width,height] dark:bg-zinc-800/75 dark:shadow-[inset_2px_0_0_0_rgba(244,244,245,0.96)]"
               style={indicatorStyle}
             />
           ) : null}

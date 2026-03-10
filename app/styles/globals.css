@@ -74,6 +74,10 @@ h4 {
   padding: 1rem 1.25rem;
 }
 
+.article-content blockquote {
+  margin-top: 1.25rem;
+}
+
 .article-content blockquote > :first-child {
   margin-top: 0;
 }
