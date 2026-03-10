@@ -1,6 +1,7 @@
 import type { MDXComponents } from "mdx/types";
 import { BiLinkExternal } from "react-icons/bi";
 import RefLink from "@/app/components/shared/RefLink";
+import CodeBlock from "@/app/components/shared/CodeBlock";
 
 /**
  * 自定义 MDX 组件 - 避免 Fumadocs UI 对 React 19 的依赖
@@ -81,12 +82,9 @@ const defaultMdxComponents = {
     );
   },
   pre: ({ children, className, ...props }: any) => (
-    <pre
-      {...props}
-      className={`my-6 w-full max-w-full overflow-x-auto rounded-lg border dark:border-zinc-800 border-zinc-200 p-4 text-sm ${className || ""}`}
-    >
+    <CodeBlock {...props} className={className || ""}>
       {children}
-    </pre>
+    </CodeBlock>
   ),
   ul: ({ children, ...props }: any) => (
     <ul {...props} className="list-[square] mt-5 ml-5">
