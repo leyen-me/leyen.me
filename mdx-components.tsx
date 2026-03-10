@@ -154,7 +154,7 @@ const defaultMdxComponents = {
   li: ({ children, ...props }: any) => (
     <li
       {...props}
-      className="pl-1 text-[0.98rem] leading-8 text-zinc-700 dark:text-zinc-300"
+      className="pl-1 text-[0.98rem] leading-8 text-zinc-700 dark:text-zinc-300 relative"
     >
       {children}
     </li>
