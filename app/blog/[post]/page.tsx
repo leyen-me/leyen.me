@@ -254,7 +254,7 @@ export default async function Post({ params }: Props) {
           </Slide>
         </article>
 
-        <aside className="hidden xl:block w-60 ml-10">
+        <aside className="hidden xl:block w-64 ml-10">
           <Slide delay={0.1} className="sticky top-24 space-y-6 pt-10">
             <section className="rounded-3xl border border-zinc-200 bg-zinc-50/70 p-5 dark:border-zinc-800 dark:bg-zinc-900/60">
               <h2 className="font-incognito text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
