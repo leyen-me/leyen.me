@@ -65,7 +65,7 @@ const defaultMdxComponents = {
         className={
           isCodeBlock
             ? className || ""
-            : `font-incognito py-[0.15rem] px-1 rounded-sm font-medium dark:bg-primary-bg bg-secondary-bg dark:text-zinc-200 text-pink-500 ${className || ""}`
+            : `font-incognito py-[0.15rem] px-1 rounded-sm font-medium dark:bg-primary-bg bg-secondary-bg dark:text-zinc-300 text-zinc-800 ${className || ""}`
         }
       >
         {children}
