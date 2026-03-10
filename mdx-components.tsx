@@ -7,6 +7,14 @@ import RefLink from "@/app/components/shared/RefLink";
  * 使用与原有 CustomPortableText 相似的样式
  */
 const defaultMdxComponents = {
+  h1: ({ children, ...props }: any) => (
+    <h1
+      {...props}
+      className="font-incognito font-bold tracking-tight dark:text-zinc-100 lg:text-5xl text-4xl text-zinc-700 my-10"
+    >
+      {children}
+    </h1>
+  ),
   h2: ({ children, ...props }: any) => (
     <h2
       {...props}

@@ -177,7 +177,7 @@ export default async function Post({ params }: Props) {
               />
             </div>
 
-            <div className="mt-8 dark:text-zinc-400 text-zinc-600 leading-relaxed tracking-tight text-lg">
+            <div className="article-content mt-8 dark:text-zinc-400 text-zinc-600 leading-relaxed tracking-tight text-lg">
               <FumadocsContent content={post.content} body={post.body} />
             </div>
           </div>

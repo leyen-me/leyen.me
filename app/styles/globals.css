@@ -33,6 +33,11 @@ h4 {
   font-family: var(--incognito), "Inter", sans-serif;
 }
 
+/* 文章内容内的分隔线：浅色模式适中，暗色模式更柔和 */
+.article-content hr {
+  @apply border-zinc-200 dark:border-zinc-800 my-8;
+}
+
 .path {
   stroke-dasharray: 500px 100px;
   animation: animate 100s linear infinite alternate-reverse;
