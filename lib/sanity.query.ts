@@ -77,6 +77,7 @@ export const postsQuery = groq`*[_type == "Post"] | order(_createdAt desc){
     twitterUrl
   },
   body,
+  content,
 }`;
 
 export const featuredPostsQuery = groq`*[_type == "Post" && featured == true] | order(_createdAt desc) {
@@ -98,6 +99,7 @@ export const singlePostQuery = groq`*[_type == "Post" && slug.current == $slug][
     twitterUrl
   },
   body,
+  content,
 }`;
 
 export const heroesQuery = groq`*[_type == "heroe"] | order(_createdAt asc) { _id, _createdAt, name, url, met }`;

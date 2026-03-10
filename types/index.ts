@@ -87,6 +87,7 @@ export type PostType = {
     twitterUrl: string;
   };
   body: PortableTextBlock[];
+  content?: string; // Markdown 内容，优先于 body
   featured: boolean;
   isPublished: boolean;
 };

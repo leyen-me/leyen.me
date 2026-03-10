@@ -90,9 +90,17 @@ export default defineType({
     }),
     defineField({
       name: "body",
-      title: "Post Body",
+      title: "Post Body (Legacy)",
       type: "blockContent",
-      description: "Write your post content here",
+      description: "Legacy Portable Text format, use content for Markdown",
+      hidden: ({ document }) => !!document?.content,
+    }),
+    defineField({
+      name: "content",
+      title: "Post Content (Markdown)",
+      type: "text",
+      description: "Write your post in Markdown",
+      rows: 20,
     }),
     defineField({
       name: "isPublished",

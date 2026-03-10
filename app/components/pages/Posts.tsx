@@ -61,7 +61,11 @@ export default async function Posts() {
                       <div className="flex items-center gap-x-2">
                         <BiSolidTime />
                         <div className="">
-                          {readTime(toPlainText(post.body))}
+                          {readTime(
+                          post.content
+                            ? post.content.replace(/#{1,6}\s|[*_`~\[\]()]/g, "").trim()
+                            : toPlainText(post.body || [])
+                        )}
                         </div>
                       </div>
                     </div>

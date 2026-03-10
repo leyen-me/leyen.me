@@ -4,9 +4,11 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { PostType } from "@/types";
 import { singlePostQuery } from "@/lib/sanity.query";
-import { PortableText, toPlainText } from "@portabletext/react";
-import { CustomPortableText } from "../../components/shared/CustomPortableText";
-import { BiChevronRight, BiSolidTime, BiTime } from "react-icons/bi";
+import { toPlainText } from "@portabletext/react";
+import { createCompiler } from "@fumadocs/mdx-remote";
+import { getMDXComponents } from "@/mdx-components";
+import { convertPortableTextToMarkdown } from "@/lib/portable-text-to-markdown";
+import { BiChevronRight, BiSolidTime } from "react-icons/bi";
 import { formatDate } from "../../utils/date";
 import SharePost from "../../components/shared/SharePost";
 import FeaturedPosts from "../../components/pages/FeaturedPosts";
@@ -27,6 +29,25 @@ type Props = {
 
 const fallbackImage: string =
   "https://res.cloudinary.com/victoreke/image/upload/v1692636087/victoreke/blog.png";
+
+const mdxCompiler = createCompiler({
+  rehypeCodeOptions: false, // 禁用 Shiki
+});
+
+async function FumadocsContent({
+  content,
+  body,
+}: {
+  content: string | undefined;
+  body: PostType["body"];
+}) {
+  const markdown =
+    content?.trim() || (body?.length ? convertPortableTextToMarkdown(body) : "");
+  if (!markdown) return null;
+  const compiled = await mdxCompiler.compile({ source: markdown });
+  const MdxContent = compiled.body;
+  return <MdxContent components={getMDXComponents()} />;
+}
 
 // Dynamic metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -86,7 +107,9 @@ export default async function Post({ params }: Props) {
     qParams: { slug },
   });
 
-  const words = toPlainText(post.body);
+  const words = post.content
+    ? post.content.replace(/#{1,6}\s|[*_`~\[\]()]/g, "").trim()
+    : toPlainText(post.body || []);
 
   if (!post) {
     notFound();
@@ -150,7 +173,7 @@ export default async function Post({ params }: Props) {
             </div>
 
             <div className="mt-8 dark:text-zinc-400 text-zinc-600 leading-relaxed tracking-tight text-lg">
-              <PortableText value={post.body} components={CustomPortableText} />
+              <FumadocsContent content={post.content} body={post.body} />
             </div>
           </div>
 
