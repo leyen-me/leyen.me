@@ -123,9 +123,9 @@ export default async function Post({ params }: Props) {
     .replace(/\/$/, "");
 
   return (
-    <main className="mx-auto max-w-[1380px] px-6 pb-20 md:px-10">
-      <div className="grid gap-14 xl:grid-cols-[minmax(0,48rem)_16rem] xl:gap-16">
-        <article className="min-w-0">
+    <main className="max-w-7xl mx-auto md:px-16 px-6">
+      <div className="flex">
+        <article className="w-0 flex-1">
           <header
             id="overview"
             className="border-b border-zinc-200 pb-10 pt-6 dark:border-zinc-800"
@@ -242,19 +242,19 @@ export default async function Post({ params }: Props) {
                 />
               </div>
 
-              <section className="mt-10 border-b border-zinc-200 pb-10 dark:border-zinc-800">
+              {/* <section className="mt-10 border-b border-zinc-200 pb-10 dark:border-zinc-800">
                 <h2 className="font-incognito text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
                   Featured
                 </h2>
                 <div className="mt-5">
                   <FeaturedPosts params={params.post} />
                 </div>
-              </section>
+              </section> */}
             </div>
           </Slide>
         </article>
 
-        <aside className="hidden xl:block">
+        <aside className="hidden xl:block w-60 ml-10">
           <Slide delay={0.1} className="sticky top-24 space-y-6 pt-10">
             <section className="rounded-3xl border border-zinc-200 bg-zinc-50/70 p-5 dark:border-zinc-800 dark:bg-zinc-900/60">
               <h2 className="font-incognito text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
