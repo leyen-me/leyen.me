@@ -138,7 +138,7 @@ const defaultMdxComponents = {
   ul: ({ children, ...props }: any) => (
     <ul
       {...props}
-      className="my-4 ml-6 list-disc space-y-2 marker:text-zinc-400 dark:marker:text-zinc-600"
+      className="my-4 px-6 ml-6 list-disc space-y-2 marker:text-zinc-400 dark:marker:text-zinc-600"
     >
       {children}
     </ul>
@@ -146,7 +146,7 @@ const defaultMdxComponents = {
   ol: ({ children, ...props }: any) => (
     <ol
       {...props}
-      className="my-4 ml-6 list-decimal space-y-2 marker:text-zinc-400 dark:marker:text-zinc-600"
+      className="my-4 px-6 ml-6 list-decimal space-y-2 marker:text-zinc-400 dark:marker:text-zinc-600"
     >
       {children}
     </ol>

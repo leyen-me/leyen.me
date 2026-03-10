@@ -126,6 +126,14 @@ html.dark .article-content details[open] summary {
   min-width: 100%;
 }
 
+.article-content td{
+  line-height: 1.5;
+}
+
+.article-content td:has(code) {
+  line-height: 2.2;
+}
+
 .path {
   stroke-dasharray: 500px 100px;
   animation: animate 100s linear infinite alternate-reverse;
