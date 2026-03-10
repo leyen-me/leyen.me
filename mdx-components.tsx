@@ -2,53 +2,90 @@ import type { MDXComponents } from "mdx/types";
 import { BiLinkExternal } from "react-icons/bi";
 import RefLink from "@/app/components/shared/RefLink";
 import CodeBlock from "@/app/components/shared/CodeBlock";
+import { slugifyHeading } from "@/lib/markdown-headings";
 
 /**
  * 自定义 MDX 组件 - 避免 Fumadocs UI 对 React 19 的依赖
  * 使用与原有 CustomPortableText 相似的样式
  */
+function flattenText(node: any): string {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return "";
+  }
+
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+
+  if (Array.isArray(node)) {
+    return node.map(flattenText).join("");
+  }
+
+  if (typeof node === "object" && "props" in node) {
+    return flattenText(node.props?.children);
+  }
+
+  return "";
+}
+
+function createHeading(
+  Tag: "h1" | "h2" | "h3" | "h4",
+  className: string,
+  hashOffsetClass = "lg:-left-8"
+) {
+  return ({ children, ...props }: any) => {
+    const headingText = flattenText(children).trim();
+    const id = props.id || slugifyHeading(headingText);
+
+    return (
+      <Tag
+        {...props}
+        id={id}
+        className={`group scroll-mt-28 font-incognito tracking-tight dark:text-zinc-50 text-zinc-900 ${className}`}
+      >
+        <a
+          href={`#${id}`}
+          className={`absolute ${hashOffsetClass} left-0 top-1/2 hidden -translate-y-1/2 text-zinc-300 opacity-0 transition group-hover:opacity-100 dark:text-zinc-600 lg:inline-block`}
+          aria-label={`跳转到 ${headingText}`}
+        >
+          #
+        </a>
+        {children}
+      </Tag>
+    );
+  };
+}
+
 const defaultMdxComponents = {
-  h1: ({ children, ...props }: any) => (
-    <h1
-      {...props}
-      className="font-incognito font-bold tracking-tight dark:text-zinc-100 lg:text-5xl text-4xl text-zinc-700 my-10"
-    >
-      {children}
-    </h1>
+  h1: createHeading(
+    "h1",
+    "relative mb-4 mt-12 border-t border-zinc-200 pt-8 text-3xl font-semibold dark:border-zinc-800 sm:text-[2rem]",
+    "lg:-left-10"
   ),
-  h2: ({ children, ...props }: any) => (
-    <h2
-      {...props}
-      className="font-incognito font-bold tracking-tight dark:text-zinc-100 lg:text-4xl text-3xl text-zinc-700 my-8"
-    >
-      {children}
-    </h2>
+  h2: createHeading(
+    "h2",
+    "relative mb-4 mt-10 border-t border-zinc-200 pt-7 text-[1.7rem] font-semibold dark:border-zinc-800 sm:text-[1.8rem]"
   ),
-  h3: ({ children, ...props }: any) => (
-    <h3
-      {...props}
-      className="font-incognito font-semibold tracking-tight lg:text-3xl text-2xl dark:text-zinc-100 text-zinc-700 my-6"
-    >
-      {children}
-    </h3>
+  h3: createHeading(
+    "h3",
+    "relative mb-3 mt-8 text-[1.35rem] font-semibold sm:text-[1.45rem]"
   ),
-  h4: ({ children, ...props }: any) => (
-    <h4
-      {...props}
-      className="font-incognito font-semibold tracking-tight text-xl dark:text-zinc-100 text-zinc-700 mb-2 mt-4"
-    >
-      {children}
-    </h4>
+  h4: createHeading(
+    "h4",
+    "relative mb-3 mt-7 text-lg font-semibold text-zinc-800 dark:text-zinc-100"
   ),
   p: ({ children, ...props }: any) => (
-    <p {...props} className="mt-2 mb-6">
+    <p
+      {...props}
+      className="my-4 text-[0.98rem] leading-8 text-zinc-700 dark:text-zinc-300"
+    >
       {children}
     </p>
   ),
   blockquote: ({ children, ...props }: any) => (
     <blockquote
       {...props}
-      className="relative overflow-hidden tracking-tight text-lg my-8 lg:py-6 lg:pl-6 pr-12 p-4 border dark:border-zinc-800 border-zinc-200 rounded-md"
+      className="my-7 rounded-2xl border border-zinc-200 bg-zinc-50/70 px-5 py-4 text-[0.98rem] leading-7 text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-300"
     >
       {children}
     </blockquote>
@@ -56,9 +93,9 @@ const defaultMdxComponents = {
   a: ({ children, href }: any) => (
     <RefLink
       href={(href as string) || "#"}
-      className="dark:text-blue-400 text-blue-500 hover:underline"
+      className="font-medium text-zinc-900 underline decoration-zinc-300 underline-offset-4 transition hover:decoration-zinc-500 dark:text-zinc-100 dark:decoration-zinc-700 dark:hover:decoration-zinc-400"
     >
-      {children} <BiLinkExternal className="inline" aria-hidden="true" />
+      {children} <BiLinkExternal className="mb-0.5 ml-0.5 inline" aria-hidden="true" />
     </RefLink>
   ),
   code: ({ children, className, ...props }: any) => {
@@ -74,7 +111,7 @@ const defaultMdxComponents = {
         className={
           isCodeBlock
             ? `block min-w-max ${className || ""}`
-            : `font-incognito py-[0.15rem] px-1 rounded-sm font-medium dark:bg-primary-bg bg-secondary-bg dark:text-zinc-300 text-zinc-800 ${className || ""}`
+            : `rounded-md border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 font-mono text-[0.9em] font-medium text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 ${className || ""}`
         }
       >
         {children}
@@ -87,25 +124,34 @@ const defaultMdxComponents = {
     </CodeBlock>
   ),
   ul: ({ children, ...props }: any) => (
-    <ul {...props} className="list-[square] mt-5 ml-5">
+    <ul
+      {...props}
+      className="my-4 ml-6 list-disc space-y-2 marker:text-zinc-400 dark:marker:text-zinc-600"
+    >
       {children}
     </ul>
   ),
   ol: ({ children, ...props }: any) => (
-    <ol {...props} className="list-decimal mt-5 ml-5">
+    <ol
+      {...props}
+      className="my-4 ml-6 list-decimal space-y-2 marker:text-zinc-400 dark:marker:text-zinc-600"
+    >
       {children}
     </ol>
   ),
   li: ({ children, ...props }: any) => (
-    <li {...props} className="mb-4">
+    <li
+      {...props}
+      className="pl-1 text-[0.98rem] leading-8 text-zinc-700 dark:text-zinc-300"
+    >
       {children}
     </li>
   ),
   table: ({ children, ...props }: any) => (
-    <div className="my-6 overflow-x-auto">
+    <div className="my-8 overflow-x-auto rounded-2xl border border-zinc-200 dark:border-zinc-800">
       <table
         {...props}
-        className="border border-collapse dark:border-zinc-800 border-zinc-200 w-full text-base"
+        className="w-full border-collapse text-left text-sm"
       >
         {children}
       </table>
@@ -114,21 +160,24 @@ const defaultMdxComponents = {
   thead: ({ children, ...props }: any) => (
     <thead
       {...props}
-      className="bg-zinc-50 dark:bg-[#141414] border-b dark:border-zinc-800 border-zinc-200 text-left"
+      className="border-b border-zinc-200 bg-zinc-50/80 dark:border-zinc-800 dark:bg-zinc-900/80"
     >
       {children}
     </thead>
   ),
   tbody: ({ children, ...props }: any) => <tbody {...props}>{children}</tbody>,
   tr: ({ children, ...props }: any) => (
-    <tr {...props} className="border-b dark:border-zinc-800 border-zinc-200 last:border-b-0">
+    <tr
+      {...props}
+      className="border-b border-zinc-200 last:border-b-0 dark:border-zinc-800"
+    >
       {children}
     </tr>
   ),
   th: ({ children, ...props }: any) => (
     <th
       {...props}
-      className="font-medium text-lg font-incognito px-3 py-2 border-r dark:border-zinc-800 border-zinc-200 last:border-r-0"
+      className="border-r border-zinc-200 px-4 py-3 font-incognito text-base font-semibold text-zinc-900 last:border-r-0 dark:border-zinc-800 dark:text-zinc-100"
     >
       {children}
     </th>
@@ -136,18 +185,44 @@ const defaultMdxComponents = {
   td: ({ children, ...props }: any) => (
     <td
       {...props}
-      className="px-3 py-2 border-r dark:border-zinc-800 border-zinc-200 last:border-r-0"
+      className="border-r border-zinc-200 px-4 py-3 align-top text-zinc-700 last:border-r-0 dark:border-zinc-800 dark:text-zinc-300"
     >
       {children}
     </td>
   ),
+  strong: ({ children, ...props }: any) => (
+    <strong {...props} className="font-semibold text-zinc-900 dark:text-zinc-100">
+      {children}
+    </strong>
+  ),
+  em: ({ children, ...props }: any) => (
+    <em {...props} className="italic text-zinc-800 dark:text-zinc-200">
+      {children}
+    </em>
+  ),
+  details: ({ children, ...props }: any) => (
+    <details
+      {...props}
+      className="my-6 overflow-hidden rounded-2xl border border-zinc-200 bg-white/70 dark:border-zinc-800 dark:bg-zinc-950/70"
+    >
+      {children}
+    </details>
+  ),
+  summary: ({ children, ...props }: any) => (
+    <summary
+      {...props}
+      className="cursor-pointer list-none px-5 py-4 font-medium text-zinc-900 marker:hidden dark:text-zinc-100"
+    >
+      {children}
+    </summary>
+  ),
   img: ({ src, alt, ...props }: any) => (
-    <figure className="my-10">
+    <figure className="my-10 overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt={alt || ""}
-        className="rounded-sm object-contain w-full"
+        className="w-full object-contain"
         loading="lazy"
         {...props}
       />

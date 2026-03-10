@@ -72,7 +72,7 @@ function CopyButton({ content }: { content: string }) {
       onClick={handleCopy}
       aria-label={copied ? "已复制代码" : "复制代码"}
       title={copied ? "已复制" : "复制代码"}
-      className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-zinc-200 bg-white/80 text-zinc-600 backdrop-blur transition hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900/80 dark:text-zinc-300 dark:hover:text-white"
+      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-white/90 text-zinc-500 backdrop-blur transition hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950/80 dark:text-zinc-400 dark:hover:text-white"
     >
       {copied ? (
         <RiCheckboxCircleFill className="text-green-500" />
@@ -109,7 +109,7 @@ function MdxCopyButton({
       onClick={handleCopy}
       aria-label={copied ? "已复制代码" : "复制代码"}
       title={copied ? "已复制" : "复制代码"}
-      className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-zinc-200 bg-white/80 text-zinc-600 backdrop-blur transition hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900/80 dark:text-zinc-300 dark:hover:text-white"
+      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-white/90 text-zinc-500 backdrop-blur transition hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950/80 dark:text-zinc-400 dark:hover:text-white"
     >
       {copied ? (
         <RiCheckboxCircleFill className="text-green-500" />
@@ -133,15 +133,17 @@ export default function CodeBlock(props: CodeBlockProps) {
     const { value } = props;
 
     return (
-      <div className="my-6">
-        <div className="flex items-center justify-between rounded-t-lg border border-zinc-200 bg-zinc-50 px-4 py-3 translate-y-2 dark:border-zinc-800 dark:bg-[#141414]">
-          {value.filename ? <p className="text-sm">{value.filename}</p> : <span />}
+      <div className="my-8 overflow-hidden rounded-2xl border border-zinc-200 bg-white/80 dark:border-zinc-800 dark:bg-zinc-950/80">
+        <div className="flex items-center justify-between border-b border-zinc-200 bg-zinc-50/80 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/80">
+          <p className="truncate text-sm font-medium text-zinc-600 dark:text-zinc-400">
+            {value.filename || value.language || "code"}
+          </p>
           <CopyButton content={value.code} />
         </div>
         <Refractor
           language={value.language ?? "jsx"}
           value={value.code}
-          className="rounded-b-lg border-x border-b border-zinc-200 text-sm tracking-normal dark:border-zinc-800"
+          className="text-sm tracking-normal"
         />
       </div>
     );
@@ -150,8 +152,8 @@ export default function CodeBlock(props: CodeBlockProps) {
   const { children, className, ...rest } = props;
 
   return (
-    <div className="group relative my-6">
-      <div className="absolute right-3 top-3 z-10">
+    <div className="group my-8 overflow-hidden rounded-2xl border border-zinc-200 bg-white/80 dark:border-zinc-800 dark:bg-zinc-950/80">
+      <div className="flex items-center justify-end border-b border-zinc-200 bg-zinc-50/80 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/80">
         <MdxCopyButton
           getContent={() => preRef.current?.textContent?.replace(/\n$/, "") ?? ""}
         />
@@ -159,7 +161,7 @@ export default function CodeBlock(props: CodeBlockProps) {
       <pre
         ref={preRef}
         {...rest}
-        className={`w-full max-w-full overflow-x-auto rounded-lg border border-zinc-200 p-4 pr-14 text-sm dark:border-zinc-800 ${className || ""}`}
+        className={`w-full max-w-full overflow-x-auto px-4 py-4 text-sm ${className || ""}`}
       >
         {children}
       </pre>

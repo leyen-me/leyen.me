@@ -19,7 +19,7 @@ import Buymeacoffee from "@/app/components/shared/Buymeacoffee";
 import { HiCalendar } from "react-icons/hi";
 import { sanityFetch } from "@/lib/sanity.client";
 import { readTime } from "@/app/utils/readTime";
-import PageHeading from "@/app/components/shared/PageHeading";
+import { extractMarkdownHeadings } from "@/lib/markdown-headings";
 
 type Props = {
   params: {
@@ -39,15 +39,7 @@ const mdxCompiler = createCompiler({
   format: "md", // 纯 Markdown 模式，禁用 import/export 与 {expression} 解析，避免 acorn 报错
 });
 
-async function FumadocsContent({
-  content,
-  body,
-}: {
-  content: string | undefined;
-  body: PostType["body"];
-}) {
-  const markdown =
-    content?.trim() || (body?.length ? convertPortableTextToMarkdown(body) : "");
+async function FumadocsContent({ markdown }: { markdown: string }) {
   if (!markdown) return null;
   const compiled = await mdxCompiler.compile({ source: markdown });
   const MdxContent = compiled.body;
@@ -112,140 +104,222 @@ export default async function Post({ params }: Props) {
     qParams: { slug },
   });
 
-  const words = post.content
-    ? post.content.replace(/#{1,6}\s|[*_`~\[\]()]/g, "").trim()
-    : toPlainText(post.body || []);
-
   if (!post) {
     notFound();
   }
 
+  const markdown =
+    post.content?.trim() ||
+    (post.body?.length ? convertPortableTextToMarkdown(post.body) : "");
+  const words = post.content
+    ? post.content.replace(/#{1,6}\s|[*_`~\[\]()]/g, "").trim()
+    : toPlainText(post.body || []);
+  const headings = extractMarkdownHeadings(markdown);
+  const publishedAt = post.date ? post.date : post._createdAt;
+  const publishedLabel = formatDate(publishedAt);
+  const updatedLabel = formatDate(post._updatedAt || post._createdAt);
+  const authorHandle = post.author.twitterUrl
+    .replace(/^https?:\/\/(www\.)?(twitter|x)\.com\//, "")
+    .replace(/\/$/, "");
+
   return (
-    <main className="max-w-7xl mx-auto md:px-16 px-6">
-      <header>
-        <Slide className="relative flex items-center gap-x-2 border-b dark:border-zinc-800 border-zinc-200 pb-8">
-          <Link
-            href="/blog"
-            className="whitespace-nowrap dark:text-zinc-400 text-zinc-400 hover:dark:text-white hover:text-zinc-700 text-sm border-b dark:border-zinc-700 border-zinc-200"
+    <main className="mx-auto max-w-[1380px] px-6 pb-20 md:px-10">
+      <div className="grid gap-14 xl:grid-cols-[minmax(0,48rem)_16rem] xl:gap-16">
+        <article className="min-w-0">
+          <header
+            id="overview"
+            className="border-b border-zinc-200 pb-10 pt-6 dark:border-zinc-800"
           >
-            cd ..
-          </Link>
-          <BiChevronRight />
-          <p className="text-zinc-400 text-sm truncate">{post.title}</p>
-        </Slide>
-      </header>
-
-      <article>
-        <Slide
-          className="grid lg:grid-cols-[75%,25%] grid-cols-1 relative"
-          delay={0.1}
-        >
-          <div className="min-w-0 min-h-full lg:border-r border-r-0 dark:border-zinc-800 border-zinc-200 pt-10 pb-4 lg:pr-6 px-0">
-            <div className="flex items-center flex-wrap gap-4 text-md mb-8 dark:text-zinc-400 text-zinc-600">
-              <div className="flex items-center gap-x-2">
-                <HiCalendar />
-                <time dateTime={post.date ? post.date : post._createdAt}>
-                  {post.date
-                    ? formatDate(post.date)
-                    : formatDate(post._createdAt)}
-                </time>
-              </div>
-              {/* <Link
-                href="#comments"
-                className="flex items-center gap-x-2 dark:text-primary-color text-tertiary-color"
+            <Slide className="flex items-center gap-x-2 text-sm text-zinc-500 dark:text-zinc-400">
+              <Link
+                href="/blog"
+                className="whitespace-nowrap transition hover:text-zinc-900 dark:hover:text-zinc-100"
               >
-                <HiChat />
-                <div className="#comments">Comments</div>
-              </Link> */}
-              <div className="flex items-center gap-x-2">
-                <BiSolidTime />
-                <div className="">{readTime(words)}</div>
+                Blog
+              </Link>
+              <BiChevronRight className="shrink-0" />
+              <p className="truncate">{post.title}</p>
+            </Slide>
+
+            <Slide delay={0.05} className="mt-8">
+              <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
+                <div className="inline-flex items-center gap-x-2 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 dark:border-zinc-800 dark:bg-zinc-900">
+                  <HiCalendar />
+                  <time dateTime={publishedAt}>{publishedLabel}</time>
+                </div>
+                <div className="inline-flex items-center gap-x-2 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 dark:border-zinc-800 dark:bg-zinc-900">
+                  <BiSolidTime />
+                  <span>{readTime(words)}</span>
+                </div>
+                <div className="inline-flex items-center gap-x-2 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 dark:border-zinc-800 dark:bg-zinc-900">
+                  <span>Updated</span>
+                  <span>{updatedLabel}</span>
+                </div>
               </div>
-            </div>
 
-            <PageHeading title={post.title} description={post.description} />
+              <h1 className="mt-6 max-w-4xl font-incognito text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-[3.35rem] sm:leading-[1.05]">
+                {post.title}
+              </h1>
 
-            <div className="relative w-full h-40 pt-[52.5%]">
-              <Image
-                className="rounded-xl border dark:border-zinc-800 border-zinc-100 object-cover"
-                layout="fill"
-                src={post.coverImage?.image || fallbackImage}
-                alt={post.coverImage?.alt || post.title}
-                quality={100}
-                placeholder={post.coverImage?.lqip ? `blur` : "empty"}
-                blurDataURL={post.coverImage?.lqip || ""}
-              />
-            </div>
-
-            <div className="article-content mt-8 min-w-0 dark:text-zinc-400 text-zinc-600 leading-relaxed tracking-tight text-lg">
-              <FumadocsContent content={post.content} body={post.body} />
-            </div>
-          </div>
-
-          <aside className="flex flex-col lg:max-h-full h-max gap-y-8 sticky top-2 bottom-auto right-0 py-10 lg:px-6 px-0">
-            <section className="border-b dark:border-zinc-800 border-zinc-200 pb-10">
-              <p className="dark:text-zinc-400 text-zinc-500 text-sm">
-                Written By
+              <p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+                {post.description}
               </p>
-              <address className="flex items-center gap-x-3 mt-4 not-italic">
-                <div className="relative w-12 h-12">
+
+              {post.tags?.length ? (
+                <ul className="mt-6 flex flex-wrap items-center gap-2">
+                  {post.tags.map((tag, id) => (
+                    <li
+                      key={id}
+                      className="rounded-full border border-zinc-200 px-3 py-1 text-sm text-zinc-600 dark:border-zinc-800 dark:text-zinc-400"
+                    >
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+
+              <div className="relative mt-8 overflow-hidden rounded-[1.5rem] border border-zinc-200 bg-zinc-50/80 dark:border-zinc-800 dark:bg-zinc-900/80">
+                <div className="relative w-full h-40 pt-[52.5%]">
                   <Image
-                    src={urlFor(post.author.photo.image)
-                      .width(80)
-                      .height(80)
-                      .url()}
-                    alt={post.author.photo.alt}
+                    className="object-cover"
                     layout="fill"
-                    className="dark:bg-zinc-800 bg-zinc-300 rounded-full object-cover"
+                    src={post.coverImage?.image || fallbackImage}
+                    alt={post.coverImage?.alt || post.title}
+                    quality={100}
+                    placeholder={post.coverImage?.lqip ? `blur` : "empty"}
+                    blurDataURL={post.coverImage?.lqip || ""}
                   />
                 </div>
-                <div rel="author">
-                  <h3 className="font-semibold text-lg tracking-tight">
-                    {post.author.name}
-                  </h3>
-                  <a
-                    href={post.author.twitterUrl}
-                    className="text-blue-500 text-sm"
-                    rel="noreferrer noopener"
-                    target="_blank"
-                  >
-                    {`@${post.author.twitterUrl.split("x.com/")[1]}`}
-                  </a>
+              </div>
+            </Slide>
+          </header>
+
+          <Slide delay={0.1}>
+            <div className="article-content mt-8 min-w-0">
+              <FumadocsContent markdown={markdown} />
+            </div>
+          </Slide>
+
+          <Slide delay={0.15}>
+            <div className="mt-14 border-t border-zinc-200 pt-10 dark:border-zinc-800">
+              <section className="rounded-3xl border border-zinc-200 bg-zinc-50/60 p-6 dark:border-zinc-800 dark:bg-zinc-900/50">
+                <p className="text-sm uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
+                  Written by
+                </p>
+                <address className="mt-4 flex items-center gap-x-4 not-italic">
+                  <div className="relative h-14 w-14 overflow-hidden rounded-full border border-zinc-200 dark:border-zinc-800">
+                    <Image
+                      src={urlFor(post.author.photo.image)
+                        .width(96)
+                        .height(96)
+                        .url()}
+                      alt={post.author.photo.alt}
+                      layout="fill"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div rel="author">
+                    <h2 className="font-incognito text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+                      {post.author.name}
+                    </h2>
+                    <a
+                      href={post.author.twitterUrl}
+                      className="mt-1 inline-flex text-sm text-zinc-500 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                      rel="noreferrer noopener"
+                      target="_blank"
+                    >
+                      @{authorHandle}
+                    </a>
+                  </div>
+                </address>
+              </section>
+
+              <div className="mt-10">
+                <SharePost
+                  title={post.title}
+                  slug={post.slug}
+                  description={post.description}
+                />
+              </div>
+
+              <section className="mt-10 border-b border-zinc-200 pb-10 dark:border-zinc-800">
+                <h2 className="font-incognito text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+                  Featured
+                </h2>
+                <div className="mt-5">
+                  <FeaturedPosts params={params.post} />
                 </div>
-              </address>
-            </section>
+              </section>
+            </div>
+          </Slide>
+        </article>
 
-            <section className="border-b dark:border-zinc-800 border-zinc-200 pb-10">
-              <h3 className="text-xl font-semibold tracking-tight mb-4">
-                Tags
-              </h3>
-              <ul className="flex flex-wrap items-center gap-2 tracking-tight">
-                {post.tags.map((tag, id) => (
-                  <li
-                    key={id}
-                    className="dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-800 border-zinc-200 rounded-md px-2 py-1 text-sm"
+        <aside className="hidden xl:block">
+          <Slide delay={0.1} className="sticky top-24 space-y-6 pt-10">
+            <section className="rounded-3xl border border-zinc-200 bg-zinc-50/70 p-5 dark:border-zinc-800 dark:bg-zinc-900/60">
+              <h2 className="font-incognito text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+                On this page
+              </h2>
+
+              <nav className="mt-4 space-y-1 text-sm">
+                <a
+                  href="#overview"
+                  className="block rounded-lg px-3 py-2 text-zinc-600 transition hover:bg-white hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-950 dark:hover:text-zinc-100"
+                >
+                  Overview
+                </a>
+                {headings.map((heading) => (
+                  <a
+                    key={heading.id}
+                    href={`#${heading.id}`}
+                    className={`block rounded-lg px-3 py-2 text-zinc-600 transition hover:bg-white hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-950 dark:hover:text-zinc-100 ${
+                      heading.level === 3
+                        ? "ml-3"
+                        : heading.level === 4
+                          ? "ml-6"
+                          : ""
+                    }`}
                   >
-                    {tag}
-                  </li>
+                    {heading.text}
+                  </a>
                 ))}
-              </ul>
+              </nav>
             </section>
 
-            <SharePost
-              title={post.title}
-              slug={post.slug}
-              description={post.description}
-            />
-
-            <section className="border-b dark:border-zinc-800 border-zinc-200 pb-10">
-              <h3 className="text-xl font-semibold tracking-tight mb-4">
-                Featured
-              </h3>
-              <FeaturedPosts params={params.post} />
+            <section className="rounded-3xl border border-zinc-200 bg-zinc-50/70 p-5 dark:border-zinc-800 dark:bg-zinc-900/60">
+              <p className="text-sm uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
+                Reading info
+              </p>
+              <dl className="mt-4 space-y-4 text-sm text-zinc-600 dark:text-zinc-400">
+                <div>
+                  <dt className="text-xs uppercase tracking-[0.14em] text-zinc-400 dark:text-zinc-500">
+                    Published
+                  </dt>
+                  <dd className="mt-1 text-zinc-900 dark:text-zinc-100">
+                    {publishedLabel}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-[0.14em] text-zinc-400 dark:text-zinc-500">
+                    Reading time
+                  </dt>
+                  <dd className="mt-1 text-zinc-900 dark:text-zinc-100">
+                    {readTime(words)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-[0.14em] text-zinc-400 dark:text-zinc-500">
+                    Last updated
+                  </dt>
+                  <dd className="mt-1 text-zinc-900 dark:text-zinc-100">
+                    {updatedLabel}
+                  </dd>
+                </div>
+              </dl>
             </section>
-          </aside>
-        </Slide>
-      </article>
+          </Slide>
+        </aside>
+      </div>
 
       {/* <section
         id="comments"
@@ -257,11 +331,13 @@ export default async function Post({ params }: Props) {
         <Comments />
       </section> */}
 
-      <section className="max-w-3xl lg:py-10 pt-0">
-        <h3 className="lg:text-4xl text-3xl font-semibold tracking-tight mb-8">
+      <section className="max-w-3xl pt-10">
+        <h3 className="font-incognito text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 lg:text-4xl">
           Support
         </h3>
-        <Buymeacoffee />
+        <div className="mt-6">
+          <Buymeacoffee />
+        </div>
       </section>
     </main>
   );

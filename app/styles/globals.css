@@ -43,6 +43,38 @@ h4 {
   min-width: 0;
 }
 
+.article-content {
+  text-wrap: pretty;
+}
+
+.article-content :is(h1, h2, h3, h4, h5, h6) {
+  position: relative;
+}
+
+.article-content blockquote > :first-child {
+  margin-top: 0;
+}
+
+.article-content blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.article-content li > :first-child {
+  margin-top: 0;
+}
+
+.article-content li > :last-child {
+  margin-bottom: 0;
+}
+
+.article-content details[open] summary {
+  border-bottom: 1px solid rgb(228 228 231 / 0.9);
+}
+
+html.dark .article-content details[open] summary {
+  border-bottom-color: rgb(39 39 42 / 1);
+}
+
 .article-content pre,
 .article-content .shiki,
 .article-content figure[data-rehype-pretty-code-figure] {
@@ -59,6 +91,17 @@ h4 {
   display: block;
   width: max-content;
   min-width: 100%;
+}
+
+.article-content .shiki {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.article-content pre code[data-language],
+.article-content .shiki code[data-language] {
+  padding: 0 !important;
 }
 
 .path {
