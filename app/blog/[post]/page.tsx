@@ -11,10 +11,10 @@ import { convertPortableTextToMarkdown } from "@/lib/portable-text-to-markdown";
 import { BiChevronRight, BiSolidTime } from "react-icons/bi";
 import { formatDate } from "../../utils/date";
 import SharePost from "../../components/shared/SharePost";
-import FeaturedPosts from "../../components/pages/FeaturedPosts";
 import { Slide } from "../../animation/Slide";
 import { urlFor } from "@/lib/sanity.image";
 import Buymeacoffee from "@/app/components/shared/Buymeacoffee";
+import PostTableOfContents from "@/app/components/pages/PostTableOfContents";
 // import Comments from "@/app/components/shared/Comments";
 import { HiCalendar } from "react-icons/hi";
 import { sanityFetch } from "@/lib/sanity.client";
@@ -123,12 +123,18 @@ export default async function Post({ params }: Props) {
     .replace(/\/$/, "");
 
   return (
-    <main className="max-w-7xl mx-auto md:px-16 px-6">
-      <div className="flex">
-        <article className="w-0 flex-1">
+    <main className="mx-auto max-w-7xl px-6 md:px-16">
+      <div className="lg:grid lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[17.5rem_minmax(0,1fr)] xl:gap-14">
+        <aside className="hidden lg:block">
+          <div className="sticky top-24 h-[calc(100vh-7rem)] overflow-hidden">
+            <PostTableOfContents headings={headings} />
+          </div>
+        </aside>
+
+        <article className="min-w-0 max-w-4xl">
           <header
             id="overview"
-            className="border-b border-zinc-200 pb-10 pt-6 dark:border-zinc-800"
+            className="scroll-mt-28 border-b border-zinc-200 pb-10 pt-6 dark:border-zinc-800"
           >
             <Slide className="flex items-center gap-x-2 text-sm text-zinc-500 dark:text-zinc-400">
               <Link
@@ -252,73 +258,15 @@ export default async function Post({ params }: Props) {
               </section> */}
             </div>
           </Slide>
+          <section className="pt-10">
+            <h3 className="font-incognito text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 lg:text-4xl">
+              Support
+            </h3>
+            <div className="mt-6">
+              <Buymeacoffee />
+            </div>
+          </section>
         </article>
-
-        <aside className="hidden xl:block w-64 ml-10">
-          <Slide delay={0.1} className="sticky top-24 space-y-6 pt-10">
-            <section className="rounded-3xl border border-zinc-200 bg-zinc-50/70 p-5 dark:border-zinc-800 dark:bg-zinc-900/60">
-              <h2 className="font-incognito text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-                On this page
-              </h2>
-
-              <nav className="mt-4 space-y-1 text-sm">
-                <a
-                  href="#overview"
-                  className="block rounded-lg px-3 py-2 text-zinc-600 transition hover:bg-white hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-950 dark:hover:text-zinc-100"
-                >
-                  Overview
-                </a>
-                {headings.map((heading) => (
-                  <a
-                    key={heading.id}
-                    href={`#${heading.id}`}
-                    className={`block rounded-lg px-3 py-2 text-zinc-600 transition hover:bg-white hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-950 dark:hover:text-zinc-100 ${
-                      heading.level === 3
-                        ? "ml-3"
-                        : heading.level === 4
-                          ? "ml-6"
-                          : ""
-                    }`}
-                  >
-                    {heading.text}
-                  </a>
-                ))}
-              </nav>
-            </section>
-
-            <section className="rounded-3xl border border-zinc-200 bg-zinc-50/70 p-5 dark:border-zinc-800 dark:bg-zinc-900/60">
-              <p className="text-sm uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
-                Reading info
-              </p>
-              <dl className="mt-4 space-y-4 text-sm text-zinc-600 dark:text-zinc-400">
-                <div>
-                  <dt className="text-xs uppercase tracking-[0.14em] text-zinc-400 dark:text-zinc-500">
-                    Published
-                  </dt>
-                  <dd className="mt-1 text-zinc-900 dark:text-zinc-100">
-                    {publishedLabel}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-xs uppercase tracking-[0.14em] text-zinc-400 dark:text-zinc-500">
-                    Reading time
-                  </dt>
-                  <dd className="mt-1 text-zinc-900 dark:text-zinc-100">
-                    {readTime(words)}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-xs uppercase tracking-[0.14em] text-zinc-400 dark:text-zinc-500">
-                    Last updated
-                  </dt>
-                  <dd className="mt-1 text-zinc-900 dark:text-zinc-100">
-                    {updatedLabel}
-                  </dd>
-                </div>
-              </dl>
-            </section>
-          </Slide>
-        </aside>
       </div>
 
       {/* <section
@@ -330,15 +278,6 @@ export default async function Post({ params }: Props) {
         </h3>
         <Comments />
       </section> */}
-
-      <section className="max-w-3xl pt-10">
-        <h3 className="font-incognito text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 lg:text-4xl">
-          Support
-        </h3>
-        <div className="mt-6">
-          <Buymeacoffee />
-        </div>
-      </section>
     </main>
   );
 }
