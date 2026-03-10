@@ -31,7 +31,9 @@ const fallbackImage: string =
   "https://res.cloudinary.com/victoreke/image/upload/v1692636087/victoreke/blog.png";
 
 const mdxCompiler = createCompiler({
-  rehypeCodeOptions: false, // 禁用 Shiki
+  rehypeCodeOptions: {
+    themes: { light: "github-light", dark: "github-dark" },
+  },
   rehypeTocOptions: false, // format: "md" 会产生 raw 节点，rehype-toc 无法处理，需禁用
   format: "md", // 纯 Markdown 模式，禁用 import/export 与 {expression} 解析，避免 acorn 报错
 });

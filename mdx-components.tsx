@@ -52,18 +52,30 @@ const defaultMdxComponents = {
       {children} <BiLinkExternal className="inline" aria-hidden="true" />
     </RefLink>
   ),
-  code: ({ children, ...props }: any) => (
-    <code
-      {...props}
-      className="font-incognito py-[0.15rem] px-1 rounded-sm font-medium dark:bg-primary-bg bg-secondary-bg dark:text-zinc-200 text-pink-500"
-    >
-      {children}
-    </code>
-  ),
-  pre: ({ children, ...props }: any) => (
+  code: ({ children, className, ...props }: any) => {
+    // Shiki 代码块的 code 无 language- 类，但 children 是 span 等 React 元素；行内代码 children 是纯文本
+    const isCodeBlock =
+      className?.includes?.("language-") ||
+      (Array.isArray(children)
+        ? children.some((c: unknown) => typeof c === "object" && c !== null)
+        : typeof children === "object" && children !== null);
+    return (
+      <code
+        {...props}
+        className={
+          isCodeBlock
+            ? className || ""
+            : `font-incognito py-[0.15rem] px-1 rounded-sm font-medium dark:bg-primary-bg bg-secondary-bg dark:text-zinc-200 text-pink-500 ${className || ""}`
+        }
+      >
+        {children}
+      </code>
+    );
+  },
+  pre: ({ children, className, ...props }: any) => (
     <pre
       {...props}
-      className="my-6 overflow-x-auto rounded-lg border dark:border-zinc-800 border-zinc-200 bg-zinc-50 dark:bg-[#141414] p-4 text-sm"
+      className={`my-6 overflow-x-auto rounded-lg border dark:border-zinc-800 border-zinc-200 p-4 text-sm ${className || ""}`}
     >
       {children}
     </pre>
