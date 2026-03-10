@@ -38,6 +38,29 @@ h4 {
   @apply border-zinc-200 dark:border-zinc-800 my-8;
 }
 
+.article-content,
+.article-content > * {
+  min-width: 0;
+}
+
+.article-content pre,
+.article-content .shiki,
+.article-content figure[data-rehype-pretty-code-figure] {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.article-content pre code,
+.article-content .shiki code,
+.article-content figure[data-rehype-pretty-code-figure] code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+}
+
 .path {
   stroke-dasharray: 500px 100px;
   animation: animate 100s linear infinite alternate-reverse;

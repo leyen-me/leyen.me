@@ -140,7 +140,7 @@ export default async function Post({ params }: Props) {
           className="grid lg:grid-cols-[75%,25%] grid-cols-1 relative"
           delay={0.1}
         >
-          <div className="min-h-full lg:border-r border-r-0 dark:border-zinc-800 border-zinc-200 pt-10 pb-4 lg:pr-6 px-0">
+          <div className="min-w-0 min-h-full lg:border-r border-r-0 dark:border-zinc-800 border-zinc-200 pt-10 pb-4 lg:pr-6 px-0">
             <div className="flex items-center flex-wrap gap-4 text-md mb-8 dark:text-zinc-400 text-zinc-600">
               <div className="flex items-center gap-x-2">
                 <HiCalendar />
@@ -177,7 +177,7 @@ export default async function Post({ params }: Props) {
               />
             </div>
 
-            <div className="article-content mt-8 dark:text-zinc-400 text-zinc-600 leading-relaxed tracking-tight text-lg">
+            <div className="article-content mt-8 min-w-0 dark:text-zinc-400 text-zinc-600 leading-relaxed tracking-tight text-lg">
               <FumadocsContent content={post.content} body={post.body} />
             </div>
           </div>

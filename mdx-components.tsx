@@ -72,7 +72,7 @@ const defaultMdxComponents = {
         {...props}
         className={
           isCodeBlock
-            ? className || ""
+            ? `block min-w-max ${className || ""}`
             : `font-incognito py-[0.15rem] px-1 rounded-sm font-medium dark:bg-primary-bg bg-secondary-bg dark:text-zinc-300 text-zinc-800 ${className || ""}`
         }
       >
@@ -83,7 +83,7 @@ const defaultMdxComponents = {
   pre: ({ children, className, ...props }: any) => (
     <pre
       {...props}
-      className={`my-6 overflow-x-auto rounded-lg border dark:border-zinc-800 border-zinc-200 p-4 text-sm ${className || ""}`}
+      className={`my-6 w-full max-w-full overflow-x-auto rounded-lg border dark:border-zinc-800 border-zinc-200 p-4 text-sm ${className || ""}`}
     >
       {children}
     </pre>
