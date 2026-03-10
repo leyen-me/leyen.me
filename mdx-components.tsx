@@ -29,11 +29,11 @@ function flattenText(node: any): string {
 }
 
 function createHeading(
-  Tag: "h1" | "h2" | "h3" | "h4",
+  Tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6",
   className: string,
   hashOffsetClass = "lg:-left-8"
 ) {
-  return ({ children, ...props }: any) => {
+  const HeadingComponent = ({ children, ...props }: any) => {
     const headingText = flattenText(children).trim();
     const id = props.id || slugifyHeading(headingText);
 
@@ -54,25 +54,37 @@ function createHeading(
       </Tag>
     );
   };
+
+  HeadingComponent.displayName = `Markdown${Tag.toUpperCase()}`;
+
+  return HeadingComponent;
 }
 
 const defaultMdxComponents = {
   h1: createHeading(
     "h1",
-    "relative mb-4 mt-12 border-t border-zinc-200 pt-8 text-3xl font-semibold dark:border-zinc-800 sm:text-[2rem]",
+    "relative mb-4 mt-12 border-t-0 border-zinc-200 pt-10 text-[1.95rem] font-semibold dark:border-zinc-800 sm:text-[2.1rem]",
     "lg:-left-10"
   ),
   h2: createHeading(
     "h2",
-    "relative mb-4 mt-10 border-t border-zinc-200 pt-7 text-[1.7rem] font-semibold dark:border-zinc-800 sm:text-[1.8rem]"
+    "relative mb-4 mt-10 border-t-0 border-zinc-200 pt-8 text-[1.7rem] font-semibold dark:border-zinc-800 sm:text-[1.8rem]"
   ),
   h3: createHeading(
     "h3",
-    "relative mb-3 mt-8 text-[1.35rem] font-semibold sm:text-[1.45rem]"
+    "relative mb-3 mt-8 text-[1.45rem] font-semibold sm:text-[1.55rem]"
   ),
   h4: createHeading(
     "h4",
-    "relative mb-3 mt-7 text-lg font-semibold text-zinc-800 dark:text-zinc-100"
+    "relative mb-3 mt-7 text-[1.25rem] font-semibold text-zinc-800 dark:text-zinc-100"
+  ),
+  h5: createHeading(
+    "h5",
+    "relative mb-2 mt-6 text-[1.1rem] font-semibold text-zinc-800 dark:text-zinc-100"
+  ),
+  h6: createHeading(
+    "h6",
+    "relative mb-2 mt-6 text-base font-semibold text-zinc-700 dark:text-zinc-200"
   ),
   p: ({ children, ...props }: any) => (
     <p
@@ -85,7 +97,7 @@ const defaultMdxComponents = {
   blockquote: ({ children, ...props }: any) => (
     <blockquote
       {...props}
-      className="my-7 rounded-2xl border border-zinc-200 bg-zinc-50/70 px-5 py-4 text-[0.98rem] leading-7 text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-300"
+      className="my-7 rounded-2xl border border-zinc-200 bg-zinc-50/70 px-6 py-5 text-[0.98rem] leading-7 text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-300 [&>*]:px-1"
     >
       {children}
     </blockquote>
@@ -111,7 +123,7 @@ const defaultMdxComponents = {
         className={
           isCodeBlock
             ? `block min-w-max ${className || ""}`
-            : `rounded-md border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 font-mono text-[0.9em] font-medium text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 ${className || ""}`
+            : `rounded-md border border-zinc-200 bg-zinc-100 px-2 py-1 font-mono text-[0.9em] font-medium text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 ${className || ""}`
         }
       >
         {children}

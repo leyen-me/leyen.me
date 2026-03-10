@@ -153,7 +153,10 @@ export default function CodeBlock(props: CodeBlockProps) {
 
   return (
     <div className="group my-8 overflow-hidden rounded-2xl border border-zinc-200 bg-white/80 dark:border-zinc-800 dark:bg-zinc-950/80">
-      <div className="flex items-center justify-end border-b border-zinc-200 bg-zinc-50/80 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/80">
+      <div className="flex items-center justify-between border-b border-zinc-200 bg-zinc-50/80 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/80">
+        <p className="truncate text-sm font-medium text-zinc-600 dark:text-zinc-400">
+          {'Code'}
+        </p>
         <MdxCopyButton
           getContent={() => preRef.current?.textContent?.replace(/\n$/, "") ?? ""}
         />

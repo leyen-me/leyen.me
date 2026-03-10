@@ -51,12 +51,41 @@ h4 {
   position: relative;
 }
 
+.article-content :is(h1) {
+  font-size: 1.5rem;
+}
+.article-content :is(h2) {
+  font-size: 1.3rem;
+}
+.article-content :is(h3) {
+  font-size: 1.1rem;
+}
+.article-content :is(h4) {
+  font-size: 0.9rem;
+}
+.article-content :is(h5) {
+  font-size: 0.7rem;
+}
+.article-content :is(h6) {
+  font-size: 0.5rem;
+}
+
+.article-content blockquote, .article-content pre{
+  padding: 1rem 1.25rem;
+}
+
 .article-content blockquote > :first-child {
   margin-top: 0;
 }
 
 .article-content blockquote > :last-child {
   margin-bottom: 0;
+}
+
+.article-content blockquote > p,
+.article-content blockquote > ul,
+.article-content blockquote > ol {
+  padding-inline: 0.25rem;
 }
 
 .article-content li > :first-child {
@@ -91,17 +120,6 @@ html.dark .article-content details[open] summary {
   display: block;
   width: max-content;
   min-width: 100%;
-}
-
-.article-content .shiki {
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-}
-
-.article-content pre code[data-language],
-.article-content .shiki code[data-language] {
-  padding: 0 !important;
 }
 
 .path {
