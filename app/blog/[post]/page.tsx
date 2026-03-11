@@ -11,6 +11,7 @@ import { convertPortableTextToMarkdown } from "@/lib/portable-text-to-markdown";
 import { BiChevronRight, BiSolidTime } from "react-icons/bi";
 import { formatDate } from "../../utils/date";
 import SharePost from "../../components/shared/SharePost";
+import CopyMarkdownButton from "../../components/shared/CopyMarkdownButton";
 import { Slide } from "../../animation/Slide";
 import { urlFor } from "@/lib/sanity.image";
 import Buymeacoffee from "@/app/components/shared/Buymeacoffee";
@@ -161,6 +162,7 @@ export default async function Post({ params }: Props) {
                   <span>Updated</span>
                   <span>{updatedLabel}</span>
                 </div>
+                {markdown ? <CopyMarkdownButton markdown={markdown} /> : null}
               </div>
 
               <h1 className="mt-6 max-w-4xl font-incognito text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-[3.35rem] sm:leading-[1.05]">
