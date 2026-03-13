@@ -162,4 +162,8 @@ html.dark .article-content details[open] summary {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
+  .resume-article {
+    width: 210mm !important;
+    min-height: 297mm !important;
+  }
 }
