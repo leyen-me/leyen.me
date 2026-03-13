@@ -158,4 +158,8 @@ html.dark .article-content details[open] summary {
     size: A4;
     margin: 0;
   }
+  .resume-page article {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
 }
