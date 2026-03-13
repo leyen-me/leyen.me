@@ -14,6 +14,7 @@ export type Project = {
 export type Header = {
   name: string;
   title: string;
+  titleEn?: string;
   contact: Record<string, string>;
   status?: string;
 };
@@ -89,11 +90,12 @@ export const resumeData: ResumeData = {
   header: {
     name: "雷光银",
     title: "前端开发工程师",
+    titleEn: "Frontend Developer",
     contact: {
       email: "672228275@qq.com",
       phone: "17608337515",
       location: "",
-      website: "",
+      website: "https://leyen.me",
       github: "",
       linkedin: "",
     },
