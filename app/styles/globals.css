@@ -147,3 +147,15 @@ html.dark .article-content details[open] summary {
     stroke-dashoffset: 12433.8193359375;
   }
 }
+
+/* 简历打印样式 */
+@media print {
+  body {
+    background: white !important;
+    background-image: none !important;
+  }
+  @page {
+    size: A4;
+    margin: 0;
+  }
+}
