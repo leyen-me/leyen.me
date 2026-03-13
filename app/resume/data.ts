@@ -102,7 +102,7 @@ export const resumeData: ResumeData = {
     status: "离职",
   },
   summary:
-    "精通 Vue2、Vue3 生态开发，对 Vue2 核心原理有一定研究。精通 Html、Css、JavaScript、TypeScript、Scss/Less，熟悉 ES6+ 新特性。精通 Uniapp 框架、小程序开发，以及 Element、ElementPlus、AntDesign 等 UI 框架。精通 Git 项目管理工具，了解 React 基本使用。了解 Webpack 构建工具，包括基本配置及构建速度优化。了解 Gin、SpringBoot、Express、Koa2 等后端框架使用。了解 Docker 基本使用及服务器部署。",
+    "拥有 6 年前端开发经验，当前聚焦 Vue3、TypeScript 与 AI 应用开发，兼具产品感、设计感与工程化思维。能够独立完成从界面设计、前端实现到服务接入与部署上线的完整开发闭环，持续进行个人产品与 AI Agent、自动化工具相关实践。熟悉现代前端工程体系与全栈协作方式，关注用户体验、组件抽象和开发效率提升。",
   education: [
     {
       school: "西南交通大学",
