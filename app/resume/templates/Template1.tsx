@@ -40,9 +40,9 @@ export function Template1({ data }: { data: ResumeData }) {
     { text: header.contact.email, label: "邮箱" },
     { text: header.contact.phone, label: "电话" },
     { text: header.contact.location, label: "地址" },
-    { text: header.contact.website, label: "网站" },
-    { text: header.contact.github, label: "GitHub" },
-    { text: header.contact.linkedin, label: "领英" },
+    { text: header.contact.website, label: "网站", href: header.contact.website?.startsWith("http") ? header.contact.website : undefined },
+    { text: header.contact.github, label: "GitHub", href: header.contact.github ? (header.contact.github.startsWith("http") ? header.contact.github : `https://github.com/${header.contact.github}`) : undefined },
+    { text: header.contact.linkedin, label: "领英", href: header.contact.linkedin?.startsWith("http") ? header.contact.linkedin : (header.contact.linkedin ? `https://linkedin.com/in/${header.contact.linkedin}` : undefined) },
   ].filter((item) => item.text);
 
   return (
@@ -85,12 +85,23 @@ export function Template1({ data }: { data: ResumeData }) {
               </div>
             )}
             <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-y-2 sm:gap-y-1 sm:gap-x-6 text-sm text-zinc-600">
-              {contactItems.map(({ text, label }) => (
+              {contactItems.map(({ text, label, href }) => (
                 <span key={label}>
                   <span className="text-zinc-400 text-xs uppercase tracking-wider mr-1">
                     {label}:
                   </span>
-                  {text}
+                  {href ? (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-zinc-900 hover:underline underline-offset-2"
+                    >
+                      {text}
+                    </a>
+                  ) : (
+                    text
+                  )}
                 </span>
               ))}
             </div>

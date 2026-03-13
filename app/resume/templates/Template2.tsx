@@ -1,6 +1,7 @@
 "use client";
 
 import type { ResumeData } from "../data";
+import { getAge, getWorkYears } from "../data";
 
 function getSkillLabel(level: number): string {
   if (level >= 85) return "Expert";
@@ -9,14 +10,14 @@ function getSkillLabel(level: number): string {
 }
 
 export function Template2({ data }: { data: ResumeData }) {
-  const { header, summary, education, experience, projects, skills } = data;
+  const { header, summary, education, experience, projects, skills, birthDate } = data;
 
   const contactItems = [
     { text: header.contact.location, label: "地址" },
     { text: header.contact.email, label: "邮箱" },
     { text: header.contact.phone, label: "电话" },
-    { text: header.contact.website, label: "网站" },
-    { text: header.contact.github, label: "GitHub" },
+    { text: header.contact.website, label: "网站", href: header.contact.website?.startsWith("http") ? header.contact.website : undefined },
+    { text: header.contact.github, label: "GitHub", href: header.contact.github ? (header.contact.github.startsWith("http") ? header.contact.github : `https://github.com/${header.contact.github}`) : undefined },
   ].filter((item) => item.text);
 
   return (
@@ -117,23 +118,52 @@ export function Template2({ data }: { data: ResumeData }) {
         </div>
 
         {/* 右侧辅助信息栏 */}
-        <aside className="md:w-[100mm] shrink-0 flex flex-col pt-6 md:pt-8 pb-8 px-6 border-t md:border-t-0 md:border-l border-zinc-200">
+        <aside className="md:w-[70mm] shrink-0 flex flex-col pt-6 md:pt-8 pb-8 px-4 md:px-5 border-t md:border-t-0 md:border-l border-zinc-200">
+          {/* About */}
+          {(birthDate || experience.length > 0 || header.status) && (
+            <section className="mb-6">
+              <h2 className="text-sm font-bold text-zinc-900 mb-3">About</h2>
+              <div className="space-y-1.5 text-[13px] text-zinc-600">
+                {birthDate && (
+                  <p>年龄：{getAge(birthDate)}</p>
+                )}
+                {experience.length > 0 && (
+                  <p>工作经验：{getWorkYears(experience)}</p>
+                )}
+                {header.status && (
+                  <p>状态：{header.status}</p>
+                )}
+              </div>
+            </section>
+          )}
+
           {/* Contacts */}
           <section className="mb-6">
             <h2 className="text-sm font-bold text-zinc-900 mb-3">Contacts</h2>
             <div className="space-y-2">
-              {contactItems.map(({ text, label }) => (
+              {contactItems.map(({ text, label, href }) => (
                 <div key={label}>
                   <p className="text-[10px] text-zinc-500 uppercase tracking-wider">
                     {label}
                   </p>
-                  <p className="text-[13px] text-zinc-700 break-words">{text}</p>
+                  {href ? (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[13px] text-zinc-700 break-words hover:text-zinc-900 hover:underline underline-offset-2"
+                    >
+                      {text}
+                    </a>
+                  ) : (
+                    <p className="text-[13px] text-zinc-700 break-words">{text}</p>
+                  )}
                 </div>
               ))}
             </div>
           </section>
 
-          {/* Skills - 带进度条 */}
+          {/* Skills */}
           <section>
             <h2 className="text-sm font-bold text-zinc-900 mb-3">Skills</h2>
             <div className="space-y-3">
