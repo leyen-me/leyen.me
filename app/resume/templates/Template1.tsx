@@ -1,7 +1,7 @@
 "use client";
 
 import type { ResumeData } from "../data";
-import { getAge, getWorkYears } from "../data";
+import { formatDateRange, getAge, getWorkYears } from "../data";
 
 function SkillBar({ name, level }: { name: string; level: number }) {
   const filled = Math.round((level / 100) * 5);
@@ -177,7 +177,7 @@ export function Template1({ data }: { data: ResumeData }) {
                       </p>
                     </div>
                     <span className="text-[11px] text-zinc-400 uppercase tracking-wider shrink-0">
-                      {exp.dates}
+                      {formatDateRange(exp.dates)}
                     </span>
                   </div>
                   <ul className="mt-2 text-[13px] text-zinc-600 leading-relaxed space-y-1">
@@ -231,7 +231,7 @@ export function Template1({ data }: { data: ResumeData }) {
                     {(proj.link || proj.dates) && (
                       <span className="text-[11px] text-zinc-400 shrink-0">
                         {proj.company && `${proj.company} · `}
-                        {proj.dates || proj.link}
+                        {proj.dates ? formatDateRange(proj.dates) : proj.link}
                       </span>
                     )}
                   </div>

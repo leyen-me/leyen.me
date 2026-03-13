@@ -85,6 +85,19 @@ export function getWorkYears(experience: { dates: string }[]): string {
   return `${years}年`;
 }
 
+export function formatDateRange(dates: string): string {
+  const [startStr, endStr] = dates.split(" - ").map((s) => s.trim());
+  if (!startStr || !endStr) return dates;
+
+  if (endStr !== "至今") return dates;
+
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = String(today.getMonth() + 1).padStart(2, "0");
+
+  return `${startStr} - ${currentYear}/${currentMonth}`;
+}
+
 export const resumeData: ResumeData = {
   birthDate: "1998.10.26",
   header: {

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ResumeData } from "../data";
-import { getAge, getWorkYears } from "../data";
+import { formatDateRange, getAge, getWorkYears } from "../data";
 
 function getSkillLabel(level: number): string {
   if (level >= 85) return "Expert";
@@ -73,20 +73,19 @@ export function Template2({ data }: { data: ResumeData }) {
             </section>
           )}
 
-          {/* Employment - 合并 experience 和 projects */}
-          <section className="flex-1">
+          {/* Employment */}
+          <section className="mb-6">
             <h2 className="text-sm font-bold text-zinc-900 mb-4">Employment</h2>
-            <div className="space-y-5">
+            <div className="space-y-4">
               {experience.map((exp, i) => (
-                <div key={`exp-${i}`}>
-                  <div className="flex justify-between items-baseline gap-2">
-                    <h3 className="font-bold text-zinc-900 text-sm">
-                      {exp.role} at {exp.company}
-                    </h3>
+                <div key={`exp-${i}`} className="pb-3 border-b border-zinc-100 last:border-b-0 last:pb-0">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 sm:gap-2">
+                    <h3 className="font-bold text-zinc-900 text-sm">{exp.company}</h3>
                     <span className="text-[11px] text-zinc-500 shrink-0">
-                      {exp.dates}
+                      {formatDateRange(exp.dates)}
                     </span>
                   </div>
+                  <p className="text-[12px] text-zinc-500 mt-0.5">{exp.role}</p>
                   {exp.bullets.length > 0 && (
                     <p className="text-[13px] text-zinc-600 mt-1 leading-relaxed">
                       {exp.bullets.join(" ")}
@@ -94,23 +93,36 @@ export function Template2({ data }: { data: ResumeData }) {
                   )}
                 </div>
               ))}
+            </div>
+          </section>
+
+          {/* Projects */}
+          <section className="flex-1">
+            <h2 className="text-sm font-bold text-zinc-900 mb-4">Projects</h2>
+            <div className="space-y-5">
               {projects.map((proj, i) => (
                 <div key={`proj-${i}`}>
-                  <div className="flex justify-between items-baseline gap-2">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 sm:gap-2">
                     <h3 className="font-bold text-zinc-900 text-sm">
                       {proj.name}
-                      {proj.company && ` at ${proj.company}`}
                     </h3>
                     <span className="text-[11px] text-zinc-500 shrink-0">
-                      {proj.dates}
+                      {proj.dates ? formatDateRange(proj.dates) : ""}
                     </span>
                   </div>
+                  {proj.company && (
+                    <p className="text-[12px] text-zinc-500 mt-0.5">{proj.company}</p>
+                  )}
                   <p className="text-[13px] text-zinc-600 mt-1 leading-relaxed">
                     {proj.description}
-                    {proj.responsibilities &&
-                      proj.responsibilities.length > 0 &&
-                      ` ${proj.responsibilities.join(" ")}`}
                   </p>
+                  {proj.responsibilities && proj.responsibilities.length > 0 && (
+                    <ul className="mt-2 space-y-1 text-[13px] text-zinc-600 leading-relaxed list-disc pl-4">
+                      {proj.responsibilities.map((item, idx) => (
+                        <li key={idx}>{item}</li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               ))}
             </div>
