@@ -49,12 +49,11 @@ export function Template2({
         ? Math.min(PROJECTS_FIRST_PAGE, projects.length)
         : Math.min(projectStart + PROJECTS_PER_PAGE, projects.length);
     const pageProjects = projects.slice(projectStart, projectEnd);
-    const showSidebar = pageIndex === 0; // 仅第一页显示完整侧边栏
 
     return (
       <article
         key={pageIndex}
-        className="resume-article resume-page-a4 w-[210mm] h-[297mm] flex-shrink-0 bg-white text-zinc-800 shadow-lg print:shadow-none print:max-w-none dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden print:break-after-page"
+        className="resume-article resume-page-a4 relative w-[210mm] h-[297mm] flex-shrink-0 bg-white text-zinc-800 shadow-lg print:shadow-none print:max-w-none dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden print:break-after-page"
         style={{ aspectRatio: "210/297" }}
       >
         {/* Header - 每页都显示 */}
@@ -171,9 +170,8 @@ export function Template2({
             </section>
           </div>
 
-          {/* 右侧辅助信息栏 - 仅第一页显示完整 */}
-          {showSidebar ? (
-            <aside className="md:w-[70mm] shrink-0 flex flex-col pt-6 md:pt-8 pb-8 px-4 md:px-5 border-t md:border-t-0 md:border-l border-zinc-200">
+          {/* 右侧辅助信息栏 - 每页都显示 */}
+          <aside className="md:w-[70mm] shrink-0 flex flex-col pt-6 md:pt-8 pb-8 px-4 md:px-5 border-t md:border-t-0 md:border-l border-zinc-200">
               {(birthDate || experience.length > 0 || header.status) && (
                 <section className="mb-6">
                   <h2 className="text-sm font-bold text-zinc-900 mb-3">About</h2>
@@ -275,15 +273,14 @@ export function Template2({
                 </section>
               )}
             </aside>
-          ) : (
-            /* 非第一页：右侧显示页码 */
-            <aside className="md:w-[70mm] shrink-0 flex flex-col items-end justify-end pb-8 pr-6 border-l border-zinc-200">
-              <p className="text-xs text-zinc-400">
-                {pageIndex + 1} / {totalPages}
-              </p>
-            </aside>
-          )}
         </div>
+
+        {/* 页码 - 右下角 */}
+        {totalPages > 1 && (
+          <p className="absolute bottom-4 right-6 text-xs text-zinc-400">
+            {pageIndex + 1} / {totalPages}
+          </p>
+        )}
       </article>
     );
   };
