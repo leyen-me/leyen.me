@@ -16,7 +16,7 @@ export function Template2({
   data: ResumeData;
   showProjectDiamondLine?: boolean;
 }) {
-  const { header, summary, education, experience, projects, skills, skillsByCategory, birthDate } = data;
+  const { header, summary, education, experience, projects, skills, skillsByCategory, openSourceProjects, birthDate } = data;
 
   const contactItems = [
     { text: header.contact.location, label: "地址" },
@@ -193,7 +193,7 @@ export function Template2({
           </section>
 
           {/* Skills */}
-          <section>
+          <section className="mb-6">
             <h2 className="text-sm font-bold text-zinc-900 mb-3">Skills</h2>
             {skillsByCategory && skillsByCategory.length > 0 ? (
               <div className="space-y-4">
@@ -238,6 +238,30 @@ export function Template2({
               </div>
             )}
           </section>
+
+          {/* Open Source */}
+          {openSourceProjects && openSourceProjects.length > 0 && (
+            <section className="pt-6 border-t border-zinc-200">
+              <h2 className="text-sm font-bold text-zinc-900 mb-3">Open Source</h2>
+              <div className="space-y-3">
+                {openSourceProjects.map((item, i) => (
+                  <div key={i}>
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[13px] font-medium text-zinc-700 hover:text-zinc-900 hover:underline underline-offset-2 block"
+                    >
+                      {item.name}
+                    </a>
+                    <p className="text-[11px] text-zinc-500 mt-0.5 leading-snug">
+                      {item.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
         </aside>
       </div>
     </article>

@@ -46,6 +46,12 @@ export type SkillsByCategory = {
   items: string[];
 };
 
+export type OpenSourceProject = {
+  name: string;
+  description: string;
+  link: string;
+};
+
 export type ResumeData = {
   birthDate: string;
   header: Header;
@@ -55,6 +61,7 @@ export type ResumeData = {
   projects: Project[];
   skills: Skill[];
   skillsByCategory?: SkillsByCategory[];
+  openSourceProjects?: OpenSourceProject[];
   certifications: { name: string; issuer: string; date: string }[];
 };
 
@@ -247,6 +254,28 @@ export const resumeData: ResumeData = {
         "Vitest",
         "Babel",
       ],
+    },
+  ],
+  openSourceProjects: [
+    {
+      name: "ReAct-Agent",
+      description: "基于 ReAct 模式的智能开发助手，TUI 界面，支持文件操作、代码编辑、Git 管理",
+      link: "https://github.com/leyen-me/ReAct-Agent",
+    },
+    {
+      name: "flask-starter",
+      description: "全开源快速开发平台，Vue3 + Flask + Sqlalchemy，支持动态权限菜单",
+      link: "https://github.com/leyen-me/flask-starter",
+    },
+    {
+      name: "tinyjs",
+      description: "轻量级 JavaScript 解释器，支持 ES6+，用于理解词法分析、语法解析与运行时",
+      link: "https://github.com/leyen-me/tinyjs",
+    },
+    {
+      name: "prompt",
+      description: "AI 提示词展示平台，现代化界面，支持搜索与标签筛选",
+      link: "https://github.com/leyen-me/prompt",
     },
   ],
   certifications: [],
