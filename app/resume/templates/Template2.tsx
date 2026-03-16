@@ -31,10 +31,10 @@ export function Template2({
       {/* Header 区 - 独占顶部，姓名与职位 */}
       <header className="shrink-0 border-b border-zinc-200 pt-8 pb-6 px-6 md:px-8 flex flex-col md:flex-row md:items-start md:justify-between gap-2">
         <div>
-          <h1 className="text-3xl font-serif font-bold text-zinc-900 tracking-tight">
+          <h1 className="text-2xl font-serif font-bold text-zinc-900 tracking-tight">
             {header.name}
           </h1>
-          <p className="text-xs text-zinc-500 font-medium mt-1">{header.title}</p>
+          <p className="text-xs text-zinc-500 font-medium mt-1 tracking-widest">{header.title}</p>
         </div>
         {header.titleEn && (
           <p className="text-xs text-zinc-500">{header.titleEn}</p>
