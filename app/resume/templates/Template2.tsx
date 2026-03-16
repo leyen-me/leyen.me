@@ -114,7 +114,7 @@ export function Template2({
     return (
       <article
         key={pageIndex}
-        className="resume-article resume-page-a4 relative w-full max-w-[210mm] min-h-0 flex-shrink-0 bg-white text-zinc-800 shadow-lg print:shadow-none print:max-w-none print:w-[210mm] print:h-[297mm] dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden print:break-after-page max-md:aspect-auto md:aspect-[210/297]"
+        className="resume-article resume-page-a4 relative w-full max-w-[210mm] min-h-0 flex-shrink-0 bg-white text-zinc-800 print:max-w-none print:w-[210mm] print:h-[297mm] dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden print:break-after-page max-md:aspect-auto md:aspect-[210/297]"
       >
         {/* Header - 每页都显示 */}
         <header className="shrink-0 border-b border-zinc-200 pt-6 sm:pt-8 pb-4 sm:pb-6 px-4 sm:px-6 md:px-8 flex flex-col md:flex-row md:items-start md:justify-between gap-2">
@@ -335,7 +335,7 @@ export function Template2({
 
   // 非分页模式：保持原有单页展示
   return (
-    <article className="resume-article w-full max-w-[210mm] min-h-[297mm] bg-white text-zinc-800 shadow-lg print:shadow-none print:max-w-none print:overflow-visible dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden">
+    <article className="resume-article w-full max-w-[210mm] min-h-[297mm] bg-white text-zinc-800 print:max-w-none print:overflow-visible dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden">
       <header className="shrink-0 border-b border-zinc-200 pt-6 sm:pt-8 pb-4 sm:pb-6 px-4 sm:px-6 md:px-8 flex flex-col md:flex-row md:items-start md:justify-between gap-2">
         <div>
           <h1 className="text-xl sm:text-2xl font-serif font-bold text-zinc-900 tracking-tight">
