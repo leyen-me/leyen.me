@@ -159,7 +159,7 @@ export const resumeData: ResumeData = {
     {
       name: "智慧工地",
       company: "天津二维科技有限公司",
-      dates: "2023/02 - 2024/01",
+      dates: "2025/02 - 2026/01",
       description:
         "面向中海油清洁能源部门建设的多项目智慧工地平台，覆盖人员管理、安全监管、设备监控和数据可视化场景，提供项目分布展示、工地地图、人员/安全帽定位、电子围栏、视频监控、环境监测、设备告警等功能，并接入基于 LLM + RAG 的智能问答能力。",
       responsibilities: [
@@ -172,7 +172,7 @@ export const resumeData: ResumeData = {
       ],
     },
     {
-      name: "电气检测",
+      name: "电气设备监测管理",
       company: "天津二维科技有限公司",
       dates: "2024/04 - 2024/09",
       description:
@@ -188,7 +188,7 @@ export const resumeData: ResumeData = {
     {
       name: "钻完井设计精细化管理系统",
       company: "天津二维科技有限公司",
-      dates: "2025/02 - 2026/01",
+      dates: "2023/02 - 2024/01",
       description:
         "面向钻完井工程设计场景建设的综合业务平台，融合探井工程管理、井史数据管理和流程审批能力，支持工程基础信息维护、邻井数据选取、井相关业务数据导入、模板化文件生成、在线文档编辑、流程审批流转和历史版本查看等功能。",
       responsibilities: [
