@@ -158,12 +158,19 @@ html.dark .article-content details[open] summary {
     size: A4;
     margin: 0;
   }
-  .resume-page article {
+  .resume-page article,
+  .resume-page .resume-page-a4 {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
-  .resume-article {
+  .resume-article,
+  .resume-page-a4 {
     width: 210mm !important;
+    height: 297mm !important;
     min-height: 297mm !important;
+    page-break-after: always;
+  }
+  .resume-page-a4:last-of-type {
+    page-break-after: auto;
   }
 }

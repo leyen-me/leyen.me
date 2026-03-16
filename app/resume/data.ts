@@ -167,6 +167,9 @@ export const resumeData: ResumeData = {
       responsibilities: [
         "承担项目技术选型、项目搭建与设计、基础组件与业务组件封装",
         "完成用户端首页模块、论坛模块、电商后台管理系统开发",
+        "完成用户端首页模块、论坛模块、电商后台管理系统开发",
+        "完成用户端首页模块、论坛模块、电商后台管理系统开发",
+        "完成用户端首页模块、论坛模块、电商后台管理系统开发",
       ],
       challenges: [
         "keep-alive 缓存组件、vuex 持久化数据",
@@ -179,94 +182,6 @@ export const resumeData: ResumeData = {
         "优化第三方组件库，抽象公共业务逻辑与公共组件，重新定义适合公司的前端脚手架",
         "推广 Eslint 前端标准化代码规范",
         "新项目广泛采用函数式编程、Vue3+TypeScript+Pinia",
-      ],
-    },
-    {
-      name: "阳光物业",
-      description: "物业缴费系统",
-      company: "广峰科技有限公司",
-      dates: "2022/04 - 2022/06",
-      tech: "Vue3, ElementPlus, Pinia",
-      link: "",
-      bullets: [],
-      responsibilities: [
-        "使用 Vue3 进行项目搭建与开发，采用最新 setup 语法进行开发",
-        "封装 H5 支付模块",
-        "使用 mock 服务加速项目开发与测试",
-        "使用 yarn 替代 npm 包管理器，了解 pnpm 包管理器",
-        "使用 vite 替代 webpack 项目构建服务",
-      ],
-      challenges: [
-        "用户数据导出 Excel 实现",
-        "使用 echarts 实现用户缴费统计可视化",
-        "使用事件委托优化项目列表性能",
-      ],
-      achievements: [
-        "理解并推广 Vue3 生态，封装 Hooks 提升项目开发效率",
-      ],
-    },
-    {
-      name: "蜀道黑牛",
-      description: "专业卖牛肉的商城系统",
-      company: "广峰科技有限公司",
-      dates: "2021/03 - 2021/06",
-      tech: "Vue2, uView, Uniapp, Element",
-      link: "",
-      bullets: [],
-      responsibilities: [
-        "完成电商项目搭建、基础组件与业务组件封装",
-        "使用 ApiPost 进行项目管理、mock 服务、API 服务",
-        "高质量还原设计稿",
-      ],
-      challenges: [
-        "项目页面分包优化、组件按需引入",
-      ],
-      achievements: [
-        "根据项目体量提前判断是否分包，建立分包规范",
-      ],
-    },
-    {
-      name: "阳光物业",
-      description: "物业缴费系统",
-      company: "广峰科技有限公司",
-      dates: "2022/04 - 2022/06",
-      tech: "Vue3, ElementPlus, Pinia",
-      link: "",
-      bullets: [],
-      responsibilities: [
-        "使用 Vue3 进行项目搭建与开发，采用最新 setup 语法进行开发",
-        "封装 H5 支付模块",
-        "使用 mock 服务加速项目开发与测试",
-        "使用 yarn 替代 npm 包管理器，了解 pnpm 包管理器",
-        "使用 vite 替代 webpack 项目构建服务",
-      ],
-      challenges: [
-        "用户数据导出 Excel 实现",
-        "使用 echarts 实现用户缴费统计可视化",
-        "使用事件委托优化项目列表性能",
-      ],
-      achievements: [
-        "理解并推广 Vue3 生态，封装 Hooks 提升项目开发效率",
-      ],
-    },
-    {
-      name: "蜀道黑牛",
-      description: "专业卖牛肉的商城系统",
-      company: "广峰科技有限公司",
-      dates: "2021/03 - 2021/06",
-      tech: "Vue2, uView, Uniapp, Element",
-      link: "",
-      bullets: [],
-      responsibilities: [
-        "完成电商项目搭建、基础组件与业务组件封装",
-        "使用 ApiPost 进行项目管理、mock 服务、API 服务",
-        "高质量还原设计稿",
-      ],
-      challenges: [
-        "项目页面分包优化、组件按需引入",
-      ],
-      achievements: [
-        "根据项目体量提前判断是否分包，建立分包规范",
       ],
     },
     {
