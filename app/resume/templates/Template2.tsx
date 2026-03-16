@@ -62,25 +62,27 @@ export function Template2({
         {proj.company && (
           <p className="text-[12px] text-zinc-500 mt-0.5">{proj.company}</p>
         )}
-        <div className="mt-2 space-y-2.5">
+        <div className="mt-2.5 space-y-2">
           {detailSections.map((section) => {
             const isSingleLine = section.items.length === 1 && section.label !== "职责";
             return (
-              <div key={section.label}>
-                <p className="text-[11px] font-medium text-zinc-500 tracking-wide">
+              <div key={section.label} className="flex items-start gap-3">
+                <p className="w-14 shrink-0 pt-0.5 text-[11px] font-medium text-zinc-500 tracking-wide">
                   {section.label}
                 </p>
-                {isSingleLine ? (
-                  <p className="text-[13px] text-zinc-600 mt-0.5 leading-relaxed">
-                    {section.items[0]}
-                  </p>
-                ) : (
-                  <ul className="mt-1 space-y-1 text-[13px] text-zinc-600 leading-relaxed list-disc pl-4">
-                    {section.items.map((item, idx) => (
-                      <li key={idx}>{item}</li>
-                    ))}
-                  </ul>
-                )}
+                <div className="flex-1 min-w-0">
+                  {isSingleLine ? (
+                    <p className="text-[13px] text-zinc-600 leading-relaxed">
+                      {section.items[0]}
+                    </p>
+                  ) : (
+                    <ul className="space-y-1 text-[13px] text-zinc-600 leading-relaxed list-disc pl-4">
+                      {section.items.map((item, idx) => (
+                        <li key={idx}>{item}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               </div>
             );
           })}
