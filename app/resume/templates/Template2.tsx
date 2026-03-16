@@ -21,7 +21,7 @@ export function Template2({ data }: { data: ResumeData }) {
   ].filter((item) => item.text);
 
   return (
-    <article className="resume-article w-full max-w-[210mm] min-h-[297mm] bg-white text-zinc-800 shadow-lg print:shadow-none print:max-w-none dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden">
+    <article className="resume-article w-full max-w-[210mm] min-h-[297mm] bg-white text-zinc-800 shadow-lg print:shadow-none print:max-w-none print:overflow-visible dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden">
       {/* Header 区 - 独占顶部，姓名与职位 */}
       <header className="shrink-0 border-b border-zinc-200 pt-8 pb-6 px-6 md:px-8 flex flex-col md:flex-row md:items-start md:justify-between gap-2">
         <div>
@@ -78,7 +78,7 @@ export function Template2({ data }: { data: ResumeData }) {
             <h2 className="text-sm font-bold text-zinc-900 mb-4">Employment</h2>
             <div className="space-y-4">
               {experience.map((exp, i) => (
-                <div key={`exp-${i}`} className="pb-3 border-b border-zinc-100 last:border-b-0 last:pb-0">
+                <div key={`exp-${i}`}>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 sm:gap-2">
                     <h3 className="font-bold text-zinc-900 text-sm">{exp.company}</h3>
                     <span className="text-[11px] text-zinc-500 shrink-0">

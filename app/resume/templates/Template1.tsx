@@ -48,7 +48,7 @@ export function Template1({ data }: { data: ResumeData }) {
   return (
     <>
       {/* 第一页 */}
-      <article className="resume-article w-full max-w-[210mm] min-h-[297mm] bg-white text-zinc-800 shadow-lg print:shadow-none print:max-w-none dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden relative">
+      <article className="resume-article w-full max-w-[210mm] min-h-[297mm] bg-white text-zinc-800 shadow-lg print:shadow-none print:max-w-none print:overflow-visible dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden relative">
         <div
           className="absolute -top-4 -left-4 sm:-top-8 sm:-left-8 origin-top-left pointer-events-none"
           style={{ transform: "rotate(-45deg)" }}
@@ -189,30 +189,8 @@ export function Template1({ data }: { data: ResumeData }) {
               ))}
             </div>
           </section>
-        </div>
-      </article>
 
-      {/* 第二页 */}
-      <article className="resume-article w-full max-w-[210mm] min-h-[297mm] bg-white text-zinc-800 shadow-lg print:shadow-none print:max-w-none dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden relative print:break-before-page">
-        <div
-          className="absolute -top-4 -left-4 sm:-top-8 sm:-left-8 origin-top-left pointer-events-none"
-          style={{ transform: "rotate(-45deg)" }}
-        >
-          <span
-            className="block text-[72px] sm:text-[100px] md:text-[140px] font-incognito font-black tracking-tighter leading-none select-none"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.02) 100%)",
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            CV / RESUME
-          </span>
-        </div>
-
-        <div className="flex-1 flex flex-col pt-8 sm:pt-12 pb-8 sm:pb-10 px-4 sm:px-6 md:px-12 relative z-10">
+          {/* Projects - 从第一页开始，空间不足时自然流到第二页 */}
           <section className="mb-8">
             <h2 className="text-[10px] font-incognito font-bold uppercase tracking-[0.2em] text-zinc-400 mb-5">
               Projects
