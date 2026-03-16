@@ -114,13 +114,12 @@ export function Template2({
     return (
       <article
         key={pageIndex}
-        className="resume-article resume-page-a4 relative w-[210mm] h-[297mm] flex-shrink-0 bg-white text-zinc-800 shadow-lg print:shadow-none print:max-w-none dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden print:break-after-page"
-        style={{ aspectRatio: "210/297" }}
+        className="resume-article resume-page-a4 relative w-full max-w-[210mm] min-h-0 flex-shrink-0 bg-white text-zinc-800 shadow-lg print:shadow-none print:max-w-none print:w-[210mm] print:h-[297mm] dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden print:break-after-page max-md:aspect-auto md:aspect-[210/297]"
       >
         {/* Header - 每页都显示 */}
-        <header className="shrink-0 border-b border-zinc-200 pt-8 pb-6 px-6 md:px-8 flex flex-col md:flex-row md:items-start md:justify-between gap-2">
+        <header className="shrink-0 border-b border-zinc-200 pt-6 sm:pt-8 pb-4 sm:pb-6 px-4 sm:px-6 md:px-8 flex flex-col md:flex-row md:items-start md:justify-between gap-2">
           <div>
-            <h1 className="text-2xl font-serif font-bold text-zinc-900 tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-serif font-bold text-zinc-900 tracking-tight">
               {header.name}
             </h1>
             <p className="text-xs text-zinc-500 font-medium mt-1 tracking-widest">{header.title}</p>
@@ -133,7 +132,7 @@ export function Template2({
         {/* 主内容区 */}
         <div className="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden">
           {/* 左侧 */}
-          <div className="flex-1 flex flex-col pt-6 pb-8 px-6 md:px-8 min-w-0 overflow-hidden">
+          <div className="flex-1 flex flex-col pt-4 sm:pt-6 pb-6 sm:pb-8 px-4 sm:px-6 md:px-8 min-w-0 overflow-hidden">
             {/* 第 1 页：Profile, Education, Employment */}
             {pageIndex === 0 && (
               <>
@@ -205,7 +204,7 @@ export function Template2({
           </div>
 
           {/* 右侧辅助信息栏 - 每页都显示 */}
-          <aside className="md:w-[70mm] shrink-0 flex flex-col pt-6 md:pt-8 pb-8 px-4 md:px-5 border-t md:border-t-0 md:border-l border-zinc-200">
+          <aside className="w-full md:w-[70mm] shrink-0 flex flex-col pt-4 sm:pt-6 md:pt-8 pb-6 sm:pb-8 px-4 sm:px-5 border-t md:border-t-0 md:border-l border-zinc-200">
               {(birthDate || experience.length > 0 || header.status) && (
                 <section className="mb-6">
                   <h2 className="text-sm font-bold text-zinc-900 mb-3">About</h2>
@@ -337,9 +336,9 @@ export function Template2({
   // 非分页模式：保持原有单页展示
   return (
     <article className="resume-article w-full max-w-[210mm] min-h-[297mm] bg-white text-zinc-800 shadow-lg print:shadow-none print:max-w-none print:overflow-visible dark:bg-white dark:text-zinc-800 flex flex-col overflow-hidden">
-      <header className="shrink-0 border-b border-zinc-200 pt-8 pb-6 px-6 md:px-8 flex flex-col md:flex-row md:items-start md:justify-between gap-2">
+      <header className="shrink-0 border-b border-zinc-200 pt-6 sm:pt-8 pb-4 sm:pb-6 px-4 sm:px-6 md:px-8 flex flex-col md:flex-row md:items-start md:justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-serif font-bold text-zinc-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-serif font-bold text-zinc-900 tracking-tight">
             {header.name}
           </h1>
           <p className="text-xs text-zinc-500 font-medium mt-1 tracking-widest">{header.title}</p>
@@ -350,7 +349,7 @@ export function Template2({
       </header>
 
       <div className="flex-1 flex flex-col md:flex-row min-h-0">
-        <div className="flex-1 flex flex-col pt-6 pb-8 px-6 md:px-8 min-w-0">
+        <div className="flex-1 flex flex-col pt-4 sm:pt-6 pb-6 sm:pb-8 px-4 sm:px-6 md:px-8 min-w-0">
           <section className="mb-6">
             <h2 className="text-sm font-bold text-zinc-900 mb-2">Profile</h2>
             <p className="text-[13px] text-zinc-600 leading-relaxed">{summary}</p>
@@ -411,7 +410,7 @@ export function Template2({
           </section>
         </div>
 
-        <aside className="md:w-[70mm] shrink-0 flex flex-col pt-6 md:pt-8 pb-8 px-4 md:px-5 border-t md:border-t-0 md:border-l border-zinc-200">
+        <aside className="w-full md:w-[70mm] shrink-0 flex flex-col pt-4 sm:pt-6 md:pt-8 pb-6 sm:pb-8 px-4 sm:px-5 border-t md:border-t-0 md:border-l border-zinc-200">
           {(birthDate || experience.length > 0 || header.status) && (
             <section className="mb-6">
               <h2 className="text-sm font-bold text-zinc-900 mb-3">About</h2>
