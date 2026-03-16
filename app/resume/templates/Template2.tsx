@@ -8,8 +8,8 @@ function getSkillLabel(level: number): string {
   return "Novice";
 }
 
-const PROJECTS_FIRST_PAGE = 2; // 第一页有 Profile/Education/Employment，项目少放
-const PROJECTS_PER_PAGE = 3; // 后续页每页约 2 个项目
+const PROJECTS_FIRST_PAGE = 1; // 第一页有 Profile/Education/Employment，项目仅放 1 个
+const PROJECTS_PER_PAGE = 2; // 后续页只放 2 个项目，避免长内容被裁切
 
 export function Template2({
   data,
@@ -29,6 +29,65 @@ export function Template2({
     { text: header.contact.website, label: "网站", href: header.contact.website?.startsWith("http") ? header.contact.website : undefined },
     { text: header.contact.github, label: "GitHub", href: header.contact.github ? (header.contact.github.startsWith("http") ? header.contact.github : `https://github.com/${header.contact.github}`) : undefined },
   ].filter((item) => item.text);
+
+  const renderProject = (proj: ResumeData["projects"][number], key: string, showLine: boolean) => {
+    const detailSections = [
+      { label: "项目介绍", items: proj.description ? [proj.description] : [] },
+      { label: "技术栈", items: proj.tech ? [proj.tech] : [] },
+      { label: "职责", items: proj.responsibilities ?? [] },
+      { label: "挑战", items: proj.challenges ?? [] },
+      { label: "成果", items: proj.achievements ?? [] },
+      { label: "补充", items: proj.bullets ?? [] },
+    ].filter((section) => section.items.length > 0);
+
+    return (
+      <div
+        key={key}
+        className={`relative mb-6 last:mb-0 ${showProjectDiamondLine ? "pl-6" : ""}`}
+      >
+        {showProjectDiamondLine && (
+          <>
+            <div className="absolute left-0 top-1.5 w-2 h-2 border border-zinc-400 rotate-45 bg-white" />
+            {showLine && (
+              <div className="absolute left-[3px] top-6 bottom-0 w-px bg-zinc-200" />
+            )}
+          </>
+        )}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 sm:gap-2">
+          <h3 className="font-bold text-zinc-900 text-sm">{proj.name}</h3>
+          <span className="text-[11px] text-zinc-500 shrink-0">
+            {proj.dates ? formatDateRange(proj.dates) : ""}
+          </span>
+        </div>
+        {proj.company && (
+          <p className="text-[12px] text-zinc-500 mt-0.5">{proj.company}</p>
+        )}
+        <div className="mt-2 space-y-2.5">
+          {detailSections.map((section) => {
+            const isSingleLine = section.items.length === 1 && section.label !== "职责";
+            return (
+              <div key={section.label}>
+                <p className="text-[11px] font-medium text-zinc-500 tracking-wide">
+                  {section.label}
+                </p>
+                {isSingleLine ? (
+                  <p className="text-[13px] text-zinc-600 mt-0.5 leading-relaxed">
+                    {section.items[0]}
+                  </p>
+                ) : (
+                  <ul className="mt-1 space-y-1 text-[13px] text-zinc-600 leading-relaxed list-disc pl-4">
+                    {section.items.map((item, idx) => (
+                      <li key={idx}>{item}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
   // 计算分页：第 1 页放 Profile + Education + Employment + 部分 Projects + Sidebar
   // 后续页放剩余 Projects
@@ -132,40 +191,13 @@ export function Template2({
             <section className={`flex-1 pt-6 ${pageIndex === 0 ? "border-t border-zinc-200" : ""} min-h-0 overflow-hidden`}>
               <h2 className="text-sm font-bold text-zinc-900 mb-4 shrink-0">Projects</h2>
               <div className="relative overflow-hidden min-h-0">
-                {pageProjects.map((proj, i) => (
-                  <div
-                    key={`proj-${projectStart + i}`}
-                    className={`relative mb-6 last:mb-0 ${showProjectDiamondLine ? "pl-6" : ""}`}
-                  >
-                    {showProjectDiamondLine && (
-                      <>
-                        <div className="absolute left-0 top-1.5 w-2 h-2 border border-zinc-400 rotate-45 bg-white" />
-                        {projectStart + i < projects.length - 1 && (
-                          <div className="absolute left-[3px] top-6 bottom-0 w-px bg-zinc-200" />
-                        )}
-                      </>
-                    )}
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 sm:gap-2">
-                      <h3 className="font-bold text-zinc-900 text-sm">{proj.name}</h3>
-                      <span className="text-[11px] text-zinc-500 shrink-0">
-                        {proj.dates ? formatDateRange(proj.dates) : ""}
-                      </span>
-                    </div>
-                    {proj.company && (
-                      <p className="text-[12px] text-zinc-500 mt-0.5">{proj.company}</p>
-                    )}
-                    <p className="text-[13px] text-zinc-600 mt-1 leading-relaxed">
-                      {proj.description}
-                    </p>
-                    {proj.responsibilities && proj.responsibilities.length > 0 && (
-                      <ul className="mt-2 space-y-1 text-[13px] text-zinc-600 leading-relaxed list-disc pl-4">
-                        {proj.responsibilities.map((item, idx) => (
-                          <li key={idx}>{item}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                ))}
+                {pageProjects.map((proj, i) =>
+                  renderProject(
+                    proj,
+                    `proj-${projectStart + i}`,
+                    projectStart + i < projects.length - 1
+                  )
+                )}
               </div>
             </section>
           </div>
@@ -370,40 +402,9 @@ export function Template2({
           <section className="flex-1 pt-6 border-t border-zinc-200">
             <h2 className="text-sm font-bold text-zinc-900 mb-4">Projects</h2>
             <div className="relative">
-              {projects.map((proj, i) => (
-                <div
-                  key={`proj-${i}`}
-                  className={`relative mb-6 last:mb-0 ${showProjectDiamondLine ? "pl-6" : ""}`}
-                >
-                  {showProjectDiamondLine && (
-                    <>
-                      <div className="absolute left-0 top-1.5 w-2 h-2 border border-zinc-400 rotate-45 bg-white" />
-                      {i < projects.length - 1 && (
-                        <div className="absolute left-[3px] top-6 bottom-0 w-px bg-zinc-200" />
-                      )}
-                    </>
-                  )}
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 sm:gap-2">
-                    <h3 className="font-bold text-zinc-900 text-sm">{proj.name}</h3>
-                    <span className="text-[11px] text-zinc-500 shrink-0">
-                      {proj.dates ? formatDateRange(proj.dates) : ""}
-                    </span>
-                  </div>
-                  {proj.company && (
-                    <p className="text-[12px] text-zinc-500 mt-0.5">{proj.company}</p>
-                  )}
-                  <p className="text-[13px] text-zinc-600 mt-1 leading-relaxed">
-                    {proj.description}
-                  </p>
-                  {proj.responsibilities && proj.responsibilities.length > 0 && (
-                    <ul className="mt-2 space-y-1 text-[13px] text-zinc-600 leading-relaxed list-disc pl-4">
-                      {proj.responsibilities.map((item, idx) => (
-                        <li key={idx}>{item}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ))}
+              {projects.map((proj, i) =>
+                renderProject(proj, `proj-${i}`, i < projects.length - 1)
+              )}
             </div>
           </section>
         </div>
