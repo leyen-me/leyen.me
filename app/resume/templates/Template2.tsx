@@ -9,7 +9,13 @@ function getSkillLabel(level: number): string {
   return "Novice";
 }
 
-export function Template2({ data }: { data: ResumeData }) {
+export function Template2({
+  data,
+  showProjectDiamondLine = false,
+}: {
+  data: ResumeData;
+  showProjectDiamondLine?: boolean;
+}) {
   const { header, summary, education, experience, projects, skills, skillsByCategory, birthDate } = data;
 
   const contactItems = [
@@ -101,10 +107,17 @@ export function Template2({ data }: { data: ResumeData }) {
             <h2 className="text-sm font-bold text-zinc-900 mb-4">Projects</h2>
             <div className="relative">
               {projects.map((proj, i) => (
-                <div key={`proj-${i}`} className="relative pl-6 mb-6 last:mb-0">
-                  <div className="absolute left-0 top-1.5 w-2 h-2 border border-zinc-400 rotate-45 bg-white" />
-                  {i < projects.length - 1 && (
-                    <div className="absolute left-[3px] top-6 bottom-0 w-px bg-zinc-200" />
+                <div
+                  key={`proj-${i}`}
+                  className={`relative mb-6 last:mb-0 ${showProjectDiamondLine ? "pl-6" : ""}`}
+                >
+                  {showProjectDiamondLine && (
+                    <>
+                      <div className="absolute left-0 top-1.5 w-2 h-2 border border-zinc-400 rotate-45 bg-white" />
+                      {i < projects.length - 1 && (
+                        <div className="absolute left-[3px] top-6 bottom-0 w-px bg-zinc-200" />
+                      )}
+                    </>
                   )}
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 sm:gap-2">
                     <h3 className="font-bold text-zinc-900 text-sm">
