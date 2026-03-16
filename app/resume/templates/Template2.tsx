@@ -10,7 +10,7 @@ function getSkillLabel(level: number): string {
 }
 
 export function Template2({ data }: { data: ResumeData }) {
-  const { header, summary, education, experience, projects, skills, birthDate } = data;
+  const { header, summary, education, experience, projects, skills, skillsByCategory, birthDate } = data;
 
   const contactItems = [
     { text: header.contact.location, label: "地址" },
@@ -182,26 +182,48 @@ export function Template2({ data }: { data: ResumeData }) {
           {/* Skills */}
           <section>
             <h2 className="text-sm font-bold text-zinc-900 mb-3">Skills</h2>
-            <div className="space-y-3">
-              {skills.map((skill, i) => (
-                <div key={i}>
-                  <div className="flex justify-between items-center gap-2 mb-1">
-                    <span className="text-[13px] font-medium text-zinc-700">
-                      {skill.name}
-                    </span>
-                    <span className="text-[11px] text-zinc-500">
-                      {getSkillLabel(skill.level)}
-                    </span>
+            {skillsByCategory && skillsByCategory.length > 0 ? (
+              <div className="space-y-4">
+                {skillsByCategory.map((cat, i) => (
+                  <div key={i}>
+                    <p className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider mb-2">
+                      {cat.label}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {cat.items.map((item, j) => (
+                        <span
+                          key={j}
+                          className="inline-block px-2 py-0.5 text-[11px] text-zinc-600 bg-zinc-100 rounded border border-zinc-200"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <div className="h-1 bg-zinc-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-zinc-800 rounded-full transition-all"
-                      style={{ width: `${skill.level}%` }}
-                    />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {skills.map((skill, i) => (
+                  <div key={i}>
+                    <div className="flex justify-between items-center gap-2 mb-1">
+                      <span className="text-[13px] font-medium text-zinc-700">
+                        {skill.name}
+                      </span>
+                      <span className="text-[11px] text-zinc-500">
+                        {getSkillLabel(skill.level)}
+                      </span>
+                    </div>
+                    <div className="h-1 bg-zinc-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-zinc-800 rounded-full transition-all"
+                        style={{ width: `${skill.level}%` }}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </section>
         </aside>
       </div>

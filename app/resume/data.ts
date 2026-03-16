@@ -41,6 +41,11 @@ export type Skill = {
   level: number;
 };
 
+export type SkillsByCategory = {
+  label: string;
+  items: string[];
+};
+
 export type ResumeData = {
   birthDate: string;
   header: Header;
@@ -49,6 +54,7 @@ export type ResumeData = {
   experience: Experience[];
   projects: Project[];
   skills: Skill[];
+  skillsByCategory?: SkillsByCategory[];
   certifications: { name: string; issuer: string; date: string }[];
 };
 
@@ -220,6 +226,28 @@ export const resumeData: ResumeData = {
     { name: "HTML / CSS / Scss", level: 90 },
     { name: "Element / AntDesign", level: 85 },
     { name: "Git / Webpack", level: 80 },
+  ],
+  skillsByCategory: [
+    {
+      label: "语言",
+      items: ["HTML", "CSS", "JavaScript", "TypeScript"],
+    },
+    {
+      label: "技术",
+      items: [
+        "React",
+        "Vue",
+        "Next.js",
+        "Nuxt",
+        "Pinia",
+        "Zustand",
+        "Tailwind CSS",
+        "Sass",
+        "Jest",
+        "Vitest",
+        "Babel",
+      ],
+    },
   ],
   certifications: [],
 };
