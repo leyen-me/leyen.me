@@ -42,6 +42,7 @@ function spineXRelativeToAnchor(el: HTMLElement): number {
   return Math.max(4, padLeft - SPINE_TO_TEXT_GAP);
 }
 
+/** 纯正交路径（仅 L）：放大时不会出现贝塞尔被栅格化成「假斜线」的毛边感 */
 function buildOutlinePath(points: SpinePoint[]): string {
   if (points.length === 0) {
     return "";
@@ -56,7 +57,7 @@ function buildOutlinePath(points: SpinePoint[]): string {
     d += ` L ${prev.x} ${cur.yTop}`;
 
     if (Math.abs(cur.x - prev.x) > 0.5) {
-      d += ` C ${prev.x} ${cur.yTop - 4} ${cur.x} ${cur.yTop + 4} ${cur.x} ${cur.yTop}`;
+      d += ` L ${cur.x} ${cur.yTop}`;
     }
 
     d += ` L ${cur.x} ${cur.yBottom}`;
@@ -251,10 +252,8 @@ export default function PostTableOfContents({
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
               preserveAspectRatio="none"
+              shapeRendering="geometricPrecision"
               viewBox={`0 0 ${layout.width} ${layout.height}`}
-              style={{
-                transform: "translateX(-10px)",
-              }}
             >
               <defs>
                 <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
@@ -280,9 +279,10 @@ export default function PostTableOfContents({
                 className="stroke-zinc-300/90 dark:stroke-zinc-600/80"
                 d={layout.pathD}
                 fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
+                strokeLinecap="butt"
+                strokeLinejoin="miter"
+                strokeMiterlimit={8}
+                strokeWidth={1}
                 vectorEffect="non-scaling-stroke"
               />
 
@@ -291,9 +291,10 @@ export default function PostTableOfContents({
                 clipPath={layout.clip ? `url(#${clipId})` : undefined}
                 d={layout.pathD}
                 fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
+                strokeLinecap="butt"
+                strokeLinejoin="miter"
+                strokeMiterlimit={8}
+                strokeWidth={1}
                 vectorEffect="non-scaling-stroke"
               />
             </svg>
