@@ -1,6 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { MarkdownHeading } from "@/lib/markdown-headings";
 
 type PostTableOfContentsProps = {
@@ -13,29 +21,157 @@ type TocItem = {
   level: 2 | 3 | 4;
 };
 
-type IndicatorStyle = {
-  top: number;
-  left: number;
-  width: number;
-  height: number;
+type SpinePoint = {
+  id: string;
+  x: number;
+  yTop: number;
+  yBottom: number;
 };
 
 const TOP_OFFSET = 140;
+
+/** 缩进在 padding-left 上，offsetLeft 恒为 0；用 padding 算左侧脊柱 x，才能画出折线树形 */
+function spineXFromAnchor(el: HTMLElement): number {
+  const padLeft = parseFloat(getComputedStyle(el).paddingLeft) || 12;
+  return Math.max(4, padLeft - 6);
+}
+
+function buildOutlinePath(points: SpinePoint[]): string {
+  if (points.length === 0) {
+    return "";
+  }
+
+  let d = `M ${points[0].x} ${points[0].yTop} L ${points[0].x} ${points[0].yBottom}`;
+
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const cur = points[i];
+
+    d += ` L ${prev.x} ${cur.yTop}`;
+
+    if (Math.abs(cur.x - prev.x) > 0.5) {
+      d += ` C ${prev.x} ${cur.yTop - 4} ${cur.x} ${cur.yTop + 4} ${cur.x} ${cur.yTop}`;
+    }
+
+    d += ` L ${cur.x} ${cur.yBottom}`;
+  }
+
+  return d;
+}
 
 export default function PostTableOfContents({
   headings,
 }: PostTableOfContentsProps) {
   const navRef = useRef<HTMLDivElement>(null);
+  const navInnerRef = useRef<HTMLElement>(null);
   const itemRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+  const clipId = useId().replace(/:/g, "");
   const [activeId, setActiveId] = useState("overview");
-  const [indicatorStyle, setIndicatorStyle] = useState<IndicatorStyle | null>(
-    null
-  );
+  const [layout, setLayout] = useState<{
+    width: number;
+    height: number;
+    pathD: string;
+    clip: { x: number; y: number; width: number; height: number } | null;
+  } | null>(null);
 
   const items = useMemo<TocItem[]>(
     () => [{ id: "overview", text: "Overview", level: 2 }, ...headings],
     [headings]
   );
+
+  const measure = useCallback(() => {
+    const inner = navInnerRef.current;
+
+    if (!inner) {
+      return;
+    }
+
+    const width = inner.clientWidth;
+    const height = inner.scrollHeight;
+
+    const points: SpinePoint[] = [];
+
+    for (const item of items) {
+      const el = itemRefs.current[item.id];
+
+      if (!el) {
+        continue;
+      }
+
+      points.push({
+        id: item.id,
+        x: spineXFromAnchor(el),
+        yTop: el.offsetTop,
+        yBottom: el.offsetTop + el.offsetHeight,
+      });
+    }
+
+    if (points.length === 0) {
+      setLayout(null);
+      return;
+    }
+
+    const pathD = buildOutlinePath(points);
+    const activeEl =
+      itemRefs.current[activeId] ?? itemRefs.current[items[0]?.id ?? ""];
+    const pad = 2;
+    const clip = activeEl
+      ? {
+          x: 0,
+          y: Math.max(0, activeEl.offsetTop - pad),
+          width,
+          height: activeEl.offsetHeight + pad * 2,
+        }
+      : null;
+
+    setLayout((prev) => {
+      const next = { width, height, pathD, clip };
+      if (
+        prev &&
+        prev.width === next.width &&
+        prev.height === next.height &&
+        prev.pathD === next.pathD &&
+        prev.clip?.x === next.clip?.x &&
+        prev.clip?.y === next.clip?.y &&
+        prev.clip?.width === next.clip?.width &&
+        prev.clip?.height === next.clip?.height
+      ) {
+        return prev;
+      }
+      return next;
+    });
+  }, [items, activeId]);
+
+  useLayoutEffect(() => {
+    measure();
+  }, [measure]);
+
+  useEffect(() => {
+    const inner = navInnerRef.current;
+
+    if (!inner) {
+      return;
+    }
+
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", measure);
+      return () => {
+        window.removeEventListener("resize", measure);
+      };
+    }
+
+    const ro = new ResizeObserver(() => {
+      measure();
+    });
+
+    ro.observe(inner);
+    window.addEventListener("resize", measure);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [measure]);
 
   useEffect(() => {
     const updateActiveId = () => {
@@ -88,30 +224,6 @@ export default function PostTableOfContents({
     });
   }, [activeId]);
 
-  useEffect(() => {
-    const updateIndicator = () => {
-      const activeLink = itemRefs.current[activeId];
-
-      if (!activeLink) {
-        return;
-      }
-
-      setIndicatorStyle({
-        top: activeLink.offsetTop,
-        left: activeLink.offsetLeft,
-        width: activeLink.offsetWidth,
-        height: activeLink.offsetHeight,
-      });
-    };
-
-    updateIndicator();
-    window.addEventListener("resize", updateIndicator);
-
-    return () => {
-      window.removeEventListener("resize", updateIndicator);
-    };
-  }, [activeId, items]);
-
   return (
     <div className="flex h-full flex-col border-r border-zinc-200 pr-6 dark:border-zinc-800">
       <div className="pb-4">
@@ -124,13 +236,55 @@ export default function PostTableOfContents({
       </div>
 
       <div ref={navRef} className="min-h-0 flex-1 overflow-y-auto">
-        <nav className="relative space-y-1 py-1">
-          {indicatorStyle ? (
-            <div
+        <nav ref={navInnerRef} className="relative space-y-1 py-1">
+          {layout?.pathD ? (
+            <svg
               aria-hidden="true"
-              className="pointer-events-none absolute rounded-r-0 bg-zinc-200/50 shadow-[inset_2px_0_0_0_rgba(24,24,27,0.92)] transition-[top,left,width,height,background-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[top,left,width,height] dark:bg-zinc-800/75 dark:shadow-[inset_2px_0_0_0_rgba(244,244,245,0.96)]"
-              style={indicatorStyle}
-            />
+              className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+              preserveAspectRatio="none"
+              viewBox={`0 0 ${layout.width} ${layout.height}`}
+            >
+              <defs>
+                <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+                  {layout.clip ? (
+                    <rect
+                      height={layout.clip.height}
+                      style={{
+                        transform: `translate(${layout.clip.x}px, ${layout.clip.y}px)`,
+                        transformBox: "fill-box",
+                        transformOrigin: "0 0",
+                        transition:
+                          "transform 500ms cubic-bezier(0.22, 1, 0.36, 1), height 500ms cubic-bezier(0.22, 1, 0.36, 1)",
+                      }}
+                      width={layout.clip.width}
+                      x={0}
+                      y={0}
+                    />
+                  ) : null}
+                </clipPath>
+              </defs>
+
+              <path
+                className="stroke-zinc-300/90 dark:stroke-zinc-600/80"
+                d={layout.pathD}
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1}
+                vectorEffect="non-scaling-stroke"
+              />
+
+              <path
+                className="stroke-zinc-900 dark:stroke-zinc-50"
+                clipPath={layout.clip ? `url(#${clipId})` : undefined}
+                d={layout.pathD}
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
           ) : null}
 
           {items.map((item) => {
