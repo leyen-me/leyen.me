@@ -33,6 +33,9 @@ const TOP_OFFSET = 140;
 /** 竖线与文字起点之间的间距（px），越大线越靠左 */
 const SPINE_TO_TEXT_GAP = 12;
 
+/** 参考 Fuma TOC：层级切换时的贝塞尔控制点强度 */
+const CORNER_CURVE = 4;
+
 /**
  * 脊柱在锚点坐标系内的 x（相对锚点左缘）。缩进在 padding-left 上，需用 padding 算层级。
  * 整体 x = offsetLeft + spineXRelativeToAnchor（与 nav 左侧留白对齐）。
@@ -42,7 +45,7 @@ function spineXRelativeToAnchor(el: HTMLElement): number {
   return Math.max(4, padLeft - SPINE_TO_TEXT_GAP);
 }
 
-/** 纯正交路径（仅 L）：放大时不会出现贝塞尔被栅格化成「假斜线」的毛边感 */
+/** 参考 Fuma：从上一项底部平滑曲线连接到下一项顶部，再继续当前项的竖线。 */
 function buildOutlinePath(points: SpinePoint[]): string {
   if (points.length === 0) {
     return "";
@@ -54,10 +57,21 @@ function buildOutlinePath(points: SpinePoint[]): string {
     const prev = points[i - 1];
     const cur = points[i];
 
-    d += ` L ${prev.x} ${cur.yTop}`;
+    const dx = cur.x - prev.x;
+    const dy = cur.yTop - prev.yBottom;
 
-    if (Math.abs(cur.x - prev.x) > 0.5) {
-      d += ` L ${cur.x} ${cur.yTop}`;
+    if (Math.abs(dx) > 0.5 && dy > 0.5) {
+      const c = Math.min(
+        CORNER_CURVE,
+        Math.abs(dx),
+        Math.max(0, dy / 2)
+      );
+      d += ` C ${prev.x} ${cur.yTop - c} ${cur.x} ${prev.yBottom + c} ${cur.x} ${cur.yTop}`;
+    } else {
+      d += ` L ${prev.x} ${cur.yTop}`;
+      if (Math.abs(dx) > 0.5) {
+        d += ` L ${cur.x} ${cur.yTop}`;
+      }
     }
 
     d += ` L ${cur.x} ${cur.yBottom}`;
@@ -254,6 +268,9 @@ export default function PostTableOfContents({
               preserveAspectRatio="none"
               shapeRendering="geometricPrecision"
               viewBox={`0 0 ${layout.width} ${layout.height}`}
+              style={{
+                transform: "translateX(-8px)",
+              }}
             >
               <defs>
                 <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
@@ -279,9 +296,8 @@ export default function PostTableOfContents({
                 className="stroke-zinc-300/90 dark:stroke-zinc-600/80"
                 d={layout.pathD}
                 fill="none"
-                strokeLinecap="butt"
-                strokeLinejoin="miter"
-                strokeMiterlimit={8}
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 strokeWidth={1}
                 vectorEffect="non-scaling-stroke"
               />
@@ -291,9 +307,8 @@ export default function PostTableOfContents({
                 clipPath={layout.clip ? `url(#${clipId})` : undefined}
                 d={layout.pathD}
                 fill="none"
-                strokeLinecap="butt"
-                strokeLinejoin="miter"
-                strokeMiterlimit={8}
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 strokeWidth={1}
                 vectorEffect="non-scaling-stroke"
               />
