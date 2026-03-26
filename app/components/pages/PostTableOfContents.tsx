@@ -270,7 +270,7 @@ export default function PostTableOfContents({
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={1}
+                strokeWidth={1.5}
                 vectorEffect="non-scaling-stroke"
               />
 
@@ -281,7 +281,7 @@ export default function PostTableOfContents({
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
+                strokeWidth={1.5}
                 vectorEffect="non-scaling-stroke"
               />
             </svg>
@@ -310,7 +310,10 @@ export default function PostTableOfContents({
                   indentClass,
                   isActive
                     ? "font-medium text-zinc-950 dark:text-zinc-50"
-                    : "text-zinc-500 hover:bg-zinc-100/70 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-100",
+                    : [
+                        "text-zinc-600 dark:text-zinc-400",
+                        "[@media(hover:hover)]:hover:text-zinc-900 dark:[@media(hover:hover)]:hover:text-zinc-100",
+                      ].join(" "),
                 ].join(" ")}
               >
                 {item.text}
