@@ -31,7 +31,7 @@ type SpinePoint = {
 const TOP_OFFSET = 140;
 
 /** 竖线与文字起点之间的间距（px），越大线越靠左 */
-const SPINE_TO_TEXT_GAP = 12;
+const SPINE_TO_TEXT_GAP = 8;
 
 /** 参考 Fuma TOC：层级切换时的贝塞尔控制点强度 */
 const CORNER_CURVE = 4;
@@ -269,7 +269,7 @@ export default function PostTableOfContents({
               shapeRendering="geometricPrecision"
               viewBox={`0 0 ${layout.width} ${layout.height}`}
               style={{
-                transform: "translateX(-8px)",
+                transform: "translateX(-10px)",
               }}
             >
               <defs>
