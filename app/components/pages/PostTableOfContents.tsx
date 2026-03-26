@@ -30,10 +30,16 @@ type SpinePoint = {
 
 const TOP_OFFSET = 140;
 
-/** 缩进在 padding-left 上，offsetLeft 恒为 0；用 padding 算左侧脊柱 x，才能画出折线树形 */
-function spineXFromAnchor(el: HTMLElement): number {
+/** 竖线与文字起点之间的间距（px），越大线越靠左 */
+const SPINE_TO_TEXT_GAP = 12;
+
+/**
+ * 脊柱在锚点坐标系内的 x（相对锚点左缘）。缩进在 padding-left 上，需用 padding 算层级。
+ * 整体 x = offsetLeft + spineXRelativeToAnchor（与 nav 左侧留白对齐）。
+ */
+function spineXRelativeToAnchor(el: HTMLElement): number {
   const padLeft = parseFloat(getComputedStyle(el).paddingLeft) || 12;
-  return Math.max(4, padLeft - 6);
+  return Math.max(4, padLeft - SPINE_TO_TEXT_GAP);
 }
 
 function buildOutlinePath(points: SpinePoint[]): string {
@@ -100,7 +106,7 @@ export default function PostTableOfContents({
 
       points.push({
         id: item.id,
-        x: spineXFromAnchor(el),
+        x: el.offsetLeft + spineXRelativeToAnchor(el),
         yTop: el.offsetTop,
         yBottom: el.offsetTop + el.offsetHeight,
       });
@@ -236,13 +242,19 @@ export default function PostTableOfContents({
       </div>
 
       <div ref={navRef} className="min-h-0 flex-1 overflow-y-auto">
-        <nav ref={navInnerRef} className="relative space-y-1 py-1">
+        <nav
+          ref={navInnerRef}
+          className="relative space-y-1 py-1 pl-2"
+        >
           {layout?.pathD ? (
             <svg
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
               preserveAspectRatio="none"
               viewBox={`0 0 ${layout.width} ${layout.height}`}
+              style={{
+                transform: "translateX(-10px)",
+              }}
             >
               <defs>
                 <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
