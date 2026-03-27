@@ -5,3 +5,4 @@ export function formatDate(date: string) {
     year: "numeric",
   });
 }
+
