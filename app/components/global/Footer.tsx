@@ -71,8 +71,11 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="relative h-[7.5rem] sm:h-[20rem] lg:h-[30rem] mt-4 overflow-hidden">
-            <p className="absolute left-0 sm:left-1 lg:left-2 bottom-[-0.35em] font-incognito text-[clamp(10rem,38vw,55rem)] leading-none tracking-[0.03em] text-zinc-50 whitespace-nowrap select-none font-bold">
+          <div className="relative mt-4 h-[8rem] overflow-hidden sm:h-[14rem] lg:h-[22rem] xl:h-[28rem] 2xl:h-[32rem]">
+            <p
+              style={{ fontFamily: 'var(--incognito), "Inter", system-ui, sans-serif' }}
+              className="absolute left-0 sm:left-1 lg:left-2 bottom-[-0.35em] text-[11rem] leading-none tracking-[0.03em] text-zinc-50 whitespace-nowrap select-none font-bold sm:text-[19rem] lg:text-[30rem] xl:text-[40rem] 2xl:text-[46rem]"
+            >
              LEYEN
             </p>
           </div>
