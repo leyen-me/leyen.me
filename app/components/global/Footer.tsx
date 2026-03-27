@@ -72,8 +72,8 @@ export default function Footer() {
           </div>
 
           <div className="relative h-[7.5rem] sm:h-[20rem] lg:h-[30rem] mt-4 overflow-hidden">
-            <p className="absolute left-0 sm:left-1 lg:left-2 bottom-[-0.4em] font-incognito text-[clamp(10rem,38vw,55rem)] leading-none tracking-[0.03em] text-zinc-50 whitespace-nowrap select-none font-bold">
-              FOOTER
+            <p className="absolute left-0 sm:left-1 lg:left-2 bottom-[-0.35em] font-incognito text-[clamp(10rem,38vw,55rem)] leading-none tracking-[0.03em] text-zinc-50 whitespace-nowrap select-none font-bold">
+             LEYEN
             </p>
           </div>
         </section>
