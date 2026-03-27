@@ -1,4 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
+import sanitylogo from "@/public/sanity.png";
+import vercellogo from "@/public/vercel.svg";
+import nextjslogo from "@/public/nextjs.svg";
 import { socialLinks } from "../../data/social";
 import UnmountStudio from "./Unmount";
 
@@ -14,11 +18,54 @@ export default function Footer() {
     .filter((item) => item.status === "social")
     .slice(0, 4);
 
+  const stack = [
+    { title: "Sanity", href: "https://sanity.io", icon: sanitylogo, alt: "sanity logo" },
+    { title: "Next.js", href: "https://nextjs.org", icon: nextjslogo, alt: "nextjs logo" },
+    { title: "Vercel", href: "https://vercel.com", icon: vercellogo, alt: "vercel logo" },
+  ];
+
   return (
     <UnmountStudio>
       <footer className="mt-40 print:hidden">
-        <div className="border-t border-zinc-200 dark:border-zinc-800" />
-        <section className="relative overflow-hidden bg-zinc-900 text-white dark:bg-zinc-950">
+        <section className="lg:hidden border-t border-zinc-200 dark:border-zinc-800 mt-24">
+          <div className="max-w-7xl mx-auto px-6 py-12">
+            <div className="flex flex-col items-center justify-center gap-y-5 text-center">
+              <div className="flex flex-col items-center gap-y-3">
+                <h3 className="text-sm text-zinc-500 dark:text-zinc-400">
+                  Built with:
+                </h3>
+                <ul className="flex flex-wrap items-center justify-center gap-x-3 gap-y-3 text-sm text-zinc-500 dark:text-zinc-400">
+                  {stack.map((item) => (
+                    <li key={item.title}>
+                      <a
+                        href={item.href}
+                        rel="noreferrer noopener"
+                        target="_blank"
+                        className="inline-flex items-center gap-x-2 text-zinc-600 dark:text-zinc-200 hover:underline"
+                      >
+                        <Image
+                          src={item.icon}
+                          width={18}
+                          height={18}
+                          alt={item.alt}
+                        />
+                        {item.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <small className="text-zinc-500 dark:text-zinc-500">
+                Copyright &copy; Leyen {new Date().getFullYear()} All rights
+                reserved.
+              </small>
+            </div>
+          </div>
+        </section>
+
+        <div className="hidden lg:block border-t border-zinc-200 dark:border-zinc-800" />
+        <section className="hidden lg:block relative overflow-hidden bg-zinc-900 text-white dark:bg-zinc-950">
           <div className="max-w-7xl mx-auto md:px-16 px-6 pt-8 sm:pt-10 lg:pt-12">
             <div className="flex items-start justify-between gap-8 text-[11px] uppercase tracking-[0.28em] text-zinc-400">
               <p>Footer</p>
