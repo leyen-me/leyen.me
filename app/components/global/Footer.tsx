@@ -25,7 +25,7 @@ export default function Footer() {
               <p className="hidden sm:block">Open, oversized, and quiet.</p>
             </div>
 
-            <div className="mt-10 grid lg:grid-cols-[220px,1fr,220px] gap-10 items-start">
+            <div className="mt-10 grid items-start gap-y-6 lg:grid-cols-[220px,1fr,220px] lg:gap-10">
               <div className="space-y-3 text-sm text-zinc-400">
                 <p className="text-[11px] uppercase tracking-[0.28em] text-zinc-500">
                   Explore
@@ -41,7 +41,7 @@ export default function Footer() {
                 ))}
               </div>
 
-              <div className="min-h-[200px]" />
+              <div className="hidden lg:block lg:min-h-[200px]" />
 
               <div className="space-y-3 text-sm text-zinc-400 lg:text-right">
                 <p className="text-[11px] uppercase tracking-[0.28em] text-zinc-500">
@@ -71,9 +71,9 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="px-1 sm:px-2 lg:px-3 pt-6 sm:pt-8">
-            <p className="font-incognito text-[clamp(6rem,30vw,24rem)] leading-[0.78] tracking-[-0.08em] text-zinc-50 whitespace-nowrap select-none">
-              Leyen
+          <div className="relative h-[7.5rem] sm:h-[20rem] lg:h-[30rem] mt-4 overflow-hidden">
+            <p className="absolute left-0 sm:left-1 lg:left-2 bottom-[-0.4em] font-incognito text-[clamp(10rem,38vw,55rem)] leading-none tracking-[0.03em] text-zinc-50 whitespace-nowrap select-none font-bold">
+              FOOTER
             </p>
           </div>
         </section>
