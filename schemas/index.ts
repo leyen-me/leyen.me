@@ -9,6 +9,7 @@ import blockContent from "./blockContent";
 import quiz from "./quiz";
 import { movie } from "./movie";
 import { quote } from "./quote";
+import { interviewQuestion } from "./interviewQuestion";
 import passwordVault from "./passwordVault";
 import passwordEntry from "./passwordEntry";
 
@@ -20,6 +21,7 @@ export const schemaTypes = [
   author,
   movie,
   quote,
+  interviewQuestion,
   passwordVault,
   passwordEntry,
 

@@ -12,6 +12,7 @@ export default function Footer() {
     { title: "Blog", href: "/blog" },
     { title: "Quotes", href: "/quotes" },
     { title: "Movies", href: "/movies" },
+    { title: "Interviews", href: "/interviews" },
   ];
 
   const socials = socialLinks

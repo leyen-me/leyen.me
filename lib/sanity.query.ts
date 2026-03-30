@@ -171,3 +171,39 @@ export const passwordEntriesQuery = groq`*[_type == "passwordEntry"] | order(coa
   encryptedData,
   order
 }`;
+
+// Interview questions (frontend interview bank)
+export const interviewsQuery = groq`*[_type == "interviewQuestion" && isPublished == true] | order(_updatedAt desc){
+  _id,
+  _createdAt,
+  _updatedAt,
+  title,
+  "slug": slug.current,
+  excerpt,
+  category,
+  tags,
+  isFromWork
+}`;
+
+export const interviewAllTagsQuery = groq`array::unique(*[_type == "interviewQuestion" && isPublished == true].tags[])`;
+
+export const singleInterviewQuery = groq`*[_type == "interviewQuestion" && slug.current == $slug && isPublished == true][0]{
+  _id,
+  _createdAt,
+  _updatedAt,
+  title,
+  "slug": slug.current,
+  excerpt,
+  category,
+  tags,
+  isFromWork,
+  shortAnswer,
+  body,
+  workScenario,
+  followUps,
+  "relatedQuestions": relatedQuestions[]->{
+    _id,
+    title,
+    "slug": slug.current
+  }
+}`;

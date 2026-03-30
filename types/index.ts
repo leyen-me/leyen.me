@@ -119,6 +119,32 @@ export type QuoteType = {
   tags: string[];
 };
 
+export type InterviewQuestionListItem = {
+  _id: string;
+  _createdAt: string;
+  _updatedAt: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  category: string;
+  tags?: string[];
+  isFromWork?: boolean;
+};
+
+export type InterviewRelatedQuestion = {
+  _id: string;
+  title: string;
+  slug: string;
+};
+
+export type InterviewQuestionType = InterviewQuestionListItem & {
+  shortAnswer?: string;
+  body?: PortableTextBlock[];
+  workScenario?: string;
+  followUps?: string[];
+  relatedQuestions?: InterviewRelatedQuestion[];
+};
+
 export type PasswordEntryType = {
   _id: string;
   _createdAt: string;
