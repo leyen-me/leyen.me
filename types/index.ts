@@ -92,14 +92,6 @@ export type PostType = {
   isPublished: boolean;
 };
 
-export type HeroeType = {
-  _id: string;
-  _createdAt: string;
-  name: string;
-  url: string;
-  met: boolean;
-};
-
 export type MovieType = {
   _id: string;
   title: string;
