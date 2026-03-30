@@ -13,7 +13,6 @@
 - [Vercel][vercel] - Hosting and Deployment
 - [Sanity.io][sanity]: Headless CMS and Content Lake
 - [TailwindCSS][tailwind] / CSS - Styling and UI
-- [Umami][umami]: Analytics
 - [Next Themes][nexttheme]: Color Theme
 - [React Refractor][reactrefractor]: Syntax Highlighting
 
@@ -120,7 +119,6 @@ This portfolio is MIT-licensed so you are free to use it as an inspiration or yo
 [vercel]: https://vercel.com
 [sanity]: https://sanity.io
 [tailwind]: https://tailwindcss.com
-[umami]: https://umami.is
 [planetscale]: https://planetscale.com/
 [nexttheme]: https://github.com/pacocoursey/next-themes
 [reactrefractor]: https://github.com/rexxars/react-refractor
