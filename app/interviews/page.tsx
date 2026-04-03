@@ -10,12 +10,10 @@ import EmptyState from "@/app/components/shared/EmptyState";
 
 export const metadata: Metadata = {
   title: "Interviews | Leyen",
-  description:
-    "把日常工作里真正遇到的问题，整理成以后跳槽时能快速复习的题库。",
+  description: "个人整理的前端面试题，方便复习与查阅。",
   openGraph: {
     title: "Interviews | Leyen",
-    description:
-      "把日常工作里真正遇到的问题，整理成以后跳槽时能快速复习的题库。",
+    description: "个人整理的前端面试题，方便复习与查阅。",
     type: "website",
     locale: "zh_CN",
     url: "https://leyen.me/interviews",
@@ -46,7 +44,7 @@ export default async function InterviewsPage({
     <div className="max-w-7xl mx-auto md:px-16 px-6">
       <PageHeading
         title="Interviews"
-        description="把日常工作里真正遇到的问题，整理成以后跳槽时能快速复习的题库。"
+        description="个人整理的前端面试题，方便复习与查阅。"
       />
 
       <Suspense fallback={<div className="h-32 mb-8" aria-hidden />}>
