@@ -1,24 +1,18 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PortableText, toPlainText } from "@portabletext/react";
 import { sanityFetch } from "@/lib/sanity.client";
 import { singleInterviewQuery } from "@/lib/sanity.query";
 import type { InterviewQuestionType } from "@/types";
-import { CustomPortableText } from "@/app/components/shared/CustomPortableText";
+import { MdxMarkdownBody } from "@/app/components/shared/MdxMarkdownBody";
 import { Slide } from "@/app/animation/Slide";
 import { formatDate } from "@/app/utils/date";
 import { getInterviewCategoryLabel } from "@/lib/interview-categories";
+import { markdownToPlainExcerpt } from "@/lib/markdown-excerpt";
 
 type Props = {
   params: { slug: string };
 };
-
-function excerptForMeta(text: string, max = 160): string {
-  const t = text.replace(/\s+/g, " ").trim();
-  if (t.length <= max) return t;
-  return `${t.slice(0, max).trim()}…`;
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const interview = await sanityFetch<InterviewQuestionType | null>({
@@ -31,8 +25,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "Not found" };
   }
 
-  const plain = toPlainText(interview.answer ?? []);
-  const description = excerptForMeta(plain || interview.title);
+  const description =
+    markdownToPlainExcerpt(interview.answer ?? "") || interview.title;
 
   return {
     title: `${interview.title} | Interviews`,
@@ -56,6 +50,8 @@ export default async function InterviewDetailPage({ params }: Props) {
   if (!interview) {
     notFound();
   }
+
+  const markdown = interview.answer?.trim() ?? "";
 
   return (
     <main className="max-w-3xl mx-auto lg:px-16 px-8 pb-16">
@@ -89,16 +85,13 @@ export default async function InterviewDetailPage({ params }: Props) {
           <h2 className="font-incognito text-xl font-semibold mb-4 text-zinc-900 dark:text-zinc-100">
             面试回答
           </h2>
-          {interview.answer && interview.answer.length > 0 ? (
-            <div className="dark:text-zinc-300 text-zinc-700 leading-relaxed">
-              <PortableText
-                value={interview.answer}
-                components={CustomPortableText}
-              />
+          {markdown ? (
+            <div className="article-content min-w-0">
+              <MdxMarkdownBody markdown={markdown} />
             </div>
           ) : (
             <p className="text-zinc-500 text-sm italic">
-              可在 Studio 中补充「面试回答」。
+              可在 Studio 中补充「面试回答」Markdown。
             </p>
           )}
         </section>

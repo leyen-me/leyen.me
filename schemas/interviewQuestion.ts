@@ -56,8 +56,11 @@ export const interviewQuestion = defineType({
     }),
     defineField({
       name: "answer",
-      title: "面试回答",
-      type: "blockContent",
+      title: "面试回答 (Markdown)",
+      type: "text",
+      description:
+        "与博客正文相同：Markdown + MDX。自定义 React 组件请在仓库 mdx-components 中注册。",
+      rows: 24,
       validation: (Rule) => Rule.required().min(1),
     }),
     defineField({

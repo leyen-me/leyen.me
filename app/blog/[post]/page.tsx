@@ -5,8 +5,7 @@ import { notFound } from "next/navigation";
 import type { PostType } from "@/types";
 import { singlePostQuery } from "@/lib/sanity.query";
 import { toPlainText } from "@portabletext/react";
-import { createCompiler } from "@fumadocs/mdx-remote";
-import { getMDXComponents } from "@/mdx-components";
+import { MdxMarkdownBody } from "@/app/components/shared/MdxMarkdownBody";
 import { convertPortableTextToMarkdown } from "@/lib/portable-text-to-markdown";
 import { BiChevronRight, BiSolidTime } from "react-icons/bi";
 import { formatDate } from "../../utils/date";
@@ -29,22 +28,6 @@ type Props = {
 
 const fallbackImage: string =
   "https://res.cloudinary.com/victoreke/image/upload/v1692636087/victoreke/blog.png";
-
-const mdxCompiler = createCompiler({
-  rehypeCodeOptions: {
-    themes: { light: "github-light", dark: "github-dark" },
-    fallbackLanguage: "plaintext", // 当语言标识符无效时（如 startLine:endLine:filepath）使用纯文本
-  },
-  rehypeTocOptions: false, // format: "md" 会产生 raw 节点，rehype-toc 无法处理，需禁用
-  format: "md", // 纯 Markdown 模式，禁用 import/export 与 {expression} 解析，避免 acorn 报错
-});
-
-async function FumadocsContent({ markdown }: { markdown: string }) {
-  if (!markdown) return null;
-  const compiled = await mdxCompiler.compile({ source: markdown });
-  const MdxContent = compiled.body;
-  return <MdxContent components={getMDXComponents()} />;
-}
 
 // Dynamic metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -203,7 +186,7 @@ export default async function Post({ params }: Props) {
 
           <Slide delay={0.1}>
             <div className="article-content mt-8 min-w-0">
-              <FumadocsContent markdown={markdown} />
+              <MdxMarkdownBody markdown={markdown} />
             </div>
           </Slide>
 

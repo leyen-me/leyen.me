@@ -129,7 +129,7 @@ export type InterviewQuestionListItem = {
 };
 
 export type InterviewQuestionType = InterviewQuestionListItem & {
-  answer?: PortableTextBlock[];
+  answer?: string;
 };
 
 export type PasswordEntryType = {
