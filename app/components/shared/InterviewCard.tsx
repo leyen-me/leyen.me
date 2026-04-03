@@ -8,8 +8,6 @@ export function InterviewCard({
 }: {
   interview: InterviewQuestionListItem;
 }) {
-  const tags = interview.tags ?? [];
-
   return (
     <Link
       href={`/interviews/${interview.slug}`}
@@ -20,33 +18,11 @@ export function InterviewCard({
           <span className="text-xs font-semibold uppercase tracking-wider text-primary-color">
             {getInterviewCategoryLabel(interview.category)}
           </span>
-          {interview.isFromWork ? (
-            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
-              Work
-            </span>
-          ) : null}
         </div>
 
-        <h2 className="text-lg font-semibold tracking-tight mb-2 line-clamp-2 group-hover:text-primary-color transition-colors">
+        <h2 className="text-lg font-semibold tracking-tight mb-4 line-clamp-3 group-hover:text-primary-color transition-colors flex-1">
           {interview.title}
         </h2>
-
-        <p className="text-sm dark:text-zinc-400 text-zinc-600 line-clamp-3 flex-1 mb-4">
-          {interview.excerpt}
-        </p>
-
-        {tags.length > 0 ? (
-          <div className="flex flex-wrap gap-2 mb-4">
-            {tags.slice(0, 4).map((tag) => (
-              <span
-                key={tag}
-                className="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 dark:bg-zinc-800/70 text-gray-600 dark:text-gray-400"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        ) : null}
 
         <time
           dateTime={interview._updatedAt}

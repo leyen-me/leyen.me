@@ -1,10 +1,7 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { sanityFetch } from "@/lib/sanity.client";
-import {
-  interviewsQuery,
-  interviewAllTagsQuery,
-} from "@/lib/sanity.query";
+import { interviewsQuery } from "@/lib/sanity.query";
 import type { InterviewQuestionListItem } from "@/types";
 import PageHeading from "@/app/components/shared/PageHeading";
 import { InterviewCard } from "@/app/components/shared/InterviewCard";
@@ -25,43 +22,25 @@ export const metadata: Metadata = {
   },
 };
 
-function filterInterviews(
+function filterByCategory(
   list: InterviewQuestionListItem[],
-  cat?: string,
-  tag?: string
+  cat?: string
 ) {
-  let out = list;
-  if (cat) {
-    out = out.filter((i) => i.category === cat);
-  }
-  if (tag) {
-    out = out.filter((i) => (i.tags ?? []).includes(tag));
-  }
-  return out;
+  if (!cat) return list;
+  return list.filter((i) => i.category === cat);
 }
 
 export default async function InterviewsPage({
   searchParams,
 }: {
-  searchParams: { cat?: string; tag?: string };
+  searchParams: { cat?: string };
 }) {
-  const [interviews, tagsRaw] = await Promise.all([
-    sanityFetch<InterviewQuestionListItem[]>({
-      query: interviewsQuery,
-      tags: ["interviewQuestion"],
-    }),
-    sanityFetch<string[]>({
-      query: interviewAllTagsQuery,
-      tags: ["interviewQuestion"],
-    }),
-  ]);
+  const interviews = await sanityFetch<InterviewQuestionListItem[]>({
+    query: interviewsQuery,
+    tags: ["interviewQuestion"],
+  });
 
-  const allTags = (tagsRaw ?? []).filter(Boolean);
-  const filtered = filterInterviews(
-    interviews,
-    searchParams.cat,
-    searchParams.tag
-  );
+  const filtered = filterByCategory(interviews, searchParams.cat);
 
   return (
     <div className="max-w-7xl mx-auto md:px-16 px-6">
@@ -71,7 +50,7 @@ export default async function InterviewsPage({
       />
 
       <Suspense fallback={<div className="h-32 mb-8" aria-hidden />}>
-        <InterviewFilters allTags={allTags} />
+        <InterviewFilters />
       </Suspense>
 
       {filtered.length > 0 ? (

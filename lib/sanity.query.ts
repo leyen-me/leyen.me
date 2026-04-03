@@ -179,13 +179,8 @@ export const interviewsQuery = groq`*[_type == "interviewQuestion" && isPublishe
   _updatedAt,
   title,
   "slug": slug.current,
-  excerpt,
-  category,
-  tags,
-  isFromWork
+  category
 }`;
-
-export const interviewAllTagsQuery = groq`array::unique(*[_type == "interviewQuestion" && isPublished == true].tags[])`;
 
 export const singleInterviewQuery = groq`*[_type == "interviewQuestion" && slug.current == $slug && isPublished == true][0]{
   _id,
@@ -193,17 +188,6 @@ export const singleInterviewQuery = groq`*[_type == "interviewQuestion" && slug.
   _updatedAt,
   title,
   "slug": slug.current,
-  excerpt,
   category,
-  tags,
-  isFromWork,
-  shortAnswer,
-  body,
-  workScenario,
-  followUps,
-  "relatedQuestions": relatedQuestions[]->{
-    _id,
-    title,
-    "slug": slug.current
-  }
+  answer
 }`;

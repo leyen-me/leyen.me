@@ -2,11 +2,27 @@ import { defineField, defineType } from "sanity";
 import { MdQuiz } from "react-icons/md";
 
 const CATEGORY_OPTIONS = [
-  { title: "HTML & CSS", value: "html-css" },
-  { title: "JavaScript / TypeScript", value: "js-ts" },
+  { title: "HTML", value: "html" },
+  { title: "CSS", value: "css" },
+  { title: "JavaScript", value: "js" },
+  { title: "TypeScript", value: "ts" },
+  { title: "Vue", value: "vue" },
   { title: "React", value: "react" },
+  { title: "浏览器原理", value: "browser-principle" },
+  { title: "网络 & 通信", value: "network-communication" },
+  { title: "性能优化", value: "performance-optimization" },
   { title: "工程化", value: "engineering" },
-  { title: "浏览器 / 网络 / 性能", value: "browser-network" },
+  { title: "算法 & 数据结构", value: "algorithm-data-structure" },
+  { title: "前端架构", value: "frontend-architecture" },
+  { title: "跨端 & 平台", value: "cross-platform" },
+  { title: "测试", value: "test" },
+  { title: "安全", value: "security" },
+  { title: "AI", value: "ai" },
+  { title: "Python", value: "python" },
+  { title: "云原生", value: "cloud-native" },
+  { title: "Node.js / 全栈方向", value: "nodejs-fullstack" },
+  { title: "数据 & 后端基础", value: "data-backend-basic" },
+  { title: "其他", value: "other" },
 ] as const;
 
 export const interviewQuestion = defineType({
@@ -17,7 +33,7 @@ export const interviewQuestion = defineType({
   fields: [
     defineField({
       name: "title",
-      title: "题目标题",
+      title: "题目",
       type: "string",
       validation: (Rule) => Rule.required(),
     }),
@@ -29,16 +45,8 @@ export const interviewQuestion = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "excerpt",
-      title: "一句话摘要",
-      type: "text",
-      rows: 2,
-      description: "列表卡片上显示",
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
       name: "category",
-      title: "主分类",
+      title: "分类",
       type: "string",
       options: {
         list: [...CATEGORY_OPTIONS],
@@ -47,17 +55,10 @@ export const interviewQuestion = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "tags",
-      title: "标签",
-      type: "array",
-      of: [
-        {
-          type: "string",
-          validation: (Rule) => Rule.required().min(1),
-        },
-      ],
-      options: { layout: "tags" },
-      validation: (Rule) => Rule.max(8),
+      name: "answer",
+      title: "面试回答",
+      type: "blockContent",
+      validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
       name: "isPublished",
@@ -65,58 +66,16 @@ export const interviewQuestion = defineType({
       type: "boolean",
       initialValue: true,
     }),
-    defineField({
-      name: "isFromWork",
-      title: "来自真实工作问题",
-      type: "boolean",
-      initialValue: false,
-    }),
-    defineField({
-      name: "shortAnswer",
-      title: "短答案（面试约 30 秒）",
-      type: "text",
-      rows: 4,
-    }),
-    defineField({
-      name: "body",
-      title: "展开说明",
-      type: "blockContent",
-    }),
-    defineField({
-      name: "workScenario",
-      title: "真实场景",
-      type: "text",
-      rows: 4,
-      description: "这题为什么会出现在工作里",
-    }),
-    defineField({
-      name: "followUps",
-      title: "追问",
-      type: "array",
-      of: [{ type: "string" }],
-    }),
-    defineField({
-      name: "relatedQuestions",
-      title: "相关题",
-      type: "array",
-      of: [
-        {
-          type: "reference",
-          to: [{ type: "interviewQuestion" }],
-        },
-      ],
-    }),
   ],
   preview: {
     select: {
       title: "title",
       category: "category",
-      tags: "tags",
     },
-    prepare({ title, category, tags }) {
+    prepare({ title, category }) {
       return {
         title: title || "Untitled",
-        subtitle: [category, tags?.join(", ")].filter(Boolean).join(" · "),
+        subtitle: category ?? "",
       };
     },
   },

@@ -125,24 +125,11 @@ export type InterviewQuestionListItem = {
   _updatedAt: string;
   title: string;
   slug: string;
-  excerpt: string;
   category: string;
-  tags?: string[];
-  isFromWork?: boolean;
-};
-
-export type InterviewRelatedQuestion = {
-  _id: string;
-  title: string;
-  slug: string;
 };
 
 export type InterviewQuestionType = InterviewQuestionListItem & {
-  shortAnswer?: string;
-  body?: PortableTextBlock[];
-  workScenario?: string;
-  followUps?: string[];
-  relatedQuestions?: InterviewRelatedQuestion[];
+  answer?: PortableTextBlock[];
 };
 
 export type PasswordEntryType = {
