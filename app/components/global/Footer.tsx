@@ -31,61 +31,58 @@ export default function Footer() {
       <footer className="mt-40 print:hidden">
         <section className="lg:hidden border-t border-zinc-200 dark:border-zinc-800 mt-24">
           <div className="max-w-7xl mx-auto px-6 py-12">
-            <div className="flex flex-col items-center justify-center gap-y-10 text-center">
-              <div className="w-full max-w-md grid grid-cols-2 gap-x-8 gap-y-2 text-left">
-                <div className="space-y-3">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-zinc-500 dark:text-zinc-400">
-                    Explore
-                  </p>
-                  <nav className="space-y-2 text-sm text-zinc-600 dark:text-zinc-300">
-                    {navigation.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="block hover:text-zinc-900 dark:hover:text-white transition-colors"
-                      >
-                        {item.title}
-                      </Link>
-                    ))}
-                  </nav>
-                </div>
-                <div className="space-y-3">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-zinc-500 dark:text-zinc-400">
-                    Elsewhere
-                  </p>
-                  <div className="space-y-2 text-sm text-zinc-600 dark:text-zinc-300">
-                    {socials.map((item) => (
-                      <a
-                        key={item.id}
-                        href={item.url}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="block hover:text-zinc-900 dark:hover:text-white transition-colors"
-                      >
-                        {item.name}
-                      </a>
-                    ))}
-                  </div>
-                </div>
+            <div className="mx-auto w-full max-w-md text-left">
+              <p className="text-[11px] uppercase tracking-[0.28em] text-zinc-500 dark:text-zinc-400">
+                Leyen
+              </p>
+
+              <p className="mt-4 max-w-[28ch] text-sm leading-6 text-zinc-600 dark:text-zinc-300">
+                Personal archive of projects, writing, films, and conversations.
+              </p>
+
+              <nav className="mt-8 flex flex-wrap gap-x-4 gap-y-3 text-sm text-zinc-700 dark:text-zinc-200">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="transition-colors hover:text-zinc-500 dark:hover:text-zinc-400"
+                  >
+                    {item.title}
+                  </Link>
+                ))}
+              </nav>
+
+              <div className="mt-6 flex flex-wrap gap-x-4 gap-y-3 text-sm text-zinc-500 dark:text-zinc-400">
+                {socials.map((item) => (
+                  <a
+                    key={item.id}
+                    href={item.url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="transition-colors hover:text-zinc-900 dark:hover:text-white"
+                  >
+                    {item.name}
+                  </a>
+                ))}
               </div>
 
-              <div className="flex flex-col items-center gap-y-3">
-                <h3 className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Built with:
-                </h3>
-                <ul className="flex flex-wrap items-center justify-center gap-x-3 gap-y-3 text-sm text-zinc-500 dark:text-zinc-400">
+              <div className="mt-10 border-t border-zinc-200/80 pt-4 dark:border-zinc-800">
+                <p className="text-[10px] uppercase tracking-[0.24em] text-zinc-400 dark:text-zinc-500">
+                  Built with
+                </p>
+                <ul className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-3 text-sm text-zinc-500 dark:text-zinc-400">
                   {stack.map((item) => (
                     <li key={item.title}>
                       <a
                         href={item.href}
                         rel="noreferrer noopener"
                         target="_blank"
-                        className="inline-flex items-center gap-x-2 text-zinc-600 dark:text-zinc-200 hover:underline"
+                        className="inline-flex items-center gap-x-2 transition-colors hover:text-zinc-900 dark:hover:text-white"
                       >
                         <Image
                           src={item.icon}
-                          width={18}
-                          height={18}
+                          width={16}
+                          height={16}
                           alt={item.alt}
                         />
                         {item.title}
@@ -95,7 +92,7 @@ export default function Footer() {
                 </ul>
               </div>
 
-              <small className="text-zinc-500 dark:text-zinc-500">
+              <small className="mt-10 block text-zinc-500 dark:text-zinc-500">
                 Copyright &copy; Leyen {new Date().getFullYear()} All rights
                 reserved.
               </small>
