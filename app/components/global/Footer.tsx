@@ -37,7 +37,7 @@ export default function Footer() {
               </p>
 
               <p className="mt-4 max-w-[28ch] text-sm leading-6 text-zinc-600 dark:text-zinc-300">
-                Personal archive of projects, writing, films, and conversations.
+                Think. Design. Build.
               </p>
 
               <nav className="mt-8 flex flex-wrap gap-x-4 gap-y-3 text-sm text-zinc-700 dark:text-zinc-200">
