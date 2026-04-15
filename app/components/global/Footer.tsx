@@ -37,7 +37,7 @@ export default function Footer() {
               </p>
 
               <p className="mt-4 max-w-[28ch] text-sm leading-6 text-zinc-600 dark:text-zinc-300">
-                Think. Design. Build.
+                Personal archive of projects, writing, films, and conversations.
               </p>
 
               <nav className="mt-8 flex flex-wrap gap-x-4 gap-y-3 text-sm text-zinc-700 dark:text-zinc-200">
@@ -92,16 +92,12 @@ export default function Footer() {
                 </ul>
               </div>
 
-              <small className="mt-10 block text-zinc-500 dark:text-zinc-500">
-                Copyright &copy; Leyen {new Date().getFullYear()} All rights
-                reserved.
-              </small>
             </div>
           </div>
         </section>
 
         <section className="hidden lg:block relative overflow-hidden border-t border-zinc-200 dark:border-zinc-800">
-          <div className="max-w-7xl mx-auto md:px-16 px-6 pt-16 lg:pt-20">
+          <div className="max-w-7xl mx-auto md:px-16 px-6 pt-16 pb-16 lg:pt-20 lg:pb-20">
             <div className="grid items-start gap-14 lg:grid-cols-[minmax(0,1.25fr)_320px]">
               <div>
                 <p className="text-[11px] uppercase tracking-[0.28em] text-zinc-500 dark:text-zinc-400">
