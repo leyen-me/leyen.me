@@ -30,7 +30,7 @@ export default function Footer() {
     <UnmountStudio>
       <footer className="mt-40 print:hidden">
         <section className="lg:hidden border-t border-zinc-200 dark:border-zinc-800 mt-24">
-          <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="max-w-7xl mx-auto px-6 pt-12 pb-8">
             <div className="mx-auto w-full max-w-md text-left">
               <p className="text-[11px] uppercase tracking-[0.28em] text-zinc-500 dark:text-zinc-400">
                 Leyen
@@ -40,7 +40,7 @@ export default function Footer() {
                 Personal archive of projects, writing, films, and conversations.
               </p>
 
-              <nav className="mt-8 flex flex-wrap gap-x-4 gap-y-3 text-sm text-zinc-700 dark:text-zinc-200">
+              <nav className="mt-7 flex flex-wrap gap-x-4 gap-y-3 text-sm text-zinc-700 dark:text-zinc-200">
                 {navigation.map((item) => (
                   <Link
                     key={item.href}
@@ -52,7 +52,7 @@ export default function Footer() {
                 ))}
               </nav>
 
-              <div className="mt-6 flex flex-wrap gap-x-4 gap-y-3 text-sm text-zinc-500 dark:text-zinc-400">
+              <div className="mt-5 flex flex-wrap gap-x-4 gap-y-3 text-sm text-zinc-500 dark:text-zinc-400">
                 {socials.map((item) => (
                   <a
                     key={item.id}
@@ -66,7 +66,7 @@ export default function Footer() {
                 ))}
               </div>
 
-              <div className="mt-10 border-t border-zinc-200/80 pt-4 dark:border-zinc-800">
+              <div className="mt-8 border-t border-zinc-200/80 pt-4 dark:border-zinc-800">
                 <p className="text-[10px] uppercase tracking-[0.24em] text-zinc-400 dark:text-zinc-500">
                   Built with
                 </p>
