@@ -143,6 +143,7 @@ export const quotesQuery = groq`*[_type == "quote"] | order(_createdAt desc){
   _createdAt,
   quote,
   author,
+  "contentType": coalesce(contentType, "quote"),
   context,
   tags
 }`;
@@ -152,6 +153,7 @@ export const quotesByTagQuery = groq`*[_type == "quote" && $tag in tags] | order
   _createdAt,
   quote,
   author,
+  "contentType": coalesce(contentType, "quote"),
   context,
   tags
 }`;

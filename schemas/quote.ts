@@ -6,7 +6,24 @@ export const quote = defineType({
   title: "Quote",
   type: "document",
   icon: BiSolidQuoteRight,
+  initialValue: {
+    contentType: "quote",
+  },
   fields: [
+    defineField({
+      name: "contentType",
+      title: "Content Type",
+      type: "string",
+      description: "Choose whether this entry is a short quote or a short essay",
+      options: {
+        list: [
+          { title: "Short Quote", value: "quote" },
+          { title: "Short Essay", value: "essay" },
+        ],
+        layout: "radio",
+      },
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({
       name: "quote",
       title: "Quote",

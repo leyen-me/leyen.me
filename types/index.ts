@@ -115,6 +115,7 @@ export type QuoteType = {
   _createdAt: string;
   quote: string;
   author: string;
+  contentType?: "quote" | "essay";
   context?: string;
   tags: string[];
 };

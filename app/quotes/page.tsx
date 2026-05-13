@@ -4,6 +4,7 @@ import { quotesQuery, quotesByTagQuery, allTagsQuery } from "@/lib/sanity.query"
 import { QuoteType } from "@/types";
 import PageHeading from "@/app/components/shared/PageHeading";
 import { QuotesGrid } from "@/app/components/shared/QuotesGrid";
+import { QuoteEssayList } from "@/app/components/shared/QuoteEssayList";
 import { TagFilter } from "@/app/components/shared/TagFilter";
 import EmptyState from "@/app/components/shared/EmptyState";
 
@@ -40,6 +41,10 @@ export default async function QuotesPage({
     tags: ["quote"],
   });
 
+  const shortQuotes = quotes.filter((quote) => quote.contentType !== "essay");
+  const essays = quotes.filter((quote) => quote.contentType === "essay");
+  const hasContent = shortQuotes.length > 0 || essays.length > 0;
+
   return (
     <div className="max-w-7xl mx-auto md:px-16 px-6">
       <script
@@ -68,9 +73,36 @@ export default async function QuotesPage({
       {/* Tag Filter */}
       <TagFilter tags={allTags} selectedTag={selectedTag} />
 
-      {/* Quotes Grid - Masonry Layout with Animation */}
-      {quotes.length > 0 ? (
-        <QuotesGrid quotes={quotes} />
+      {hasContent ? (
+        <div className="space-y-14 md:space-y-16">
+          {shortQuotes.length > 0 && (
+            <section className="space-y-5">
+              <div className="space-y-2">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 md:text-2xl">
+                  Short Quotes
+                </h2>
+                <p className="max-w-2xl text-sm leading-6 text-gray-500 dark:text-gray-400 md:text-base">
+                  Those brief lines worth keeping close.
+                </p>
+              </div>
+              <QuotesGrid quotes={shortQuotes} />
+            </section>
+          )}
+
+          {essays.length > 0 && (
+            <section className="space-y-5">
+              <div className="space-y-2">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 md:text-2xl">
+                  Short Essays
+                </h2>
+                <p className="max-w-2xl text-sm leading-6 text-gray-500 dark:text-gray-400 md:text-base">
+                  Longer passages deserve a quieter rhythm and more room to breathe.
+                </p>
+              </div>
+              <QuoteEssayList essays={essays} />
+            </section>
+          )}
+        </div>
       ) : (
         <EmptyState value="Quote" />
       )}
