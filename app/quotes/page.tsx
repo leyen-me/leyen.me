@@ -91,14 +91,15 @@ export default async function QuotesPage({
 
           {essays.length > 0 && (
             <section className="space-y-5">
-              <div className="space-y-2">
+              <hr className="my-8 border-zinc-200 dark:border-zinc-800" />
+              {/* <div className="space-y-2">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 md:text-2xl">
                   Short Essays
                 </h2>
                 <p className="max-w-2xl text-sm leading-6 text-gray-500 dark:text-gray-400 md:text-base">
                   Longer passages deserve a quieter rhythm and more room to breathe.
                 </p>
-              </div>
+              </div> */}
               <QuoteEssayList essays={essays} />
             </section>
           )}
