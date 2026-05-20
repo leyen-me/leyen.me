@@ -85,7 +85,7 @@ Open up the cloned repository and do the following:
 
 - Now run `npm run dev` and you can visit [http://localhost:3000][localhost] to see the project live.
 
-By default the UI will be blank. To start adding data to the site, visit your studio at [http://localhost:3000/studio][localhost-studio] to create your own documents.
+By default the UI will be blank. To start adding data to the site, visit your studio at [http://localhost:3000/admin][localhost-studio] to create your own documents.
 
 If you expereinced any issues or enquiries, please raise an issue to discuss it.
 
@@ -105,7 +105,7 @@ npm run build
 | ---------------------------------------------- | ----------------------------------------------- |
 | [`sanity.config.ts`](sanity.config.ts)         | Config file for Sanity Studio                   |
 | [`sanity.client.ts`](lib/sanity.client.ts)     | Config file for Sanity CLI                      |
-| [`studio`](./app/studio/[[...index]]/page.tsx) | Where Sanity Studio is mounted                  |
+| [`admin`](./app/admin/[[...index]]/page.tsx)   | Where Sanity Studio is mounted                  |
 | [`schemas`](./schemas)                         | Where Sanity Studio gets its content types from |
 | [`sanity.query.ts`](./lib/sanity.query.ts)     | Groq query for Sanity Schema data               |
 
@@ -123,12 +123,12 @@ This portfolio is MIT-licensed so you are free to use it as an inspiration or yo
 [nexttheme]: https://github.com/pacocoursey/next-themes
 [reactrefractor]: https://github.com/rexxars/react-refractor
 [site]: https://leyen.me
-[studio]: https://leyen.me/studio
+[studio]: https://leyen.me/admin
 [studio-preview]: https://github.com/Evavic44/leyen.me/assets/62628408/a2574479-a352-4437-ba67-14bd976e48eb
 [site-preview]: https://github.com/Evavic44/leyen.me/assets/62628408/e84ac72f-1ba1-4c46-bfc0-2512ffa0e5fa
 [env-example]: https://github.com/Evavic44/leyen.me/blob/main/.env.example
 [localhost]: http://localhost:3000
-[localhost-studio]: http://localhost:3000/studio
+[localhost-studio]: http://localhost:3000/admin
 [env-api]: https://github.com/Evavic44/leyen.me/blob/main/lib/env.api.ts
 [sanity-manage]: https://sanity.io/manage
 [sanity-guide]: https://www.freecodecamp.org/news/how-to-build-a-portfolio-site-with-sanity-and-nextjs

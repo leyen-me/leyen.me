@@ -9,7 +9,7 @@ import { projectId, dataset } from "./lib/env.api";
 export default defineConfig({
   name: "leyen",
   title: "leyen.me",
-  basePath: "/studio",
+  basePath: "/admin",
   projectId,
   dataset,
   plugins: [deskTool(), visionTool(), codeInput(), table()],
