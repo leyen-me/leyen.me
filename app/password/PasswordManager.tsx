@@ -39,6 +39,7 @@ import {
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import SlideCaptchaModal from "./SlideCaptchaModal";
 
 type VaultState = {
   salt: string;
@@ -66,6 +67,8 @@ export default function PasswordManager() {
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [reordering, setReordering] = useState(false);
+  const [showCaptchaModal, setShowCaptchaModal] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -154,13 +157,20 @@ export default function PasswordManager() {
     []
   );
 
-  const handleVerify = async (e: React.FormEvent) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     if (!masterPassword.trim()) {
       setError("请输入主密码");
-      return; 
+      return;
     }
+    setShowCaptchaModal(true);
+  };
+
+  const performVerify = async () => {
+    setShowCaptchaModal(false);
+    setSubmitting(true);
+    setError("");
 
     if (isSetup) {
       try {
@@ -204,6 +214,8 @@ export default function PasswordManager() {
         setError("主密码错误");
       }
     }
+
+    setSubmitting(false);
   };
 
   const handleAddEntry = async (data: PasswordEntryData) => {
@@ -346,7 +358,7 @@ export default function PasswordManager() {
                 ? "首次使用，请设置一个主密码（建议 6 位数字）。主密码仅存在你的设备内存中，刷新页面后需重新输入。"
                 : "请输入主密码以解锁密码管理器。主密码不会存储在服务器。"}
             </p>
-            <form onSubmit={handleVerify} className="space-y-4">
+            <form onSubmit={handleFormSubmit} className="space-y-4">
               <input
                 type="password"
                 inputMode="numeric"
@@ -366,13 +378,26 @@ export default function PasswordManager() {
               )}
               <button
                 type="submit"
-                className="w-full py-3 rounded-lg font-incognito font-semibold dark:bg-primary-color bg-secondary-color dark:text-white text-zinc-800 hover:opacity-90 transition"
+                disabled={submitting}
+                className="w-full py-3 rounded-lg font-incognito font-semibold dark:bg-primary-color bg-secondary-color dark:text-white text-zinc-800 hover:opacity-90 transition disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                {isSetup ? "创建并进入" : "解锁"}
+                {submitting ? (
+                  <>
+                    <BiLoaderAlt className="animate-spin text-lg" />
+                    {isSetup ? "创建中..." : "解锁中..."}
+                  </>
+                ) : (
+                  isSetup ? "创建并进入" : "解锁"
+                )}
               </button>
             </form>
           </div>
         </Slide>
+        <SlideCaptchaModal
+          open={showCaptchaModal}
+          onClose={() => setShowCaptchaModal(false)}
+          onSuccess={performVerify}
+        />
       </div>
     );
   }
