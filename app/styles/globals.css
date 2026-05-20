@@ -1,3 +1,5 @@
+@import "prism.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,8 +7,6 @@
 html {
   scroll-behavior: smooth;
 }
-
-@import "prism.css";
 
 /* Shiki 双主题：浅色/深色模式使用对应 CSS 变量 */
 .shiki,
