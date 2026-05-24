@@ -19,7 +19,7 @@ function Line({
 
 export default function HeroCode() {
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-xl border border-zinc-200/90 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/70">
+    <div className="relative w-full rounded-xl border border-zinc-200/90 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/70">
       <div className="flex items-center border-b border-zinc-200/90 px-4 py-2.5 dark:border-zinc-800">
         <div className="flex items-center gap-2">
           <span
@@ -44,9 +44,9 @@ export default function HeroCode() {
         <div className="w-[52px]" aria-hidden />
       </div>
 
-      <div className="overflow-x-auto px-4 py-5 sm:px-5 sm:py-6">
+      <div className="overflow-x-auto px-3 py-4 sm:px-5 sm:py-6">
         <pre
-          className="table text-[12px] leading-[1.8] sm:text-[13px]"
+          className="table text-[11px] leading-[1.75] sm:text-[13px] sm:leading-[1.8]"
           style={{ fontFamily: "var(--gitlabmono), monospace" }}
         >
           <code className="table-row-group">
