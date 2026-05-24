@@ -20,18 +20,28 @@ function Line({
 export default function HeroCode() {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-xl border border-zinc-200/90 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/70">
-      <div className="flex items-center gap-3 border-b border-zinc-200/90 px-4 py-2.5 dark:border-zinc-800">
-        <div className="flex gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-          <span className="h-2.5 w-2.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-          <span className="h-2.5 w-2.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+      <div className="flex items-center border-b border-zinc-200/90 px-4 py-2.5 dark:border-zinc-800">
+        <div className="flex items-center gap-2">
+          <span
+            className="h-3 w-3 rounded-full bg-[#FF5F57] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.12)]"
+            aria-hidden
+          />
+          <span
+            className="h-3 w-3 rounded-full bg-[#FEBC2E] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.12)]"
+            aria-hidden
+          />
+          <span
+            className="h-3 w-3 rounded-full bg-[#28C840] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.12)]"
+            aria-hidden
+          />
         </div>
         <span
-          className="text-[11px] text-zinc-400 dark:text-zinc-500"
+          className="flex-1 text-center text-[11px] text-zinc-400 dark:text-zinc-500"
           style={{ fontFamily: "var(--gitlabmono), monospace" }}
         >
           leyen.tsx
         </span>
+        <div className="w-[52px]" aria-hidden />
       </div>
 
       <div className="overflow-x-auto px-4 py-5 sm:px-5 sm:py-6">
