@@ -111,7 +111,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               </Button>
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold">{currentSection}</p>
-                <p className="truncate text-xs text-zinc-500">leyen Admin</p>
+                <p className="truncate text-xs text-zinc-500">后台管理</p>
               </div>
             </header>
           )}

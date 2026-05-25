@@ -213,7 +213,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
             onChange={(e) => handleTitleChange(e.target.value)}
             placeholder="文章标题"
             required
-            className="min-w-0 flex-1 border-0 bg-transparent px-0 text-base font-medium shadow-none focus-visible:ring-0 sm:text-lg"
+            className="min-w-0 flex-1 border-0 bg-transparent pl-2 pr-0 text-base font-medium shadow-none focus-visible:ring-0 sm:pl-3 sm:text-lg"
           />
 
           <div className="flex shrink-0 items-center gap-2">

@@ -24,7 +24,7 @@ export default function AdminDashboardPage() {
     <div className="space-y-6 sm:space-y-8">
       <div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Dashboard</h1>
-        <p className="mt-2 text-sm text-zinc-500 sm:text-base">管理 leyen.me 的全部内容</p>
+        <p className="mt-2 text-sm text-zinc-500 sm:text-base">管理全部内容</p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">

@@ -74,7 +74,7 @@ export default function AdminSidebar({
             className="text-lg font-semibold tracking-tight"
             onClick={onNavigate}
           >
-            leyen Admin
+            后台管理
           </Link>
           <p className="mt-1 text-xs text-zinc-500">内容管理</p>
         </div>
