@@ -3,7 +3,6 @@
 import {
   forwardRef,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useRef,
 } from "react";
@@ -62,13 +61,12 @@ const ImmersiveMarkdownEditor = forwardRef<
     };
   }, [value]);
 
-  const notifySelectionChange = useCallback(() => {
-    onSelectionChange?.(readSelection());
-  }, [onSelectionChange, readSelection]);
+  const onSelectionChangeRef = useRef(onSelectionChange);
+  onSelectionChangeRef.current = onSelectionChange;
 
-  useEffect(() => {
-    notifySelectionChange();
-  }, [value, notifySelectionChange]);
+  const notifySelectionChange = useCallback(() => {
+    onSelectionChangeRef.current?.(readSelection());
+  }, [readSelection]);
 
   function applyFormat(action: MarkdownFormatAction) {
     const textarea = textareaRef.current;

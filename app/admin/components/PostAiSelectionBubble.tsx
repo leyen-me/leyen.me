@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useRef } from "react";
 import {
-  autoUpdate,
   flip,
   offset,
   shift,
@@ -26,62 +25,55 @@ export default function PostAiSelectionBubble({
   loading,
   onPolish,
 }: PostAiSelectionBubbleProps) {
-  const [anchor, setAnchor] = useState<{ x: number; y: number } | null>(null);
-
-  const { refs, floatingStyles } = useFloating({
+  const { refs, floatingStyles, update } = useFloating({
     placement: "top",
     middleware: [offset(8), flip(), shift({ padding: 8 })],
-    whileElementsMounted: autoUpdate,
   });
+  const updateRef = useRef(update);
+  updateRef.current = update;
 
-  useEffect(() => {
-    if (!selection || !textarea) {
-      setAnchor(null);
+  useLayoutEffect(() => {
+    if (!selection?.text.trim() || !textarea) {
+      refs.setReference(null);
       return;
     }
 
-    function updateAnchor() {
-      if (!selection || !textarea) return;
+    function syncReference() {
+      if (!selection?.text.trim() || !textarea) return;
+
       const coords = getSelectionAnchorCoordinates(
         textarea,
         selection.start,
         selection.end
       );
-      setAnchor({ x: coords.left, y: coords.top });
+
+      refs.setReference({
+        getBoundingClientRect: () => ({
+          x: coords.left,
+          y: coords.top,
+          top: coords.top,
+          left: coords.left,
+          bottom: coords.top,
+          right: coords.left,
+          width: 0,
+          height: 0,
+        }),
+      });
+      updateRef.current();
     }
 
-    updateAnchor();
+    syncReference();
 
-    textarea.addEventListener("scroll", updateAnchor);
-    window.addEventListener("resize", updateAnchor);
+    textarea.addEventListener("scroll", syncReference);
+    window.addEventListener("resize", syncReference);
 
     return () => {
-      textarea.removeEventListener("scroll", updateAnchor);
-      window.removeEventListener("resize", updateAnchor);
+      textarea.removeEventListener("scroll", syncReference);
+      window.removeEventListener("resize", syncReference);
     };
-  }, [selection, textarea]);
+  }, [selection, textarea, refs.setReference]);
 
-  useEffect(() => {
-    if (!anchor) {
-      refs.setReference(null);
-      return;
-    }
-
-    refs.setReference({
-      getBoundingClientRect: () => ({
-        x: anchor.x,
-        y: anchor.y,
-        top: anchor.y,
-        left: anchor.x,
-        bottom: anchor.y,
-        right: anchor.x,
-        width: 0,
-        height: 0,
-      }),
-    });
-  }, [anchor, refs]);
-
-  if (!selection?.text.trim() || !anchor) return null;
+  if (!selection?.text.trim() || !textarea) return null;
 
   return (
     <div

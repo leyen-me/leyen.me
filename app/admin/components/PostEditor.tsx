@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Menu, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -67,10 +67,27 @@ export default function PostEditor({ postId }: PostEditorProps) {
   );
   const modKey = useModKeyLabel();
 
-  function handleSelectionChange(selection: EditorSelection | null) {
-    setEditorSelection(selection);
-    setEditorTextarea(editorRef.current?.getTextarea() ?? null);
-  }
+  const handleSelectionChange = useCallback(
+    (selection: EditorSelection | null) => {
+      setEditorSelection((prev) => {
+        if (!selection && !prev) return prev;
+        if (
+          selection &&
+          prev &&
+          prev.start === selection.start &&
+          prev.end === selection.end &&
+          prev.text === selection.text
+        ) {
+          return prev;
+        }
+        return selection;
+      });
+
+      const textarea = editorRef.current?.getTextarea() ?? null;
+      setEditorTextarea((prev) => (prev === textarea ? prev : textarea));
+    },
+    []
+  );
 
   const ai = usePostAiAction({
     title: form.title,
