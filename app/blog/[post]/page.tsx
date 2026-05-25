@@ -51,9 +51,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         post.canonicalLink || `https://leyen.me/blog/${post.slug}`,
     },
     openGraph: {
-      images:
-        urlFor(post.coverImage?.image).width(1200).height(630).url() ||
-        fallbackImage,
+      images: post.coverImage?.image
+        ? urlFor(post.coverImage.image).width(1200).height(630).url()
+        : fallbackImage,
       url: `https://leyen.me/blog/${post.slug}`,
       title: post.title,
       description: post.description,
@@ -67,9 +67,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     twitter: {
       title: post.title,
       description: post.description,
-      images:
-        urlFor(post.coverImage?.image).width(680).height(340).url() ||
-        fallbackImage,
+      images: post.coverImage?.image
+        ? urlFor(post.coverImage.image).width(680).height(340).url()
+        : fallbackImage,
       creator: `@${post.author.twitterUrl.split("twitter.com/")[1]}`,
       site: `@${post.author.twitterUrl.split("twitter.com/")[1]}`,
       card: "summary_large_image",
