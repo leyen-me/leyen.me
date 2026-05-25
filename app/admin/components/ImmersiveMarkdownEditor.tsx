@@ -1,30 +1,74 @@
 "use client";
 
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import MarkdownPreview from "@/app/admin/components/MarkdownPreview";
 import {
   applyTextareaUpdate,
+  insertAtCursor,
   wrapSelection,
   type MarkdownFormatAction,
 } from "@/lib/markdown-editor-utils";
 
+export type EditorSelection = {
+  start: number;
+  end: number;
+  text: string;
+};
+
 export type ImmersiveMarkdownEditorHandle = {
   applyFormat: (action: MarkdownFormatAction) => void;
+  getSelection: () => EditorSelection | null;
+  getTextarea: () => HTMLTextAreaElement | null;
+  replaceRange: (start: number, end: number, text: string) => void;
+  insertAtCursor: (text: string) => void;
 };
 
 type ImmersiveMarkdownEditorProps = {
   value: string;
   onChange: (value: string) => void;
+  onSelectionChange?: (selection: EditorSelection | null) => void;
   className?: string;
 };
 
 const ImmersiveMarkdownEditor = forwardRef<
   ImmersiveMarkdownEditorHandle,
   ImmersiveMarkdownEditorProps
->(function ImmersiveMarkdownEditor({ value, onChange, className }, ref) {
+>(function ImmersiveMarkdownEditor(
+  { value, onChange, onSelectionChange, className },
+  ref
+) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const readSelection = useCallback((): EditorSelection | null => {
+    const textarea = textareaRef.current;
+    if (!textarea) return null;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    if (start === end) return null;
+
+    return {
+      start,
+      end,
+      text: value.slice(start, end),
+    };
+  }, [value]);
+
+  const notifySelectionChange = useCallback(() => {
+    onSelectionChange?.(readSelection());
+  }, [onSelectionChange, readSelection]);
+
+  useEffect(() => {
+    notifySelectionChange();
+  }, [value, notifySelectionChange]);
 
   function applyFormat(action: MarkdownFormatAction) {
     const textarea = textareaRef.current;
@@ -32,11 +76,51 @@ const ImmersiveMarkdownEditor = forwardRef<
 
     const update = action(value, textarea.selectionStart, textarea.selectionEnd);
     onChange(update.newValue);
-    requestAnimationFrame(() => applyTextareaUpdate(textarea, update));
+    requestAnimationFrame(() => {
+      applyTextareaUpdate(textarea, update);
+      notifySelectionChange();
+    });
+  }
+
+  function replaceRange(start: number, end: number, text: string) {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const newValue = value.slice(0, start) + text + value.slice(end);
+    onChange(newValue);
+    requestAnimationFrame(() => {
+      applyTextareaUpdate(textarea, {
+        newValue,
+        selectionStart: start,
+        selectionEnd: start + text.length,
+      });
+      notifySelectionChange();
+    });
+  }
+
+  function insertAtCursorText(text: string) {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const update = insertAtCursor(
+      value,
+      textarea.selectionStart,
+      textarea.selectionEnd,
+      text
+    );
+    onChange(update.newValue);
+    requestAnimationFrame(() => {
+      applyTextareaUpdate(textarea, update);
+      notifySelectionChange();
+    });
   }
 
   useImperativeHandle(ref, () => ({
     applyFormat,
+    getSelection: readSelection,
+    getTextarea: () => textareaRef.current,
+    replaceRange,
+    insertAtCursor: insertAtCursorText,
   }));
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -68,12 +152,16 @@ const ImmersiveMarkdownEditor = forwardRef<
   return (
     <div className={cn("flex min-h-0 flex-1 flex-col", className)}>
       <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-2">
-        <div className="flex min-h-0 flex-col lg:border-r lg:border-zinc-200 dark:lg:border-zinc-800">
+        <div className="relative flex min-h-0 flex-col lg:border-r lg:border-zinc-200 dark:lg:border-zinc-800">
           <Textarea
             ref={textareaRef}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
+            onKeyUp={notifySelectionChange}
+            onMouseUp={notifySelectionChange}
+            onSelect={notifySelectionChange}
+            onBlur={() => onSelectionChange?.(null)}
             placeholder="开始写作..."
             className="min-h-0 flex-1 resize-none rounded-none border-0 bg-transparent px-4 py-4 font-mono text-sm leading-relaxed shadow-none focus-visible:ring-0"
           />

@@ -6,13 +6,18 @@ import { Menu, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ImmersiveMarkdownEditor, {
+  type EditorSelection,
   type ImmersiveMarkdownEditorHandle,
 } from "@/app/admin/components/ImmersiveMarkdownEditor";
 import MarkdownFormatToolbar from "@/app/admin/components/MarkdownFormatToolbar";
+import PostAiPreviewDialog from "@/app/admin/components/PostAiPreviewDialog";
+import PostAiSelectionBubble from "@/app/admin/components/PostAiSelectionBubble";
+import PostAiToolbar from "@/app/admin/components/PostAiToolbar";
 import PostMetadataPanel, {
   type PostMetadataForm,
 } from "@/app/admin/components/PostMetadataPanel";
 import { useAdminLayout } from "@/app/admin/components/AdminLayoutContext";
+import { usePostAiAction } from "@/app/admin/hooks/usePostAiAction";
 import {
   useModKeyLabel,
   usePostEditorShortcuts,
@@ -54,7 +59,24 @@ export default function PostEditor({ postId }: PostEditorProps) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [metadataOpen, setMetadataOpen] = useState(false);
+  const [editorSelection, setEditorSelection] = useState<EditorSelection | null>(
+    null
+  );
+  const [editorTextarea, setEditorTextarea] = useState<HTMLTextAreaElement | null>(
+    null
+  );
   const modKey = useModKeyLabel();
+
+  function handleSelectionChange(selection: EditorSelection | null) {
+    setEditorSelection(selection);
+    setEditorTextarea(editorRef.current?.getTextarea() ?? null);
+  }
+
+  const ai = usePostAiAction({
+    title: form.title,
+    content: form.content,
+    editorRef,
+  });
 
   usePostEditorShortcuts({
     onSave: () => save(),
@@ -284,10 +306,17 @@ export default function PostEditor({ postId }: PostEditorProps) {
           </div>
         </div>
 
-        <MarkdownFormatToolbar
-          className="flex items-center gap-1 overflow-x-auto border-t border-zinc-100 pt-2 dark:border-zinc-800"
-          onAction={(action) => editorRef.current?.applyFormat(action)}
-        />
+        <div className="flex items-center gap-1 overflow-x-auto border-t border-zinc-100 pt-2 dark:border-zinc-800">
+          <MarkdownFormatToolbar
+            onAction={(action) => editorRef.current?.applyFormat(action)}
+          />
+          <PostAiToolbar
+            loading={ai.loading}
+            hasSelection={!!editorSelection?.text.trim()}
+            onPolish={ai.runPolish}
+            onContinue={ai.runContinue}
+          />
+        </div>
       </header>
 
       {error && (
@@ -296,10 +325,31 @@ export default function PostEditor({ postId }: PostEditorProps) {
         </div>
       )}
 
+      {ai.error && (
+        <div className="shrink-0 border-b border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+          {ai.error}
+        </div>
+      )}
+
       <ImmersiveMarkdownEditor
         ref={editorRef}
         value={form.content}
         onChange={(content) => updateField("content", content)}
+        onSelectionChange={handleSelectionChange}
+      />
+
+      <PostAiSelectionBubble
+        selection={editorSelection}
+        textarea={editorTextarea}
+        loading={ai.loading}
+        onPolish={ai.runPolish}
+      />
+
+      <PostAiPreviewDialog
+        preview={ai.preview}
+        onApply={ai.applyPreview}
+        onRetry={ai.retryPreview}
+        onDismiss={ai.dismissPreview}
       />
 
       <PostMetadataPanel
