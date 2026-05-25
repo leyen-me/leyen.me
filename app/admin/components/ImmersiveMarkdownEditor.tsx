@@ -43,19 +43,19 @@ const ImmersiveMarkdownEditor = forwardRef<
   return (
     <div className={cn("flex min-h-0 flex-1 flex-col", className)}>
       <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-2">
-        <div className="flex min-h-0 flex-col border-b border-zinc-200 dark:border-zinc-800 lg:border-b-0 lg:border-r">
+        <div className="flex min-h-0 flex-col lg:border-r lg:border-zinc-200 dark:lg:border-zinc-800">
           <Textarea
             ref={textareaRef}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder="开始写作..."
-            className="min-h-[280px] flex-1 resize-none rounded-none border-0 bg-transparent px-4 py-4 font-mono text-sm leading-relaxed shadow-none focus-visible:ring-0 lg:min-h-0"
+            className="min-h-0 flex-1 resize-none rounded-none border-0 bg-transparent px-4 py-4 font-mono text-sm leading-relaxed shadow-none focus-visible:ring-0"
           />
         </div>
-        <div className="min-h-0 overflow-y-auto bg-zinc-50/50 dark:bg-zinc-900/30">
+        <div className="hidden min-h-0 overflow-y-auto bg-zinc-50/50 dark:bg-zinc-900/30 lg:block">
           <MarkdownPreview
             markdown={value}
-            className="min-h-[280px] rounded-none border-0 bg-transparent lg:min-h-full"
+            className="min-h-full rounded-none border-0 bg-transparent"
           />
         </div>
       </div>
