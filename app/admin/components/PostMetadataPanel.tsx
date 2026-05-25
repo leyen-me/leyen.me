@@ -36,6 +36,14 @@ type PostFormState = {
 
 export type PostMetadataForm = Omit<PostFormState, "content">;
 
+function RequiredMark() {
+  return (
+    <span className="text-red-500" aria-hidden="true">
+      *
+    </span>
+  );
+}
+
 type PostMetadataPanelProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -128,7 +136,9 @@ export default function PostMetadataPanel({
 
         <div className="flex-1 space-y-5 overflow-y-auto p-4">
           <div className="space-y-2">
-            <Label htmlFor="meta-title">标题</Label>
+            <Label htmlFor="meta-title">
+              标题 <RequiredMark />
+            </Label>
             <Input
               id="meta-title"
               value={form.title}
@@ -139,7 +149,9 @@ export default function PostMetadataPanel({
 
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <Label htmlFor="meta-slug">Slug</Label>
+              <Label htmlFor="meta-slug">
+                Slug <RequiredMark />
+              </Label>
               <Button
                 type="button"
                 variant="ghost"
@@ -177,7 +189,9 @@ export default function PostMetadataPanel({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="meta-description">描述</Label>
+            <Label htmlFor="meta-description">
+              描述 <RequiredMark />
+            </Label>
             <Input
               id="meta-description"
               value={form.description}
@@ -197,7 +211,9 @@ export default function PostMetadataPanel({
           </div>
 
           <div className="space-y-2">
-            <Label>作者</Label>
+            <Label>
+              作者 <RequiredMark />
+            </Label>
             <Select
               value={form.authorId}
               onValueChange={(value) => onFieldChange("authorId", value)}
@@ -216,7 +232,9 @@ export default function PostMetadataPanel({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="meta-tags">标签（逗号分隔）</Label>
+            <Label htmlFor="meta-tags">
+              标签（逗号分隔） <RequiredMark />
+            </Label>
             <Input
               id="meta-tags"
               value={form.tags}
