@@ -191,6 +191,8 @@ export default function PostEditor({ postId }: PostEditorProps) {
     );
   }
 
+  const isDraft = !form.isPublished;
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <header className="flex shrink-0 flex-col gap-2 border-b border-zinc-200 bg-white/95 px-3 py-2 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95 sm:px-4">
@@ -215,51 +217,53 @@ export default function PostEditor({ postId }: PostEditorProps) {
           />
 
           <div className="flex shrink-0 items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="hidden sm:inline-flex"
-            onClick={() => router.push("/admin/posts")}
-          >
-            取消
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="sm:hidden"
-            onClick={() => setMetadataOpen(true)}
-            aria-label="文章设置"
-          >
-            <Settings2 className="h-4 w-4" />
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="hidden sm:inline-flex"
-            onClick={() => setMetadataOpen(true)}
-          >
-            设置
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            disabled={saving}
-            onClick={() => save()}
-          >
-            {saving ? "保存中..." : "保存"}
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            disabled={saving}
-            onClick={() => save({ publish: true })}
-          >
-            发布
-          </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="hidden sm:inline-flex"
+              onClick={() => router.push("/admin/posts")}
+            >
+              取消
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="sm:hidden"
+              onClick={() => setMetadataOpen(true)}
+              aria-label="文章设置"
+            >
+              <Settings2 className="h-4 w-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="hidden sm:inline-flex"
+              onClick={() => setMetadataOpen(true)}
+            >
+              设置
+            </Button>
+            <Button
+              type="button"
+              variant={isDraft ? "outline" : "default"}
+              size="sm"
+              disabled={saving}
+              onClick={() => save()}
+            >
+              {saving ? "保存中..." : isDraft ? "保存草稿" : "保存"}
+            </Button>
+            {isDraft ? (
+              <Button
+                type="button"
+                size="sm"
+                disabled={saving}
+                onClick={() => save({ publish: true })}
+              >
+                发布
+              </Button>
+            ) : null}
           </div>
         </div>
 
