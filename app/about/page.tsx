@@ -1,14 +1,13 @@
-import Image from "next/image";
 import { Metadata } from "next";
+import Image from "next/image";
 import { profileQuery } from "@/lib/sanity.query";
 import type { ProfileType } from "@/types";
-import { PortableText } from "@portabletext/react";
 import { BiEnvelope, BiLinkExternal, BiSolidDownload } from "react-icons/bi";
-import { CustomPortableText } from "../components/shared/CustomPortableText";
-import Usage from "../components/pages/Usage";
 import { Slide } from "../animation/Slide";
 import { sanityFetch } from "@/lib/sanity.client";
 import RefLink from "../components/shared/RefLink";
+import { MarkdownOrPortableText } from "../components/shared/MarkdownOrPortableText";
+import Usage from "../components/pages/Usage";
 
 export const metadata: Metadata = {
   title: "About | Leyen",
@@ -44,10 +43,7 @@ export default async function About() {
 
               <div className="dark:text-zinc-400 text-zinc-600 leading-relaxed">
                 {profile?.fullBio ? (
-                  <PortableText
-                    value={profile?.fullBio}
-                    components={CustomPortableText}
-                  />
+                  <MarkdownOrPortableText value={profile.fullBio} />
                 ) : (
                   "Your bio information will show up here"
                 )}

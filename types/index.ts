@@ -1,5 +1,9 @@
-import { TableRow } from "@sanity/table";
-import { PortableTextBlock } from "sanity";
+import type { PortableTextBlock } from "@portabletext/types";
+
+export interface TableRow {
+  _key?: string;
+  cells?: string[];
+}
 
 export interface Table {
   rows?: TableRow[];
@@ -28,11 +32,11 @@ export type ProfileType = {
   };
   shortBio: string;
   email: string;
-  fullBio: PortableTextBlock[];
+  fullBio: string | PortableTextBlock[];
   location: string;
   resumeURL: string;
   og: string;
-  usage: PortableTextBlock[];
+  usage: string | PortableTextBlock[];
 };
 
 export type JobType = {
@@ -59,7 +63,7 @@ export type ProjectType = {
     alt: string | null;
     lqip: string;
   };
-  description: PortableTextBlock[];
+  description: string | PortableTextBlock[];
   order?: number;
 };
 

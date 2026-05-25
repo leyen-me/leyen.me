@@ -1,8 +1,8 @@
-import { PortableText } from "@portabletext/react";
 import { profileQuery } from "@/lib/sanity.query";
 import type { ProfileType } from "@/types";
-import { CustomPortableTextFavicon } from "../shared/CustomPortableTextFavicon";
 import { sanityFetch } from "@/lib/sanity.client";
+import { MarkdownOrPortableText } from "../shared/MarkdownOrPortableText";
+import { CustomPortableTextFavicon } from "../shared/CustomPortableTextFavicon";
 
 export default async function Usage() {
   const profile: ProfileType = await sanityFetch({
@@ -19,7 +19,7 @@ export default async function Usage() {
           to.
         </p>
       </div>
-      <PortableText
+      <MarkdownOrPortableText
         value={profile?.usage}
         components={CustomPortableTextFavicon}
       />

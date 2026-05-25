@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
-import { createClient } from "next-sanity";
-import { projectId, dataset, apiVersion, token } from "@/lib/env.api";
-
-const client = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  token,
-  useCdn: false,
-});
+import { requireAdmin } from "@/lib/admin/auth-guard";
+import { writeClient } from "@/lib/sanity.write";
 
 export async function POST(req: NextRequest) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const { encryptedData, order } = await req.json();
 
@@ -22,7 +17,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const doc = await client.create({
+    const doc = await writeClient.create({
       _type: "passwordEntry",
       encryptedData,
       order: typeof order === "number" ? order : 0,

@@ -1,23 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
-import { createClient } from "next-sanity";
-import { projectId, dataset, apiVersion, token } from "@/lib/env.api";
-
-const client = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  token,
-  useCdn: false,
-});
+import { requireAdmin } from "@/lib/admin/auth-guard";
+import { writeClient } from "@/lib/sanity.write";
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const { encryptedData } = await req.json();
-    const { id } = await params;
+    const { id } = params;
 
     if (!id) {
       return NextResponse.json({ error: "Missing entry id" }, { status: 400 });
@@ -30,7 +25,7 @@ export async function PATCH(
       );
     }
 
-    await client.patch(id).set({ encryptedData }).commit();
+    await writeClient.patch(id).set({ encryptedData }).commit();
 
     revalidateTag("passwordEntry");
     return NextResponse.json({ success: true });
@@ -47,14 +42,17 @@ export async function DELETE(
   _req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
-    const { id } = await params;
+    const { id } = params;
 
     if (!id) {
       return NextResponse.json({ error: "Missing entry id" }, { status: 400 });
     }
 
-    await client.delete(id);
+    await writeClient.delete(id);
 
     revalidateTag("passwordEntry");
     return NextResponse.json({ success: true });

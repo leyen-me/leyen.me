@@ -8,7 +8,9 @@ export default function Table({ value }: { value: TableValueProps }) {
     return <p>Table Data Missing</p>;
   }
 
-  const [tableHeading, ...tableBody] = tableContent.map((t) => t.cells);
+  const [tableHeading, ...tableBody] = tableContent
+    .map((t) => t.cells)
+    .filter((cells): cells is string[] => Array.isArray(cells) && cells.length > 0);
 
   if (!tableHeading || tableBody.length < 1) {
     return <p>Table must have at least one cell.</p>;

@@ -2,12 +2,11 @@ import Image from "next/image";
 import { Metadata } from "next";
 import { singleProjectQuery } from "@/lib/sanity.query";
 import type { ProjectType } from "@/types";
-import { PortableText } from "@portabletext/react";
-import { CustomPortableText } from "@/app/components/shared/CustomPortableText";
 import { Slide } from "../../animation/Slide";
 import { urlFor } from "@/lib/sanity.image";
 import { sanityFetch } from "@/lib/sanity.client";
 import { BiLinkExternal, BiLogoGithub } from "react-icons/bi";
+import { MarkdownOrPortableText } from "@/app/components/shared/MarkdownOrPortableText";
 
 type Props = {
   params: {
@@ -103,10 +102,7 @@ export default async function Project({ params }: Props) {
           </div>
 
           <div className="mt-8 dark:text-zinc-400 text-zinc-600 leading-relaxed">
-            <PortableText
-              value={project.description}
-              components={CustomPortableText}
-            />
+            <MarkdownOrPortableText value={project.description} />
           </div>
         </div>
       </Slide>

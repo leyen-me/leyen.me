@@ -10,9 +10,9 @@ export const dataset: string = checkValue(
   "https://sanity.io"
 );
 
-export const token = checkValue(
-  process.env.NEXT_PUBLIC_SANITY_ACCESS_TOKEN,
-  "NEXT_PUBLIC_SANITY_ACCESS_TOKEN",
+export const apiToken = checkValue(
+  process.env.SANITY_API_TOKEN ?? process.env.NEXT_PUBLIC_SANITY_ACCESS_TOKEN,
+  "SANITY_API_TOKEN",
   "https://sanity.io"
 );
 
@@ -22,7 +22,9 @@ export const mode = process.env.NODE_ENV;
 export const apiVersion =
   process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2023-07-21";
 
-// Validate env varaibles
+export const adminPassword = process.env.ADMIN_PASSWORD;
+export const sessionSecret = process.env.SESSION_SECRET;
+
 function checkValue<T>(
   value: T | undefined,
   errorMsg: string,
@@ -30,7 +32,7 @@ function checkValue<T>(
 ): T {
   if (value === undefined) {
     throw new Error(
-      `Missing Environment Variable: ${errorMsg}\n\nVist ${url} to learn how you can generate your own API keys`
+      `Missing Environment Variable: ${errorMsg}\n\nVisit ${url} to learn how you can generate your own API keys`
     );
   }
   return value;

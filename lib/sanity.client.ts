@@ -1,14 +1,12 @@
 import "server-only";
 import { createClient, type ClientConfig, type QueryParams } from "next-sanity";
-import { projectId, dataset, apiVersion, token, mode } from "@/lib/env.api";
+import { projectId, dataset, apiVersion, mode } from "@/lib/env.api";
 
 const config: ClientConfig = {
   projectId,
   dataset,
   apiVersion,
-  useCdn: mode === "development" ? true : false,
-  ignoreBrowserTokenWarning: true,
-  token,
+  useCdn: mode === "development",
   perspective: "published",
 };
 

@@ -1,34 +1,28 @@
 import { NextResponse } from "next/server";
 import { unstable_noStore } from "next/cache";
-import { createClient } from "next-sanity";
-import { projectId, dataset, apiVersion, token } from "@/lib/env.api";
+import { requireAdmin } from "@/lib/admin/auth-guard";
+import { writeClient } from "@/lib/sanity.write";
 import {
   passwordVaultQuery,
   passwordEntriesQuery,
 } from "@/lib/sanity.query";
 
-// 使用 useCdn: false 确保获取最新数据，避免 CDN 缓存导致新添加的密码条目查不到
-const client = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  token,
-  useCdn: false,
-});
-
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   unstable_noStore();
   try {
     const fetchOptions = { cache: "no-store" as RequestCache };
     const [vault, entries] = await Promise.all([
-      client.fetch<{
+      writeClient.fetch<{
         _id: string;
         salt: string;
         verificationCipher: string;
       } | null>(passwordVaultQuery, {}, fetchOptions),
-      client.fetch<
+      writeClient.fetch<
         Array<{
           _id: string;
           _createdAt: string;
