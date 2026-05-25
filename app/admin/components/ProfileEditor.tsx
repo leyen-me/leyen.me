@@ -85,8 +85,8 @@ export default function ProfileEditor() {
   if (loading) return <p className="text-zinc-500">加载中...</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-4xl space-y-6">
-      <h1 className="text-3xl font-bold">Profile</h1>
+    <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl space-y-6">
+      <h1 className="text-2xl font-bold sm:text-3xl">Profile</h1>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>全名</Label><Input value={fullName} onChange={(e) => setFullName(e.target.value)} required /></div>
         <div className="space-y-2"><Label>邮箱</Label><Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></div>
@@ -105,7 +105,9 @@ export default function ProfileEditor() {
       </div>
       <MarkdownEditor label="Full Bio (Markdown)" value={fullBio} onChange={setFullBio} />
       <MarkdownEditor label="Usage (Markdown)" value={usage} onChange={setUsage} />
-      <Button type="submit" disabled={saving}>{saving ? "保存中..." : "保存"}</Button>
+      <Button type="submit" disabled={saving} className="w-full sm:w-auto">
+        {saving ? "保存中..." : "保存"}
+      </Button>
     </form>
   );
 }

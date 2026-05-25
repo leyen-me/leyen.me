@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import MarkdownEditor from "@/app/admin/components/MarkdownEditor";
 import { slugify } from "@/lib/utils";
 import { INTERVIEW_CATEGORY_OPTIONS } from "@/lib/interview-categories";
+import AdminFormActions from "@/app/admin/components/AdminFormActions";
 
 export default function InterviewEditor({ itemId }: { itemId?: string }) {
   const router = useRouter();
@@ -56,8 +57,8 @@ export default function InterviewEditor({ itemId }: { itemId?: string }) {
   if (loading) return <p className="text-zinc-500">加载中...</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-4xl space-y-6">
-      <h1 className="text-3xl font-bold">{itemId ? "编辑面试题" : "新建面试题"}</h1>
+    <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl space-y-6">
+      <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑面试题" : "新建面试题"}</h1>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>题目</Label><Input value={title} onChange={(e) => { setTitle(e.target.value); if (!itemId && !slug) setSlug(slugify(e.target.value)); }} required /></div>
         <div className="space-y-2"><Label>Slug</Label><Input value={slug} onChange={(e) => setSlug(e.target.value)} required /></div>
@@ -72,7 +73,7 @@ export default function InterviewEditor({ itemId }: { itemId?: string }) {
       <div className="flex items-center gap-3"><Switch checked={isPublished} onCheckedChange={setIsPublished} /><Label>发布</Label></div>
       <MarkdownEditor label="回答 (Markdown)" value={answer} onChange={setAnswer} />
       {error && <p className="text-sm text-red-600">{error}</p>}
-      <div className="flex gap-3"><Button type="submit" disabled={saving}>{saving ? "保存中..." : "保存"}</Button><Button type="button" variant="outline" onClick={() => router.push("/admin/interviews")}>取消</Button></div>
+      <AdminFormActions saving={saving} onCancel={() => router.push("/admin/interviews")} />
     </form>
   );
 }

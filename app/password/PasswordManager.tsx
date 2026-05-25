@@ -52,7 +52,7 @@ type DecryptedEntry = PasswordEntryData & {
   order?: number;
 };
 
-export default function PasswordManager() {
+export default function PasswordManager({ embedded = false }: { embedded?: boolean }) {
   const [vault, setVault] = useState<VaultState>(null);
   const [entries, setEntries] = useState<PasswordEntryType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -403,16 +403,18 @@ export default function PasswordManager() {
   }
 
   return (
-    <div className="mt-10">
+    <div className={embedded ? "mt-0" : "mt-10"}>
       <Slide>
-        <header className="mb-10">
-          <h1 className="font-incognito font-semibold tracking-tight sm:text-5xl text-3xl mb-6">
-            密码管理器
-          </h1>
-          <p className="max-w-2xl text-base dark:text-zinc-400 text-zinc-600 leading-relaxed">
-            安全存储你的账号密码，数据经主密码加密后保存。刷新页面需重新输入主密码。
-          </p>
-        </header>
+        {!embedded && (
+          <header className="mb-10">
+            <h1 className="font-incognito font-semibold tracking-tight sm:text-5xl text-3xl mb-6">
+              密码管理器
+            </h1>
+            <p className="max-w-2xl text-base dark:text-zinc-400 text-zinc-600 leading-relaxed">
+              安全存储你的账号密码，数据经主密码加密后保存。刷新页面需重新输入主密码。
+            </p>
+          </header>
+        )}
       </Slide>
 
       {error && (
@@ -436,7 +438,7 @@ export default function PasswordManager() {
           </div>
           <button
             onClick={() => setShowAddForm(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 hover:border-primary-color/50 transition font-incognito font-medium shrink-0"
+            className="flex w-full items-center justify-center gap-2 px-4 py-2 rounded-lg dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 hover:border-primary-color/50 transition font-incognito font-medium sm:w-auto shrink-0"
           >
             <BiPlus className="text-lg" />
             添加密码

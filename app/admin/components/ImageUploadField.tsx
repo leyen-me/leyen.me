@@ -49,7 +49,7 @@ export default function ImageUploadField({
     <div className="space-y-3">
       <Label>{label}</Label>
       {(previewUrl || value?.assetId) && (
-        <div className="relative h-40 w-64 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-700">
+        <div className="relative h-40 w-full max-w-xs overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-700 sm:max-w-sm md:w-64">
           {previewUrl ? (
             <Image src={previewUrl} alt={value?.alt || label} fill className="object-cover" />
           ) : (

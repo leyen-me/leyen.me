@@ -21,13 +21,13 @@ const sections = [
 
 export default function AdminDashboardPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="mt-2 text-zinc-500">管理 leyen.me 的全部内容</p>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Dashboard</h1>
+        <p className="mt-2 text-sm text-zinc-500 sm:text-base">管理 leyen.me 的全部内容</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         {sections.map((section) => (
           <Link key={section.href} href={section.href}>
             <Card className="transition-shadow hover:shadow-md">

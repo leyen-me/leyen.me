@@ -9,6 +9,7 @@ import MarkdownEditor from "@/app/admin/components/MarkdownEditor";
 import ImageUploadField from "@/app/admin/components/ImageUploadField";
 import { slugify } from "@/lib/utils";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
+import AdminFormActions from "@/app/admin/components/AdminFormActions";
 
 export default function ProjectEditor({ itemId }: { itemId?: string }) {
   const router = useRouter();
@@ -61,8 +62,8 @@ export default function ProjectEditor({ itemId }: { itemId?: string }) {
   if (loading) return <p className="text-zinc-500">加载中...</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-4xl space-y-6">
-      <h1 className="text-3xl font-bold">{itemId ? "编辑 Project" : "新建 Project"}</h1>
+    <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl space-y-6">
+      <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑 Project" : "新建 Project"}</h1>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>名称</Label><Input value={name} onChange={(e) => { setName(e.target.value); if (!itemId && !slug) setSlug(slugify(e.target.value)); }} required /></div>
         <div className="space-y-2"><Label>Slug</Label><Input value={slug} onChange={(e) => setSlug(e.target.value)} required /></div>
@@ -76,7 +77,7 @@ export default function ProjectEditor({ itemId }: { itemId?: string }) {
       <ImageUploadField label="Logo" value={logo} previewUrl={logoUrl} onChange={setLogo} />
       <ImageUploadField label="封面" value={coverImage} previewUrl={coverUrl} onChange={setCoverImage} />
       <MarkdownEditor label="描述 (Markdown)" value={description} onChange={setDescription} />
-      <div className="flex gap-3"><Button type="submit" disabled={saving}>保存</Button><Button type="button" variant="outline" onClick={() => router.push("/admin/projects")}>取消</Button></div>
+      <AdminFormActions saving={saving} onCancel={() => router.push("/admin/projects")} />
     </form>
   );
 }

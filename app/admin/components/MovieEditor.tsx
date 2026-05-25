@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import ImageUploadField from "@/app/admin/components/ImageUploadField";
 import { slugify } from "@/lib/utils";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
+import AdminFormActions from "@/app/admin/components/AdminFormActions";
 
 export default function MovieEditor({ itemId }: { itemId?: string }) {
   const router = useRouter();
@@ -67,8 +68,8 @@ export default function MovieEditor({ itemId }: { itemId?: string }) {
   if (loading) return <p className="text-zinc-500">加载中...</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6">
-      <h1 className="text-3xl font-bold">{itemId ? "编辑 Movie" : "新建 Movie"}</h1>
+    <form onSubmit={handleSubmit} className="mx-auto w-full max-w-2xl space-y-6">
+      <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑 Movie" : "新建 Movie"}</h1>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>标题</Label><Input value={title} onChange={(e) => { setTitle(e.target.value); if (!itemId && !slug) setSlug(slugify(e.target.value)); }} required /></div>
         <div className="space-y-2"><Label>Slug</Label><Input value={slug} onChange={(e) => setSlug(e.target.value)} required /></div>
@@ -83,7 +84,7 @@ export default function MovieEditor({ itemId }: { itemId?: string }) {
       <div className="space-y-2"><Label>演员（逗号分隔）</Label><Input value={cast} onChange={(e) => setCast(e.target.value)} /></div>
       <div className="space-y-2"><Label>描述</Label><Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} /></div>
       <div className="space-y-2"><Label>External URL</Label><Input value={externalUrl} onChange={(e) => setExternalUrl(e.target.value)} /></div>
-      <div className="flex gap-3"><Button type="submit" disabled={saving}>保存</Button><Button type="button" variant="outline" onClick={() => router.push("/admin/movies")}>取消</Button></div>
+      <AdminFormActions saving={saving} onCancel={() => router.push("/admin/movies")} />
     </form>
   );
 }

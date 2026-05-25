@@ -6,6 +6,8 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import AdminPageHeader from "@/app/admin/components/AdminPageHeader";
+import AdminTableShell from "@/app/admin/components/AdminTableShell";
 
 type PostListItem = {
   _id: string;
@@ -56,27 +58,27 @@ export default function PostsListPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Posts</h1>
-          <p className="mt-1 text-zinc-500">管理博客文章</p>
-        </div>
-        <Button asChild>
-          <Link href="/admin/posts/new">
-            <Plus className="h-4 w-4" />
-            新建文章
-          </Link>
-        </Button>
-      </div>
+      <AdminPageHeader
+        title="Posts"
+        description="管理博客文章"
+        action={
+          <Button asChild className="w-full sm:w-auto">
+            <Link href="/admin/posts/new">
+              <Plus className="h-4 w-4" />
+              新建文章
+            </Link>
+          </Button>
+        }
+      />
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <Input
           placeholder="搜索标题或 slug..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="max-w-sm"
+          className="w-full sm:max-w-sm"
         />
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {(["all", "published", "draft"] as const).map((value) => (
             <Button
               key={value}
@@ -92,62 +94,105 @@ export default function PostsListPage() {
 
       {loading ? (
         <p className="text-zinc-500">加载中...</p>
+      ) : filtered.length === 0 ? (
+        <p className="rounded-lg border border-dashed border-zinc-200 px-4 py-8 text-center text-zinc-500 dark:border-zinc-800">
+          暂无文章
+        </p>
       ) : (
-        <div className="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800">
-          <table className="w-full text-sm">
-            <thead className="bg-zinc-50 dark:bg-zinc-900">
-              <tr className="text-left">
-                <th className="px-4 py-3 font-medium">标题</th>
-                <th className="px-4 py-3 font-medium">Slug</th>
-                <th className="px-4 py-3 font-medium">状态</th>
-                <th className="px-4 py-3 font-medium">操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((post) => (
-                <tr key={post._id} className="border-t border-zinc-200 dark:border-zinc-800">
-                  <td className="px-4 py-3">
-                    <div className="font-medium">{post.title}</div>
-                    {post.featured && (
-                      <Badge variant="secondary" className="mt-1">
-                        Featured
+        <>
+          <div className="space-y-3 md:hidden">
+            {filtered.map((post) => (
+              <div
+                key={post._id}
+                className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-medium leading-snug">{post.title}</p>
+                    <p className="mt-1 truncate text-xs text-zinc-500">{post.slug}</p>
+                  </div>
+                  <Badge variant={post.isPublished ? "success" : "warning"}>
+                    {post.isPublished ? "已发布" : "草稿"}
+                  </Badge>
+                </div>
+                {post.featured && (
+                  <Badge variant="secondary" className="mt-2">
+                    Featured
+                  </Badge>
+                )}
+                <div className="mt-3 flex gap-2">
+                  <Button asChild variant="outline" size="sm" className="flex-1">
+                    <Link href={`/admin/posts/${post._id}`}>
+                      <Pencil className="h-4 w-4" />
+                      编辑
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 text-red-600"
+                    onClick={() => handleDelete(post._id, post.title)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    删除
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <AdminTableShell className="hidden md:block">
+            <table className="w-full text-sm">
+              <thead className="bg-zinc-50 dark:bg-zinc-900">
+                <tr className="text-left">
+                  <th className="px-4 py-3 font-medium">标题</th>
+                  <th className="px-4 py-3 font-medium">Slug</th>
+                  <th className="px-4 py-3 font-medium">状态</th>
+                  <th className="px-4 py-3 font-medium">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((post) => (
+                  <tr
+                    key={post._id}
+                    className="border-t border-zinc-200 dark:border-zinc-800"
+                  >
+                    <td className="px-4 py-3">
+                      <div className="font-medium">{post.title}</div>
+                      {post.featured && (
+                        <Badge variant="secondary" className="mt-1">
+                          Featured
+                        </Badge>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-zinc-500">{post.slug}</td>
+                    <td className="px-4 py-3">
+                      <Badge variant={post.isPublished ? "success" : "warning"}>
+                        {post.isPublished ? "已发布" : "草稿"}
                       </Badge>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-zinc-500">{post.slug}</td>
-                  <td className="px-4 py-3">
-                    <Badge variant={post.isPublished ? "success" : "warning"}>
-                      {post.isPublished ? "已发布" : "草稿"}
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2">
-                      <Button asChild variant="ghost" size="icon">
-                        <Link href={`/admin/posts/${post._id}`}>
-                          <Pencil className="h-4 w-4" />
-                        </Link>
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDelete(post._id, post.title)}
-                      >
-                        <Trash2 className="h-4 w-4 text-red-600" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={4} className="px-4 py-8 text-center text-zinc-500">
-                    暂无文章
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex gap-2">
+                        <Button asChild variant="ghost" size="icon">
+                          <Link href={`/admin/posts/${post._id}`}>
+                            <Pencil className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(post._id, post.title)}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-600" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </AdminTableShell>
+        </>
       )}
     </div>
   );

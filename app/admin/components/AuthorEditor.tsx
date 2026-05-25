@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ImageUploadField from "@/app/admin/components/ImageUploadField";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
+import AdminFormActions from "@/app/admin/components/AdminFormActions";
 
 export default function AuthorEditor({ itemId }: { itemId?: string }) {
   const router = useRouter();
@@ -46,13 +47,13 @@ export default function AuthorEditor({ itemId }: { itemId?: string }) {
   if (loading) return <p className="text-zinc-500">加载中...</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6">
-      <h1 className="text-3xl font-bold">{itemId ? "编辑作者" : "新建作者"}</h1>
+    <form onSubmit={handleSubmit} className="mx-auto w-full max-w-2xl space-y-6">
+      <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑作者" : "新建作者"}</h1>
       <div className="space-y-2"><Label>姓名</Label><Input value={name} onChange={(e) => setName(e.target.value)} required /></div>
       <div className="space-y-2"><Label>Twitter URL</Label><Input value={twitterUrl} onChange={(e) => setTwitterUrl(e.target.value)} required /></div>
       <ImageUploadField label="头像" value={photo} previewUrl={photoUrl} onChange={setPhoto} />
       {error && <p className="text-sm text-red-600">{error}</p>}
-      <div className="flex gap-3"><Button type="submit" disabled={saving}>保存</Button><Button type="button" variant="outline" onClick={() => router.push("/admin/authors")}>取消</Button></div>
+      <AdminFormActions saving={saving} onCancel={() => router.push("/admin/authors")} />
     </form>
   );
 }

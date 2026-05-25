@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import ImageUploadField from "@/app/admin/components/ImageUploadField";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
+import AdminFormActions from "@/app/admin/components/AdminFormActions";
 
 export default function JobEditor({ itemId }: { itemId?: string }) {
   const router = useRouter();
@@ -51,8 +52,8 @@ export default function JobEditor({ itemId }: { itemId?: string }) {
   if (loading) return <p className="text-zinc-500">加载中...</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6">
-      <h1 className="text-3xl font-bold">{itemId ? "编辑 Job" : "新建 Job"}</h1>
+    <form onSubmit={handleSubmit} className="mx-auto w-full max-w-2xl space-y-6">
+      <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑 Job" : "新建 Job"}</h1>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>公司</Label><Input value={name} onChange={(e) => setName(e.target.value)} required /></div>
         <div className="space-y-2"><Label>职位</Label><Input value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required /></div>
@@ -64,7 +65,7 @@ export default function JobEditor({ itemId }: { itemId?: string }) {
         <div className="space-y-2"><Label>开始日期</Label><Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} /></div>
         <div className="space-y-2"><Label>结束日期</Label><Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} /></div>
       </div>
-      <div className="flex gap-3"><Button type="submit" disabled={saving}>保存</Button><Button type="button" variant="outline" onClick={() => router.push("/admin/jobs")}>取消</Button></div>
+      <AdminFormActions saving={saving} onCancel={() => router.push("/admin/jobs")} />
     </form>
   );
 }

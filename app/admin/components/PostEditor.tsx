@@ -17,6 +17,7 @@ import MarkdownEditor from "@/app/admin/components/MarkdownEditor";
 import ImageUploadField from "@/app/admin/components/ImageUploadField";
 import { slugify } from "@/lib/utils";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
+import AdminFormActions from "@/app/admin/components/AdminFormActions";
 
 type AuthorOption = { _id: string; name: string };
 
@@ -134,9 +135,9 @@ export default function PostEditor({ postId }: PostEditorProps) {
   if (loading) return <p className="text-zinc-500">加载中...</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-4xl space-y-6">
+    <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
           {postId ? "编辑文章" : "新建文章"}
         </h1>
       </div>
@@ -254,14 +255,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 
-      <div className="flex gap-3">
-        <Button type="submit" disabled={saving}>
-          {saving ? "保存中..." : "保存"}
-        </Button>
-        <Button type="button" variant="outline" onClick={() => router.push("/admin/posts")}>
-          取消
-        </Button>
-      </div>
+      <AdminFormActions saving={saving} onCancel={() => router.push("/admin/posts")} />
     </form>
   );
 }

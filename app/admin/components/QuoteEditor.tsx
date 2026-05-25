@@ -6,7 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import AdminFormActions from "@/app/admin/components/AdminFormActions";
 
 export default function QuoteEditor({ itemId }: { itemId?: string }) {
   const router = useRouter();
@@ -45,14 +52,14 @@ export default function QuoteEditor({ itemId }: { itemId?: string }) {
   if (loading) return <p className="text-zinc-500">加载中...</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-6">
-      <h1 className="text-3xl font-bold">{itemId ? "编辑 Quote" : "新建 Quote"}</h1>
+    <form onSubmit={handleSubmit} className="mx-auto w-full max-w-2xl space-y-6">
+      <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑 Quote" : "新建 Quote"}</h1>
       <div className="space-y-2"><Label>类型</Label><Select value={contentType} onValueChange={(v) => setContentType(v as "quote" | "essay")}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="quote">Short Quote</SelectItem><SelectItem value="essay">Short Essay</SelectItem></SelectContent></Select></div>
       <div className="space-y-2"><Label>内容</Label><Textarea value={quote} onChange={(e) => setQuote(e.target.value)} rows={6} /></div>
       <div className="space-y-2"><Label>作者</Label><Input value={author} onChange={(e) => setAuthor(e.target.value)} required /></div>
       <div className="space-y-2"><Label>Context</Label><Input value={context} onChange={(e) => setContext(e.target.value)} /></div>
       <div className="space-y-2"><Label>Tags（逗号分隔）</Label><Input value={tags} onChange={(e) => setTags(e.target.value)} required /></div>
-      <div className="flex gap-3"><Button type="submit" disabled={saving}>保存</Button><Button type="button" variant="outline" onClick={() => router.push("/admin/quotes")}>取消</Button></div>
+      <AdminFormActions saving={saving} onCancel={() => router.push("/admin/quotes")} />
     </form>
   );
 }
