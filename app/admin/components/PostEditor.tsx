@@ -11,7 +11,6 @@ import ImmersiveMarkdownEditor, {
 } from "@/app/admin/components/ImmersiveMarkdownEditor";
 import MarkdownFormatToolbar from "@/app/admin/components/MarkdownFormatToolbar";
 import PostAiPreviewDialog from "@/app/admin/components/PostAiPreviewDialog";
-import PostAiSelectionBubble from "@/app/admin/components/PostAiSelectionBubble";
 import PostAiToolbar from "@/app/admin/components/PostAiToolbar";
 import PostMetadataPanel, {
   type PostMetadataForm,
@@ -62,9 +61,6 @@ export default function PostEditor({ postId }: PostEditorProps) {
   const [editorSelection, setEditorSelection] = useState<EditorSelection | null>(
     null
   );
-  const [editorTextarea, setEditorTextarea] = useState<HTMLTextAreaElement | null>(
-    null
-  );
   const modKey = useModKeyLabel();
 
   const handleSelectionChange = useCallback(
@@ -82,9 +78,6 @@ export default function PostEditor({ postId }: PostEditorProps) {
         }
         return selection;
       });
-
-      const textarea = editorRef.current?.getTextarea() ?? null;
-      setEditorTextarea((prev) => (prev === textarea ? prev : textarea));
     },
     []
   );
@@ -353,13 +346,6 @@ export default function PostEditor({ postId }: PostEditorProps) {
         value={form.content}
         onChange={(content) => updateField("content", content)}
         onSelectionChange={handleSelectionChange}
-      />
-
-      <PostAiSelectionBubble
-        selection={editorSelection}
-        textarea={editorTextarea}
-        loading={ai.loading}
-        onPolish={ai.runPolish}
       />
 
       <PostAiPreviewDialog
