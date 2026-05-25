@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Menu, Settings2, X } from "lucide-react";
+import { ArrowLeft, Loader2, Menu, Save, Send, Settings2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ImmersiveMarkdownEditor, {
@@ -285,6 +285,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
               className="hidden sm:inline-flex"
               onClick={() => router.push("/admin/posts")}
             >
+              <ArrowLeft className="h-4 w-4" />
               取消
             </Button>
             <Button
@@ -305,6 +306,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
               onClick={() => setMetadataOpen(true)}
               title={`文章设置 (${modKey}+,)`}
             >
+              <Settings2 className="h-4 w-4" />
               设置
             </Button>
             <Button
@@ -315,6 +317,11 @@ export default function PostEditor({ postId }: PostEditorProps) {
               onClick={() => save()}
               title={`${isDraft ? "保存草稿" : "保存"} (${modKey}+S)`}
             >
+              {saving ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
               {saving ? "保存中..." : isDraft ? "保存草稿" : "保存"}
             </Button>
             {isDraft ? (
@@ -325,6 +332,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
                 onClick={() => save({ publish: true })}
                 title={`发布 (${modKey}+Shift+S)`}
               >
+                <Send className="h-4 w-4" />
                 发布
               </Button>
             ) : null}
@@ -345,7 +353,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
       </header>
 
       {error && (
-        <div className="flex shrink-0 items-start gap-2 border-b border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/40">
+        <div className="flex shrink-0 items-center gap-2 border-b border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/40">
           <p className="min-w-0 flex-1">{error}</p>
           <Button
             type="button"
@@ -361,7 +369,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
       )}
 
       {ai.error && (
-        <div className="flex shrink-0 items-start gap-2 border-b border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+        <div className="flex shrink-0 items-center gap-2 border-b border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
           <p className="min-w-0 flex-1">{ai.error}</p>
           <Button
             type="button"
