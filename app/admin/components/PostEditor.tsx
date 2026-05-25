@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Menu, Settings2 } from "lucide-react";
+import { Menu, Settings2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ImmersiveMarkdownEditor, {
@@ -345,14 +345,34 @@ export default function PostEditor({ postId }: PostEditorProps) {
       </header>
 
       {error && (
-        <div className="shrink-0 border-b border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/40">
-          {error}
+        <div className="flex shrink-0 items-start gap-2 border-b border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/40">
+          <p className="min-w-0 flex-1">{error}</p>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 shrink-0 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+            onClick={() => setError("")}
+            aria-label="关闭"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
       )}
 
       {ai.error && (
-        <div className="shrink-0 border-b border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
-          {ai.error}
+        <div className="flex shrink-0 items-start gap-2 border-b border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+          <p className="min-w-0 flex-1">{ai.error}</p>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 shrink-0 text-amber-800 hover:text-amber-900 dark:text-amber-200 dark:hover:text-amber-100"
+            onClick={ai.clearError}
+            aria-label="关闭"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
       )}
 
