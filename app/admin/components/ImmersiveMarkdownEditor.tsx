@@ -34,6 +34,7 @@ type ImmersiveMarkdownEditorProps = {
   value: string;
   onChange: (value: string) => void;
   onSelectionChange?: (selection: EditorSelection | null) => void;
+  onContentScroll?: (scrolled: boolean) => void;
   className?: string;
 };
 
@@ -41,10 +42,21 @@ const ImmersiveMarkdownEditor = forwardRef<
   ImmersiveMarkdownEditorHandle,
   ImmersiveMarkdownEditorProps
 >(function ImmersiveMarkdownEditor(
-  { value, onChange, onSelectionChange, className },
+  { value, onChange, onSelectionChange, onContentScroll, className },
   ref
 ) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const onContentScrollRef = useRef(onContentScroll);
+  onContentScrollRef.current = onContentScroll;
+
+  const notifyContentScroll = useCallback(() => {
+    const textareaScrollTop = textareaRef.current?.scrollTop ?? 0;
+    const previewScrollTop = previewRef.current?.scrollTop ?? 0;
+    onContentScrollRef.current?.(
+      textareaScrollTop > 4 || previewScrollTop > 4
+    );
+  }, []);
 
   const readSelection = useCallback((): EditorSelection | null => {
     const textarea = textareaRef.current;
@@ -159,11 +171,16 @@ const ImmersiveMarkdownEditor = forwardRef<
             onKeyUp={notifySelectionChange}
             onMouseUp={notifySelectionChange}
             onSelect={notifySelectionChange}
+            onScroll={notifyContentScroll}
             placeholder="开始写作..."
             className="min-h-0 flex-1 resize-none rounded-none border-0 bg-transparent px-4 py-4 font-mono text-sm leading-relaxed shadow-none focus-visible:ring-0"
           />
         </div>
-        <div className="hidden min-h-0 overflow-y-auto bg-zinc-50/50 dark:bg-zinc-900/30 lg:block">
+        <div
+          ref={previewRef}
+          onScroll={notifyContentScroll}
+          className="hidden min-h-0 overflow-y-auto bg-zinc-50/50 dark:bg-zinc-900/30 lg:block"
+        >
           <MarkdownPreview
             markdown={value}
             className="min-h-full rounded-none border-0 bg-transparent"

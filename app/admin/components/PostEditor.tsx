@@ -21,7 +21,7 @@ import {
   useModKeyLabel,
   usePostEditorShortcuts,
 } from "@/app/admin/hooks/usePostEditorShortcuts";
-import { isValidSlug, normalizeSlug, slugify } from "@/lib/utils";
+import { cn, isValidSlug, normalizeSlug, slugify } from "@/lib/utils";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
 
 type AuthorOption = { _id: string; name: string };
@@ -61,6 +61,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
   const [editorSelection, setEditorSelection] = useState<EditorSelection | null>(
     null
   );
+  const [headerElevated, setHeaderElevated] = useState(false);
   const modKey = useModKeyLabel();
 
   const lastSelectionRef = useRef<EditorSelection | null>(null);
@@ -249,7 +250,13 @@ export default function PostEditor({ postId }: PostEditorProps) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <header className="sticky top-0 z-30 flex shrink-0 flex-col gap-2 border-b border-zinc-200 bg-white/95 px-3 py-2 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95 sm:px-4">
+      <header
+        className={cn(
+          "sticky top-0 z-30 flex shrink-0 flex-col gap-2 border-b border-zinc-200 bg-white/95 px-3 py-2 backdrop-blur transition-shadow duration-200 dark:border-zinc-800 dark:bg-zinc-950/95 sm:px-4",
+          headerElevated &&
+            "shadow-md shadow-zinc-900/5 dark:shadow-black/40"
+        )}
+      >
         <div className="flex items-center gap-2 sm:gap-3">
           <Button
             type="button"
@@ -354,6 +361,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
         value={form.content}
         onChange={(content) => updateField("content", content)}
         onSelectionChange={handleSelectionChange}
+        onContentScroll={setHeaderElevated}
       />
 
       <PostAiPreviewDialog
