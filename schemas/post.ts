@@ -89,13 +89,6 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "body",
-      title: "Post Body (Legacy)",
-      type: "blockContent",
-      description: "Legacy Portable Text format, use content for Markdown",
-      hidden: ({ document }) => !!document?.content,
-    }),
-    defineField({
       name: "content",
       title: "Post Content (Markdown)",
       type: "text",

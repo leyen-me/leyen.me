@@ -8,8 +8,6 @@ import { formatDate } from "../../utils/date";
 import { HiCalendar } from "react-icons/hi";
 import { sanityFetch } from "@/lib/sanity.client";
 import { readTime } from "@/app/utils/readTime";
-import { toPlainText } from "@portabletext/react";
-
 const fallbackImage: string =
   "https://res.cloudinary.com/victoreke/image/upload/v1692608339/victoreke/blog.png";
 
@@ -62,10 +60,11 @@ export default async function Posts() {
                         <BiSolidTime />
                         <div className="">
                           {readTime(
-                          post.content
-                            ? post.content.replace(/#{1,6}\s|[*_`~\[\]()]/g, "").trim()
-                            : toPlainText(post.body || [])
-                        )}
+                            (post.content ?? post.description ?? "").replace(
+                              /#{1,6}\s|[*_`~\[\]()]/g,
+                              ""
+                            ).trim()
+                          )}
                         </div>
                       </div>
                     </div>

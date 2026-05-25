@@ -76,7 +76,6 @@ export const postsQuery = groq`*[_type == "Post"] | order(_createdAt desc){
     photo, 
     twitterUrl
   },
-  body,
   content,
 }`;
 
@@ -98,7 +97,6 @@ export const singlePostQuery = groq`*[_type == "Post" && slug.current == $slug][
     }, 
     twitterUrl
   },
-  body,
   content,
 }`;
 

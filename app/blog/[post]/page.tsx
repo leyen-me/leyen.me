@@ -4,9 +4,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { PostType } from "@/types";
 import { singlePostQuery } from "@/lib/sanity.query";
-import { toPlainText } from "@portabletext/react";
 import { MdxMarkdownBody } from "@/app/components/shared/MdxMarkdownBody";
-import { convertPortableTextToMarkdown } from "@/lib/portable-text-to-markdown";
 import { BiChevronRight, BiSolidTime } from "react-icons/bi";
 import { formatDate } from "../../utils/date";
 import SharePost from "../../components/shared/SharePost";
@@ -91,12 +89,8 @@ export default async function Post({ params }: Props) {
     notFound();
   }
 
-  const markdown =
-    post.content?.trim() ||
-    (post.body?.length ? convertPortableTextToMarkdown(post.body) : "");
-  const words = post.content
-    ? post.content.replace(/#{1,6}\s|[*_`~\[\]()]/g, "").trim()
-    : toPlainText(post.body || []);
+  const markdown = post.content?.trim() || "";
+  const words = markdown.replace(/#{1,6}\s|[*_`~\[\]()]/g, "").trim();
   const headings = extractMarkdownHeadings(markdown);
   const publishedAt = post.date ? post.date : post._createdAt;
   const publishedLabel = formatDate(publishedAt);
