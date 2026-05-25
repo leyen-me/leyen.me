@@ -54,8 +54,37 @@ export default function PostEditor({ postId }: PostEditorProps) {
   useEffect(() => {
     fetch("/api/admin/authors")
       .then((r) => r.json())
-      .then((data) => setAuthors(Array.isArray(data) ? data : []));
-  }, []);
+      .then((data) => {
+        const list = Array.isArray(data) ? data : [];
+        setAuthors(list);
+        if (!postId && list.length === 1) {
+          setForm((prev) =>
+            prev.authorId ? prev : { ...prev, authorId: list[0]._id }
+          );
+        }
+      });
+  }, [postId]);
+
+  function getMissingFields(): string[] {
+    const missing: string[] = [];
+    if (!form.title.trim()) missing.push("标题");
+    if (!(form.slug.trim() || slugify(form.title))) missing.push("Slug");
+    if (!form.description.trim()) missing.push("描述");
+    if (!form.authorId) missing.push("作者");
+    if (!form.tags.split(",").map((t) => t.trim()).filter(Boolean).length) {
+      missing.push("标签");
+    }
+    return missing;
+  }
+
+  function validateBeforeSave() {
+    const missing = getMissingFields();
+    if (missing.length === 0) return true;
+
+    setError(`请在设置中填写：${missing.join("、")}`);
+    setMetadataOpen(true);
+    return false;
+  }
 
   useEffect(() => {
     if (!postId) return;
@@ -97,6 +126,8 @@ export default function PostEditor({ postId }: PostEditorProps) {
   }
 
   async function save(options?: { publish?: boolean }) {
+    if (!validateBeforeSave()) return;
+
     setSaving(true);
     setError("");
 
@@ -126,7 +157,13 @@ export default function PostEditor({ postId }: PostEditorProps) {
         body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Save failed");
+      if (!res.ok) {
+        if (data.error === "Validation failed") {
+          setMetadataOpen(true);
+          throw new Error("部分字段未通过校验，请在设置中检查并补全");
+        }
+        throw new Error(data.error || "Save failed");
+      }
 
       if (options?.publish) {
         setForm((prev) => ({ ...prev, isPublished: true }));
