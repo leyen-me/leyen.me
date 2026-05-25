@@ -1,43 +1,16 @@
-import { z } from "zod";
 import { createChatCompletion } from "@/lib/admin/ai/client";
-import { getAiModel } from "@/lib/admin/ai/config";
+import { getAiStructuredModel } from "@/lib/admin/ai/config";
 import { parseJsonResponse, previewText } from "@/lib/admin/ai/parse-json";
 import {
   buildLevelContext,
   ENRICH_WORD_SYSTEM_PROMPT,
 } from "@/lib/admin/ai/english/prompts";
+import { normalizeEnrichedWord } from "@/lib/admin/ai/english/normalize";
 import type { EnglishWordDoc } from "@/lib/admin/english/daily-flow";
 import { adminEnglishWordByIdQuery } from "@/lib/admin/english/queries";
 import { adminEnglishSettingsQuery } from "@/lib/admin/english/queries";
 import { isWordEnriched } from "@/lib/admin/english/word-utils";
 import { writeClient } from "@/lib/sanity.write";
-
-const phraseSchema = z.object({
-  phrase: z.string(),
-  meaningZh: z.string(),
-});
-
-const exampleSchema = z.object({
-  sentence: z.string(),
-  source: z.enum(["ielts", "toefl", "movie", "general"]),
-  translationZh: z.string(),
-});
-
-const derivationSchema = z.object({
-  word: z.string(),
-  partOfSpeech: z.string(),
-  meaningZh: z.string(),
-});
-
-const enrichedWordSchema = z.object({
-  word: z.string(),
-  phonetic: z.string(),
-  partOfSpeech: z.string(),
-  meaningZh: z.string(),
-  phrases: z.array(phraseSchema).min(1),
-  examples: z.array(exampleSchema).min(1),
-  derivations: z.array(derivationSchema),
-});
 
 async function fetchWord(wordId: string): Promise<EnglishWordDoc | null> {
   return writeClient.fetch<EnglishWordDoc | null>(adminEnglishWordByIdQuery, {
@@ -47,7 +20,7 @@ async function fetchWord(wordId: string): Promise<EnglishWordDoc | null> {
 
 async function patchWordEnrichment(
   wordId: string,
-  enriched: z.infer<typeof enrichedWordSchema>
+  enriched: NonNullable<ReturnType<typeof normalizeEnrichedWord>>
 ): Promise<EnglishWordDoc> {
   await writeClient
     .patch(wordId)
@@ -84,9 +57,9 @@ export async function enrichWord(wordId: string): Promise<EnglishWordDoc> {
   const targetExam = settings?.targetExam ?? "none";
 
   const raw = await createChatCompletion({
-    model: getAiModel(),
+    model: getAiStructuredModel(),
     temperature: 0.3,
-    max_tokens: 1536,
+    max_tokens: 2048,
     response_format: { type: "json_object" },
     messages: [
       { role: "system", content: ENRICH_WORD_SYSTEM_PROMPT },
@@ -95,6 +68,7 @@ export async function enrichWord(wordId: string): Promise<EnglishWordDoc> {
         content: [
           buildLevelContext(level, targetExam),
           `请为单词「${wordDoc.word}」生成详解。`,
+          "examples[].source 只能是 ielts、toefl、movie、general 四个值之一。",
         ].join("\n"),
       },
     ],
@@ -113,17 +87,18 @@ export async function enrichWord(wordId: string): Promise<EnglishWordDoc> {
     throw new Error("AI 返回格式异常，请重试");
   }
 
-  const parsed = enrichedWordSchema.safeParse(parsedJson);
-  if (!parsed.success) {
-    console.error("[ai/english/enrich-word] Schema mismatch", {
+  const normalized = normalizeEnrichedWord(parsedJson);
+  if (!normalized) {
+    console.error("[ai/english/enrich-word] Unable to normalize", {
       wordId,
       word: wordDoc.word,
-      error: parsed.error,
+      raw: previewText(raw, 500),
+      parsedJson,
     });
     throw new Error("AI 返回的单词详解不完整，请重试");
   }
 
-  return patchWordEnrichment(wordId, parsed.data);
+  return patchWordEnrichment(wordId, normalized);
 }
 
 /** 按顺序逐词 enrich（避免单次 token 过大） */

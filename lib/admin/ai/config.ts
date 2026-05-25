@@ -22,6 +22,20 @@ export function getAiModel(): string {
   return process.env.AI_MODEL ?? process.env.OPENAI_MODEL ?? "deepseek-chat";
 }
 
+/** JSON / structured output — avoid reasoning models that burn tokens on thinking. */
+export function getAiStructuredModel(): string {
+  const configured = getAiModel();
+
+  if (isLikelyReasoningModel(configured)) {
+    console.warn(
+      `[ai] AI_MODEL "${configured}" uses reasoning/thinking and may truncate JSON. Falling back to deepseek-chat.`
+    );
+    return "deepseek-chat";
+  }
+
+  return configured;
+}
+
 /** Lightweight tasks (slug, tags, etc.) — no reasoning/thinking. */
 export function isLikelyReasoningModel(model: string): boolean {
   return /reasoner|deepseek-v4|-pro$|-flash$/i.test(model);
