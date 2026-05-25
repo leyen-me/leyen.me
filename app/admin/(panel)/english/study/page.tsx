@@ -1,0 +1,348 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import AdminPageHeader from "@/app/admin/components/AdminPageHeader";
+import QuizPanel, { type QuizQuestion } from "@/app/admin/components/english/QuizPanel";
+import WordDetailView, { type WordDetail } from "@/app/admin/components/english/WordDetailView";
+import { useEnrichedWord } from "@/app/admin/hooks/useEnrichedWord";
+
+type StudyStep = "review" | "learn" | "exam" | "done";
+
+type TodayState = {
+  today: string;
+  currentStep: StudyStep;
+  reviewWords: WordDetail[];
+  todayWords: WordDetail[];
+  hasTodayBatch: boolean;
+};
+
+export default function EnglishStudyPage() {
+  const [state, setState] = useState<TodayState | null>(null);
+  const [step, setStep] = useState<StudyStep>("review");
+  const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
+  const [quizLoading, setQuizLoading] = useState(false);
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [learnIndex, setLearnIndex] = useState(0);
+  const [error, setError] = useState("");
+
+  const currentRawWord = state?.todayWords[learnIndex] ?? null;
+  const {
+    word: currentWord,
+    loading: enriching,
+    error: enrichError,
+  } = useEnrichedWord(step === "learn" ? currentRawWord : null);
+
+  async function loadState() {
+    setLoading(true);
+    setError("");
+    const res = await fetch("/api/admin/english/study/today");
+    const data = await res.json();
+    if (!res.ok) {
+      setError(data.error ?? "加载失败");
+      setLoading(false);
+      return;
+    }
+    setState(data);
+    setStep(data.currentStep);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    loadState();
+  }, []);
+
+  async function generateTodayWords() {
+    setGenerating(true);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/ai/english/generate-words", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "生成失败");
+      await loadState();
+      setStep("learn");
+      setLearnIndex(0);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "生成失败");
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  async function loadQuiz(mode: "review" | "new_words", wordIds: string[]) {
+    setQuizLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/ai/english/generate-quiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          wordIds,
+          mode,
+          questionTypes: ["dictation", "multiple_choice", "fill_blank"],
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "出题失败");
+      setQuestions(data.questions);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "出题失败");
+    } finally {
+      setQuizLoading(false);
+    }
+  }
+
+  async function handleReviewStart() {
+    if (!state?.reviewWords.length) {
+      setStep("learn");
+      return;
+    }
+    await loadQuiz(
+      "review",
+      state.reviewWords.map((w) => w._id)
+    );
+  }
+
+  async function handleReviewSubmit(
+    results: Array<{ wordId: string; correct: boolean }>
+  ) {
+    await fetch("/api/admin/english/study/review", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ results }),
+    });
+    await loadState();
+    setStep("learn");
+    setQuestions([]);
+  }
+
+  async function finishLearning() {
+    if (!state) return;
+    await fetch("/api/admin/english/daily", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        date: state.today,
+        step: "learn",
+        wordsLearnedCount: state.todayWords.length,
+      }),
+    });
+    setStep("exam");
+    await loadQuiz(
+      "new_words",
+      state.todayWords.map((w) => w._id)
+    );
+  }
+
+  async function handleExamSubmit(
+    results: Array<{ wordId: string; correct: boolean }>
+  ) {
+    if (!state) return;
+    await fetch("/api/admin/english/study/exam", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ batchDate: state.today, results }),
+    });
+    setStep("done");
+    await loadState();
+  }
+
+  if (loading) {
+    return <p className="text-zinc-500">加载中...</p>;
+  }
+
+  return (
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="每日学习"
+        description="复习 → 新词 → 考试"
+        action={
+          <Button asChild variant="outline">
+            <Link href="/admin/english">
+              <ArrowLeft className="h-4 w-4" />
+              返回
+            </Link>
+          </Button>
+        }
+      />
+
+      {error && (
+        <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">
+          {error}
+        </div>
+      )}
+
+      <StepIndicator current={step} />
+
+      {step === "review" && (
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold">第一步：复习旧词</h2>
+          {state?.reviewWords.length ? (
+            <>
+              <p className="text-zinc-500">
+                有 {state.reviewWords.length} 个单词到期复习，先完成复习考试再学新词。
+              </p>
+              {questions.length === 0 ? (
+                <Button onClick={handleReviewStart} disabled={quizLoading}>
+                  {quizLoading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      出题中...
+                    </>
+                  ) : (
+                    "开始复习考试"
+                  )}
+                </Button>
+              ) : (
+                <QuizPanel
+                  questions={questions}
+                  title="复习考试"
+                  onSubmit={handleReviewSubmit}
+                />
+              )}
+            </>
+          ) : (
+            <>
+              <p className="text-zinc-500">暂无到期复习词，可以直接学习新词。</p>
+              <Button onClick={() => setStep("learn")}>继续</Button>
+            </>
+          )}
+        </section>
+      )}
+
+      {step === "learn" && (
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold">第二步：学习新词</h2>
+          {!state?.hasTodayBatch ? (
+            <div className="space-y-3">
+              <p className="text-zinc-500">
+                AI 将根据你的等级生成今日新单词（仅词表，详解在学习时逐词生成）。
+              </p>
+              <Button onClick={generateTodayWords} disabled={generating}>
+                {generating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    AI 生成中...
+                  </>
+                ) : (
+                  "生成今日单词"
+                )}
+              </Button>
+            </div>
+          ) : (
+            <>
+              <p className="text-sm text-zinc-500">
+                {learnIndex + 1} / {state.todayWords.length}
+              </p>
+              {enrichError && (
+                <p className="text-sm text-amber-600 dark:text-amber-400">
+                  {enrichError}
+                </p>
+              )}
+              {enriching ? (
+                <div className="flex items-center gap-2 text-zinc-500">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  AI 正在生成「{currentRawWord?.word}」的详解...
+                </div>
+              ) : currentWord ? (
+                <WordDetailView word={currentWord} showAiTutor={false} />
+              ) : null}
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  disabled={learnIndex === 0 || enriching}
+                  onClick={() => setLearnIndex((i) => i - 1)}
+                >
+                  上一个
+                </Button>
+                {learnIndex < state.todayWords.length - 1 ? (
+                  <Button disabled={enriching} onClick={() => setLearnIndex((i) => i + 1)}>
+                    下一个
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                ) : (
+                  <Button disabled={enriching} onClick={finishLearning}>
+                    学完，开始考试
+                  </Button>
+                )}
+              </div>
+            </>
+          )}
+        </section>
+      )}
+
+      {step === "exam" && (
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold">第三步：今日考试</h2>
+          {questions.length === 0 && !quizLoading ? (
+            <Button
+              onClick={() =>
+                state &&
+                loadQuiz(
+                  "new_words",
+                  state.todayWords.map((w) => w._id)
+                )
+              }
+            >
+              开始考试
+            </Button>
+          ) : (
+            <QuizPanel
+              questions={questions}
+              title="新词考试"
+              loading={quizLoading}
+              onSubmit={handleExamSubmit}
+            />
+          )}
+        </section>
+      )}
+
+      {step === "done" && (
+        <section className="space-y-4 text-center">
+          <h2 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+            今日学习完成！
+          </h2>
+          <p className="text-zinc-500">明天继续加油，先复习再学新词。</p>
+          <Button asChild>
+            <Link href="/admin/english">返回首页</Link>
+          </Button>
+        </section>
+      )}
+    </div>
+  );
+}
+
+function StepIndicator({ current }: { current: StudyStep }) {
+  const steps: Array<{ key: StudyStep; label: string }> = [
+    { key: "review", label: "复习" },
+    { key: "learn", label: "新词" },
+    { key: "exam", label: "考试" },
+    { key: "done", label: "完成" },
+  ];
+  const order = steps.map((s) => s.key);
+  const currentIdx = order.indexOf(current);
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {steps.map((s, i) => (
+        <div
+          key={s.key}
+          className={`rounded-full px-3 py-1 text-sm ${
+            i <= currentIdx
+              ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200"
+              : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800"
+          }`}
+        >
+          {s.label}
+        </div>
+      ))}
+    </div>
+  );
+}

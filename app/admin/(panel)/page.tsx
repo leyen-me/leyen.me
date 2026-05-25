@@ -17,6 +17,7 @@ const sections = [
   { href: "/admin/projects", title: "Projects", desc: "项目展示" },
   { href: "/admin/profile", title: "Profile", desc: "个人资料" },
   { href: "/admin/password", title: "Password", desc: "密码库" },
+  { href: "/admin/english", title: "English", desc: "AI 英语学习" },
 ];
 
 export default function AdminDashboardPage() {

@@ -15,6 +15,7 @@ import {
   Lock,
   LogOut,
   X,
+  GraduationCap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ export const adminNavItems: Array<{
   { href: "/admin/projects", label: "Projects", icon: FolderKanban },
   { href: "/admin/profile", label: "Profile", icon: UserCircle },
   { href: "/admin/password", label: "Password", icon: Lock },
+  { href: "/admin/english", label: "English", icon: GraduationCap },
 ] ;
 
 type AdminSidebarProps = {
