@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MarkdownEditor from "@/app/admin/components/MarkdownEditor";
-import { slugify } from "@/lib/utils";
+import { normalizeSlug, slugify } from "@/lib/utils";
 import { INTERVIEW_CATEGORY_OPTIONS } from "@/lib/interview-categories";
 import AdminFormActions from "@/app/admin/components/AdminFormActions";
 
@@ -39,7 +39,7 @@ export default function InterviewEditor({ itemId }: { itemId?: string }) {
     e.preventDefault();
     setSaving(true);
     setError("");
-    const payload = { title, slug: slug || slugify(title), category, answer, isPublished };
+    const payload = { title, slug: normalizeSlug(slug || slugify(title)), category, answer, isPublished };
     const res = await fetch(itemId ? `/api/admin/interviews/${itemId}` : "/api/admin/interviews", {
       method: itemId ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
@@ -61,7 +61,7 @@ export default function InterviewEditor({ itemId }: { itemId?: string }) {
       <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑面试题" : "新建面试题"}</h1>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>题目</Label><Input value={title} onChange={(e) => { setTitle(e.target.value); if (!itemId && !slug) setSlug(slugify(e.target.value)); }} required /></div>
-        <div className="space-y-2"><Label>Slug</Label><Input value={slug} onChange={(e) => setSlug(e.target.value)} required /></div>
+        <div className="space-y-2"><Label>Slug</Label><Input value={slug} onChange={(e) => setSlug(normalizeSlug(e.target.value))} placeholder="my-interview" pattern="[a-z][a-z0-9-]*" required /></div>
       </div>
       <div className="space-y-2">
         <Label>分类</Label>

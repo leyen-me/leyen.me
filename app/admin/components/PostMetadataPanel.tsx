@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import ImageUploadField from "@/app/admin/components/ImageUploadField";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
-import { cn } from "@/lib/utils";
+import { cn, normalizeSlug } from "@/lib/utils";
 
 type AuthorOption = { _id: string; name: string };
 
@@ -107,9 +107,14 @@ export default function PostMetadataPanel({
             <Input
               id="meta-slug"
               value={form.slug}
-              onChange={(e) => onFieldChange("slug", e.target.value)}
+              onChange={(e) => onFieldChange("slug", normalizeSlug(e.target.value))}
+              placeholder="my-first-post"
+              pattern="[a-z][a-z0-9-]*"
               required
             />
+            <p className="text-xs text-zinc-500">
+              小写字母开头，仅允许英文字母、数字和中划线
+            </p>
           </div>
 
           <div className="space-y-2">

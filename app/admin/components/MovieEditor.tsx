@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ImageUploadField from "@/app/admin/components/ImageUploadField";
-import { slugify } from "@/lib/utils";
+import { normalizeSlug, slugify } from "@/lib/utils";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
 import AdminFormActions from "@/app/admin/components/AdminFormActions";
 
@@ -51,7 +51,7 @@ export default function MovieEditor({ itemId }: { itemId?: string }) {
     if (!coverImage?.assetId) return;
     setSaving(true);
     const payload = {
-      title, slug: slug || slugify(title), mediaType, coverImage,
+      title, slug: normalizeSlug(slug || slugify(title)), mediaType, coverImage,
       rating: rating ? Number(rating) : null,
       releaseDate: releaseDate || undefined,
       director, cast: cast.split(",").map((c) => c.trim()).filter(Boolean),
@@ -72,7 +72,7 @@ export default function MovieEditor({ itemId }: { itemId?: string }) {
       <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑 Movie" : "新建 Movie"}</h1>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>标题</Label><Input value={title} onChange={(e) => { setTitle(e.target.value); if (!itemId && !slug) setSlug(slugify(e.target.value)); }} required /></div>
-        <div className="space-y-2"><Label>Slug</Label><Input value={slug} onChange={(e) => setSlug(e.target.value)} required /></div>
+        <div className="space-y-2"><Label>Slug</Label><Input value={slug} onChange={(e) => setSlug(normalizeSlug(e.target.value))} placeholder="my-movie" pattern="[a-z][a-z0-9-]*" required /></div>
       </div>
       <div className="space-y-2"><Label>类型</Label><Select value={mediaType} onValueChange={(v) => setMediaType(v as "movie" | "tv")}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="movie">Movie</SelectItem><SelectItem value="tv">TV Show</SelectItem></SelectContent></Select></div>
       <ImageUploadField label="封面" value={coverImage} previewUrl={coverUrl} onChange={setCoverImage} />

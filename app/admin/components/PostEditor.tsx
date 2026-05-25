@@ -13,7 +13,7 @@ import PostMetadataPanel, {
   type PostMetadataForm,
 } from "@/app/admin/components/PostMetadataPanel";
 import { useAdminLayout } from "@/app/admin/components/AdminLayoutContext";
-import { slugify } from "@/lib/utils";
+import { isValidSlug, normalizeSlug, slugify } from "@/lib/utils";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
 
 type AuthorOption = { _id: string; name: string };
@@ -67,8 +67,13 @@ export default function PostEditor({ postId }: PostEditorProps) {
 
   function getMissingFields(): string[] {
     const missing: string[] = [];
+    const slug = normalizeSlug(form.slug || slugify(form.title));
+
     if (!form.title.trim()) missing.push("标题");
-    if (!(form.slug.trim() || slugify(form.title))) missing.push("Slug");
+    if (!slug) missing.push("Slug");
+    else if (!isValidSlug(slug)) {
+      missing.push("Slug（须以小写字母开头，仅含 a-z、0-9、-）");
+    }
     if (!form.description.trim()) missing.push("描述");
     if (!form.authorId) missing.push("作者");
     if (!form.tags.split(",").map((t) => t.trim()).filter(Boolean).length) {
@@ -136,7 +141,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
     try {
       const payload = {
         title: form.title,
-        slug: form.slug || slugify(form.title),
+        slug: normalizeSlug(form.slug || slugify(form.title)),
         description: form.description,
         canonicalLink: form.canonicalLink,
         date: form.date ? new Date(form.date).toISOString() : undefined,

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import MarkdownEditor from "@/app/admin/components/MarkdownEditor";
 import ImageUploadField from "@/app/admin/components/ImageUploadField";
-import { slugify } from "@/lib/utils";
+import { normalizeSlug, slugify } from "@/lib/utils";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
 import AdminFormActions from "@/app/admin/components/AdminFormActions";
 
@@ -52,7 +52,7 @@ export default function ProjectEditor({ itemId }: { itemId?: string }) {
       method: itemId ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name, slug: slug || slugify(name), tagline, logo, projectUrl, repository,
+        name, slug: normalizeSlug(slug || slugify(name)), tagline, logo, projectUrl, repository,
         coverImage, description, order: Number(order) || 0,
       }),
     });
@@ -66,7 +66,7 @@ export default function ProjectEditor({ itemId }: { itemId?: string }) {
       <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑 Project" : "新建 Project"}</h1>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>名称</Label><Input value={name} onChange={(e) => { setName(e.target.value); if (!itemId && !slug) setSlug(slugify(e.target.value)); }} required /></div>
-        <div className="space-y-2"><Label>Slug</Label><Input value={slug} onChange={(e) => setSlug(e.target.value)} required /></div>
+        <div className="space-y-2"><Label>Slug</Label><Input value={slug} onChange={(e) => setSlug(normalizeSlug(e.target.value))} placeholder="my-project" pattern="[a-z][a-z0-9-]*" required /></div>
       </div>
       <div className="space-y-2"><Label>Tagline</Label><Input value={tagline} onChange={(e) => setTagline(e.target.value)} maxLength={60} required /></div>
       <div className="grid gap-4 md:grid-cols-2">

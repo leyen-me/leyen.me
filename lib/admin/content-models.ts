@@ -1,13 +1,22 @@
 import { z } from "zod";
+import { SLUG_REGEX } from "@/lib/utils";
 
 export const imageInputSchema = z.object({
   assetId: z.string().min(1),
   alt: z.string().optional(),
 });
 
+export const slugSchema = z
+  .string()
+  .min(1)
+  .regex(
+    SLUG_REGEX,
+    "Slug must start with a lowercase letter and contain only a-z, 0-9, and hyphens"
+  );
+
 export const postSchema = z.object({
   title: z.string().min(1),
-  slug: z.string().min(1),
+  slug: slugSchema,
   description: z.string().min(1),
   canonicalLink: z.string().url().optional().or(z.literal("")),
   date: z.string().optional(),
@@ -21,7 +30,7 @@ export const postSchema = z.object({
 
 export const interviewSchema = z.object({
   title: z.string().min(1),
-  slug: z.string().min(1),
+  slug: slugSchema,
   category: z.string().min(1),
   answer: z.string().min(1),
   isPublished: z.boolean().optional(),
@@ -43,7 +52,7 @@ export const quoteSchema = z.object({
 
 export const movieSchema = z.object({
   title: z.string().min(1),
-  slug: z.string().min(1),
+  slug: slugSchema,
   mediaType: z.enum(["movie", "tv"]),
   coverImage: imageInputSchema,
   rating: z.number().min(0).max(10).optional().nullable(),
@@ -66,7 +75,7 @@ export const jobSchema = z.object({
 
 export const projectSchema = z.object({
   name: z.string().min(1),
-  slug: z.string().min(1),
+  slug: slugSchema,
   tagline: z.string().min(1).max(60),
   logo: imageInputSchema.optional().nullable(),
   projectUrl: z.string().url().optional().or(z.literal("")),
