@@ -27,14 +27,30 @@ export class AiRequestError extends Error {
 
 type OpenAIChatCompletionResponse = {
   choices?: Array<{
+    finish_reason?: string | null;
     message?: {
       content?: string | null;
+      reasoning_content?: string | null;
     };
   }>;
   error?: {
     message?: string;
   };
 };
+
+function getEmptyResponseMessage(
+  choice: NonNullable<OpenAIChatCompletionResponse["choices"]>[number] | undefined
+): string {
+  if (choice?.finish_reason === "length") {
+    return "AI 输出被截断（token 上限过低）。推理模型如 deepseek-v4-pro 需要更多 token，建议改用 deepseek-chat。";
+  }
+
+  if (choice?.message?.reasoning_content?.trim()) {
+    return "AI 推理模型把 token 都用在了思考阶段，未生成最终结果。建议将 AI_MODEL 改为 deepseek-chat。";
+  }
+
+  return "AI 返回了空内容，请检查模型名称与 API 配置。";
+}
 
 export async function createChatCompletion(
   options: ChatCompletionOptions
@@ -67,9 +83,10 @@ export async function createChatCompletion(
     );
   }
 
-  const content = data.choices?.[0]?.message?.content?.trim();
+  const choice = data.choices?.[0];
+  const content = choice?.message?.content?.trim();
   if (!content) {
-    throw new AiRequestError("AI returned an empty response", 502);
+    throw new AiRequestError(getEmptyResponseMessage(choice), 502);
   }
 
   return content;

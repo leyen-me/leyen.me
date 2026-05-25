@@ -47,7 +47,6 @@ type PostMetadataPanelProps = {
     value: PostMetadataForm[K]
   ) => void;
   onTitleChange: (title: string) => void;
-  content?: string;
 };
 
 export default function PostMetadataPanel({
@@ -58,7 +57,6 @@ export default function PostMetadataPanel({
   postId,
   onFieldChange,
   onTitleChange,
-  content,
 }: PostMetadataPanelProps) {
   const [generatingSlug, setGeneratingSlug] = useState(false);
   const [slugError, setSlugError] = useState("");
@@ -77,9 +75,7 @@ export default function PostMetadataPanel({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: form.title,
-          description: form.description || undefined,
-          content: content || undefined,
+          title: form.title.trim(),
         }),
       });
       const data = await res.json();
@@ -175,7 +171,7 @@ export default function PostMetadataPanel({
               <p className="text-xs text-red-500">{slugError}</p>
             ) : (
               <p className="text-xs text-zinc-500">
-                小写字母开头，仅允许英文字母、数字和中划线
+                只需填写标题即可 AI 生成；小写字母开头，仅允许英文字母、数字和中划线
               </p>
             )}
           </div>

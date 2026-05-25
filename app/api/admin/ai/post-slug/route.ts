@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (error instanceof Error) {
+      console.error("[api/admin/ai/post-slug]", error.message, error);
       return NextResponse.json({ error: error.message }, { status: 502 });
     }
 

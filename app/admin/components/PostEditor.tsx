@@ -312,7 +312,6 @@ export default function PostEditor({ postId }: PostEditorProps) {
           updateField(key, value as PostFormState[typeof key])
         }
         onTitleChange={handleTitleChange}
-        content={form.content}
       />
     </div>
   );
