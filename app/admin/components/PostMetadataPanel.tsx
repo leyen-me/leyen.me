@@ -1,6 +1,7 @@
 "use client";
 
-import { X } from "lucide-react";
+import { useState } from "react";
+import { Loader2, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -46,6 +47,7 @@ type PostMetadataPanelProps = {
     value: PostMetadataForm[K]
   ) => void;
   onTitleChange: (title: string) => void;
+  content?: string;
 };
 
 export default function PostMetadataPanel({
@@ -56,7 +58,44 @@ export default function PostMetadataPanel({
   postId,
   onFieldChange,
   onTitleChange,
+  content,
 }: PostMetadataPanelProps) {
+  const [generatingSlug, setGeneratingSlug] = useState(false);
+  const [slugError, setSlugError] = useState("");
+
+  async function handleGenerateSlug() {
+    if (!form.title.trim()) {
+      setSlugError("请先填写标题");
+      return;
+    }
+
+    setGeneratingSlug(true);
+    setSlugError("");
+
+    try {
+      const res = await fetch("/api/admin/ai/post-slug", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: form.title,
+          description: form.description || undefined,
+          content: content || undefined,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "生成 Slug 失败");
+      }
+
+      onFieldChange("slug", data.slug);
+    } catch (err) {
+      setSlugError(err instanceof Error ? err.message : "生成 Slug 失败");
+    } finally {
+      setGeneratingSlug(false);
+    }
+  }
+
   return (
     <>
       {open && (
@@ -103,18 +142,42 @@ export default function PostMetadataPanel({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="meta-slug">Slug</Label>
+            <div className="flex items-center justify-between gap-2">
+              <Label htmlFor="meta-slug">Slug</Label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7 gap-1.5 px-2 text-xs text-zinc-600 dark:text-zinc-400"
+                onClick={handleGenerateSlug}
+                disabled={generatingSlug || !form.title.trim()}
+              >
+                {generatingSlug ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="h-3.5 w-3.5" />
+                )}
+                AI 生成
+              </Button>
+            </div>
             <Input
               id="meta-slug"
               value={form.slug}
-              onChange={(e) => onFieldChange("slug", normalizeSlug(e.target.value))}
+              onChange={(e) => {
+                setSlugError("");
+                onFieldChange("slug", normalizeSlug(e.target.value));
+              }}
               placeholder="my-first-post"
               pattern="[a-z][a-z0-9-]*"
               required
             />
-            <p className="text-xs text-zinc-500">
-              小写字母开头，仅允许英文字母、数字和中划线
-            </p>
+            {slugError ? (
+              <p className="text-xs text-red-500">{slugError}</p>
+            ) : (
+              <p className="text-xs text-zinc-500">
+                小写字母开头，仅允许英文字母、数字和中划线
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
