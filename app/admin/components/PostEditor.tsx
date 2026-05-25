@@ -249,7 +249,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <header className="flex shrink-0 flex-col gap-2 border-b border-zinc-200 bg-white/95 px-3 py-2 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95 sm:px-4">
+      <header className="sticky top-0 z-30 flex shrink-0 flex-col gap-2 border-b border-zinc-200 bg-white/95 px-3 py-2 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95 sm:px-4">
         <div className="flex items-center gap-2 sm:gap-3">
           <Button
             type="button"

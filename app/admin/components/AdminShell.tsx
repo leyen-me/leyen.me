@@ -50,7 +50,12 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
   return (
     <AdminLayoutProvider value={layoutContext}>
-      <div className="flex min-h-screen">
+      <div
+        className={cn(
+          "flex",
+          immersiveWriting ? "h-screen overflow-hidden" : "min-h-screen"
+        )}
+      >
         {!immersiveWriting && (
           <div className="hidden lg:block">
             <div className="sticky top-0 h-screen">
@@ -97,7 +102,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           </div>
         )}
 
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           {!immersiveWriting && (
             <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-zinc-200 bg-zinc-50/95 px-4 py-3 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95 lg:hidden">
               <Button
