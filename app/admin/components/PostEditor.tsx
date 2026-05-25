@@ -63,8 +63,14 @@ export default function PostEditor({ postId }: PostEditorProps) {
   );
   const modKey = useModKeyLabel();
 
+  const lastSelectionRef = useRef<EditorSelection | null>(null);
+
   const handleSelectionChange = useCallback(
     (selection: EditorSelection | null) => {
+      if (selection?.text.trim()) {
+        lastSelectionRef.current = selection;
+      }
+
       setEditorSelection((prev) => {
         if (!selection && !prev) return prev;
         if (
@@ -86,6 +92,8 @@ export default function PostEditor({ postId }: PostEditorProps) {
     title: form.title,
     content: form.content,
     editorRef,
+    getPolishSelection: () =>
+      editorRef.current?.getSelection() ?? lastSelectionRef.current,
   });
 
   usePostEditorShortcuts({
@@ -321,7 +329,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
             onAction={(action) => editorRef.current?.applyFormat(action)}
           />
           <PostAiToolbar
-            loading={ai.loading}
+            loadingAction={ai.loadingAction}
             hasSelection={!!editorSelection?.text.trim()}
             onPolish={ai.runPolish}
             onContinue={ai.runContinue}

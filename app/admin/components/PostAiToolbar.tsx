@@ -3,9 +3,10 @@
 import { Loader2, PenLine, Sparkles, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { PostAiAction } from "@/app/admin/hooks/usePostAiAction";
 
 type PostAiToolbarProps = {
-  loading: boolean;
+  loadingAction: PostAiAction | null;
   hasSelection: boolean;
   onPolish: () => void;
   onContinue: () => void;
@@ -13,12 +14,14 @@ type PostAiToolbarProps = {
 };
 
 export default function PostAiToolbar({
-  loading,
+  loadingAction,
   hasSelection,
   onPolish,
   onContinue,
   className,
 }: PostAiToolbarProps) {
+  const isBusy = loadingAction !== null;
+
   return (
     <div className={cn("flex shrink-0 items-center gap-1", className)}>
       <div
@@ -31,11 +34,12 @@ export default function PostAiToolbar({
         variant="ghost"
         size="sm"
         className="h-8 shrink-0 gap-1.5 px-2 text-xs sm:text-sm"
-        disabled={loading || !hasSelection}
+        disabled={isBusy || !hasSelection}
+        onMouseDown={(e) => e.preventDefault()}
         onClick={onPolish}
         title="润色选中文本"
       >
-        {loading ? (
+        {loadingAction === "polish" ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
           <Wand2 className="h-4 w-4" />
@@ -47,11 +51,11 @@ export default function PostAiToolbar({
         variant="ghost"
         size="sm"
         className="h-8 shrink-0 gap-1.5 px-2 text-xs sm:text-sm"
-        disabled={loading}
+        disabled={isBusy}
         onClick={onContinue}
         title="从光标处续写"
       >
-        {loading ? (
+        {loadingAction === "continue" ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
           <PenLine className="h-4 w-4" />

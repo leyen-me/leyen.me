@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import type { ImmersiveMarkdownEditorHandle } from "@/app/admin/components/ImmersiveMarkdownEditor";
+import type {
+  EditorSelection,
+  ImmersiveMarkdownEditorHandle,
+} from "@/app/admin/components/ImmersiveMarkdownEditor";
 
 const CONTEXT_BEFORE_AFTER = 300;
 const CONTEXT_CONTINUE_MAX = 4000;
@@ -19,6 +22,7 @@ type UsePostAiActionOptions = {
   title: string;
   content: string;
   editorRef: React.RefObject<ImmersiveMarkdownEditorHandle | null>;
+  getPolishSelection: () => EditorSelection | null;
 };
 
 function truncateTail(text: string, maxLength: number): string {
@@ -30,8 +34,9 @@ export function usePostAiAction({
   title,
   content,
   editorRef,
+  getPolishSelection,
 }: UsePostAiActionOptions) {
-  const [loading, setLoading] = useState(false);
+  const [loadingAction, setLoadingAction] = useState<PostAiAction | null>(null);
   const [error, setError] = useState("");
   const [preview, setPreview] = useState<PostAiPreview | null>(null);
 
@@ -48,66 +53,43 @@ export function usePostAiAction({
       const textarea = editorRef.current?.getTextarea();
       if (!textarea) return;
 
-      let body: Record<string, string>;
-
       if (action === "polish") {
-        const selection = editorRef.current?.getSelection();
+        const selection =
+          editorRef.current?.getSelection() ?? getPolishSelection();
         if (!selection?.text.trim()) {
           setError("请先选中要润色的文字");
           return;
         }
 
-        body = {
-          action: "polish",
-          title: trimmedTitle,
-          selection: selection.text,
-          before: content.slice(
-            Math.max(0, selection.start - CONTEXT_BEFORE_AFTER),
-            selection.start
-          ),
-          after: content.slice(
-            selection.end,
-            selection.end + CONTEXT_BEFORE_AFTER
-          ),
-        };
-      } else {
-        const cursor = textarea.selectionStart;
-        const contentBeforeCursor = content.slice(0, cursor).trim();
-        if (!contentBeforeCursor) {
-          setError("请先输入一些正文内容再续写");
-          return;
-        }
+        setLoadingAction("polish");
 
-        body = {
-          action: "continue",
-          title: trimmedTitle,
-          content: truncateTail(contentBeforeCursor, CONTEXT_CONTINUE_MAX),
-        };
-      }
+        try {
+          const res = await fetch("/api/admin/ai/post-content", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "polish",
+              title: trimmedTitle,
+              selection: selection.text,
+              before: content.slice(
+                Math.max(0, selection.start - CONTEXT_BEFORE_AFTER),
+                selection.start
+              ),
+              after: content.slice(
+                selection.end,
+                selection.end + CONTEXT_BEFORE_AFTER
+              ),
+            }),
+          });
+          const data = await res.json();
 
-      setLoading(true);
+          if (!res.ok) {
+            throw new Error(data.error || "AI 请求失败");
+          }
 
-      try {
-        const res = await fetch("/api/admin/ai/post-content", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || "AI 请求失败");
-        }
-
-        const result = typeof data.text === "string" ? data.text : "";
-        if (!result.trim()) {
-          throw new Error("AI 返回了空内容，请重试");
-        }
-
-        if (action === "polish") {
-          const selection = editorRef.current?.getSelection();
-          if (!selection) {
-            throw new Error("选区已丢失，请重新选中文字");
+          const result = typeof data.text === "string" ? data.text : "";
+          if (!result.trim()) {
+            throw new Error("AI 返回了空内容，请重试");
           }
 
           setPreview({
@@ -122,24 +104,60 @@ export function usePostAiAction({
               );
             },
           });
-        } else {
-          const cursor = textarea.selectionStart;
-          setPreview({
-            action,
-            original: content.slice(Math.max(0, cursor - 200), cursor) || "（光标位置）",
-            result,
-            apply: () => {
-              editorRef.current?.replaceRange(cursor, cursor, result);
-            },
-          });
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "AI 请求失败");
+        } finally {
+          setLoadingAction(null);
         }
+        return;
+      }
+
+      const cursor = textarea.selectionStart;
+      const contentBeforeCursor = content.slice(0, cursor).trim();
+      if (!contentBeforeCursor) {
+        setError("请先输入一些正文内容再续写");
+        return;
+      }
+
+      setLoadingAction("continue");
+
+      try {
+        const res = await fetch("/api/admin/ai/post-content", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "continue",
+            title: trimmedTitle,
+            content: truncateTail(contentBeforeCursor, CONTEXT_CONTINUE_MAX),
+          }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || "AI 请求失败");
+        }
+
+        const result = typeof data.text === "string" ? data.text : "";
+        if (!result.trim()) {
+          throw new Error("AI 返回了空内容，请重试");
+        }
+
+        setPreview({
+          action,
+          original:
+            content.slice(Math.max(0, cursor - 200), cursor) || "（光标位置）",
+          result,
+          apply: () => {
+            editorRef.current?.replaceRange(cursor, cursor, result);
+          },
+        });
       } catch (err) {
         setError(err instanceof Error ? err.message : "AI 请求失败");
       } finally {
-        setLoading(false);
+        setLoadingAction(null);
       }
     },
-    [title, content, editorRef]
+    [title, content, editorRef, getPolishSelection]
   );
 
   const runPolish = useCallback(() => runAction("polish"), [runAction]);
@@ -162,7 +180,7 @@ export function usePostAiAction({
   }, [preview, runAction]);
 
   return {
-    loading,
+    loadingAction,
     error,
     preview,
     runPolish,

@@ -159,7 +159,6 @@ const ImmersiveMarkdownEditor = forwardRef<
             onKeyUp={notifySelectionChange}
             onMouseUp={notifySelectionChange}
             onSelect={notifySelectionChange}
-            onBlur={() => onSelectionChange?.(null)}
             placeholder="开始写作..."
             className="min-h-0 flex-1 resize-none rounded-none border-0 bg-transparent px-4 py-4 font-mono text-sm leading-relaxed shadow-none focus-visible:ring-0"
           />
