@@ -13,6 +13,10 @@ import PostMetadataPanel, {
   type PostMetadataForm,
 } from "@/app/admin/components/PostMetadataPanel";
 import { useAdminLayout } from "@/app/admin/components/AdminLayoutContext";
+import {
+  useModKeyLabel,
+  usePostEditorShortcuts,
+} from "@/app/admin/hooks/usePostEditorShortcuts";
 import { isValidSlug, normalizeSlug, slugify } from "@/lib/utils";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
 
@@ -50,6 +54,16 @@ export default function PostEditor({ postId }: PostEditorProps) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [metadataOpen, setMetadataOpen] = useState(false);
+  const modKey = useModKeyLabel();
+
+  usePostEditorShortcuts({
+    onSave: () => save(),
+    onPublish: () => save({ publish: true }),
+    onOpenSettings: () => setMetadataOpen(true),
+    onCloseSettings: () => setMetadataOpen(false),
+    saving,
+    metadataOpen,
+  });
 
   useEffect(() => {
     fetch("/api/admin/authors")
@@ -242,6 +256,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
               size="sm"
               className="hidden sm:inline-flex"
               onClick={() => setMetadataOpen(true)}
+              title={`文章设置 (${modKey}+,)`}
             >
               设置
             </Button>
@@ -251,6 +266,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
               size="sm"
               disabled={saving}
               onClick={() => save()}
+              title={`${isDraft ? "保存草稿" : "保存"} (${modKey}+S)`}
             >
               {saving ? "保存中..." : isDraft ? "保存草稿" : "保存"}
             </Button>
@@ -260,6 +276,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
                 size="sm"
                 disabled={saving}
                 onClick={() => save({ publish: true })}
+                title={`发布 (${modKey}+Shift+S)`}
               >
                 发布
               </Button>
