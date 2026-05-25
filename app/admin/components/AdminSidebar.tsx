@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import AdminThemeToggle from "@/app/admin/components/AdminThemeToggle";
 
 export const adminNavItems: Array<{
   href: string;
@@ -114,7 +115,8 @@ export default function AdminSidebar({
         })}
       </nav>
 
-      <div className="border-t border-zinc-200 p-3 dark:border-zinc-800 sm:p-4">
+      <div className="space-y-1 border-t border-zinc-200 p-3 dark:border-zinc-800 sm:p-4">
+        <AdminThemeToggle />
         <Button
           variant="ghost"
           className="w-full justify-start gap-3"
