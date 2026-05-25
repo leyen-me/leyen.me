@@ -4,6 +4,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import MarkdownPreview from "@/app/admin/components/MarkdownPreview";
 
 type MarkdownEditorProps = {
   id?: string;
@@ -62,13 +63,7 @@ export default function MarkdownEditor({
           className="font-mono text-sm"
         />
       ) : (
-        <div className="article-content min-h-[320px] rounded-md border border-zinc-200 bg-zinc-50 p-4 text-sm dark:border-zinc-700 dark:bg-zinc-900">
-          {value.trim() ? (
-            <pre className="whitespace-pre-wrap font-sans">{value}</pre>
-          ) : (
-            <p className="text-zinc-500">暂无内容</p>
-          )}
-        </div>
+        <MarkdownPreview markdown={value} />
       )}
     </div>
   );

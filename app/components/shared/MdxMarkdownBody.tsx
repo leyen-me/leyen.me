@@ -1,15 +1,6 @@
-import { createCompiler } from "@fumadocs/mdx-remote";
 import type { MDXComponents } from "mdx/types";
 import { getMDXComponents } from "@/mdx-components";
-
-const mdxCompiler = createCompiler({
-  rehypeCodeOptions: {
-    themes: { light: "github-light", dark: "github-dark" },
-    fallbackLanguage: "plaintext",
-  },
-  rehypeTocOptions: false,
-  format: "md",
-});
+import { mdxCompiler } from "@/lib/mdx-compiler";
 
 export type MdxMarkdownBodyProps = {
   markdown: string;
