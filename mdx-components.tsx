@@ -2,6 +2,10 @@ import type { MDXComponents } from "mdx/types";
 import { BiLinkExternal } from "react-icons/bi";
 import RefLink from "@/app/components/shared/RefLink";
 import CodeBlock from "@/app/components/shared/CodeBlock";
+import {
+  extractLanguageFromPreChildren,
+  parseLanguageFromClassName,
+} from "@/lib/code-language-label";
 import { slugifyHeading } from "@/lib/markdown-headings";
 
 /**
@@ -131,7 +135,14 @@ const defaultMdxComponents = {
     );
   },
   pre: ({ children, className, ...props }: any) => (
-    <CodeBlock {...props} className={className || ""}>
+    <CodeBlock
+      {...props}
+      className={className || ""}
+      language={
+        extractLanguageFromPreChildren(children) ||
+        parseLanguageFromClassName(className)
+      }
+    >
       {children}
     </CodeBlock>
   ),

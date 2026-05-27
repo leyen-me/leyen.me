@@ -19,6 +19,7 @@ import yaml from "refractor/lang/yaml";
 import graphql from "refractor/lang/graphql";
 import json from "refractor/lang/json";
 import java from "refractor/lang/java";
+import { formatCodeLanguageLabel } from "@/lib/code-language-label";
 
 // Supported languages: https://prismjs.com/#supported-languages
 Refractor.registerLanguage(js);
@@ -47,6 +48,7 @@ type PortableTextCodeProps = {
 
 type MdxCodeBlockProps = React.HTMLAttributes<HTMLPreElement> & {
   children: React.ReactNode;
+  language?: string;
 };
 
 type CodeBlockProps = PortableTextCodeProps | MdxCodeBlockProps;
@@ -136,7 +138,9 @@ export default function CodeBlock(props: CodeBlockProps) {
       <div className="my-8 overflow-hidden rounded-2xl border border-zinc-200 bg-white/80 dark:border-zinc-800 dark:bg-zinc-950/80">
         <div className="flex items-center justify-between border-b border-zinc-200 bg-zinc-50/80 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/80">
           <p className="truncate text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            {value.filename || value.language || "code"}
+            {value.filename ||
+              formatCodeLanguageLabel(value.language) ||
+              "Code"}
           </p>
           <CopyButton content={value.code} />
         </div>
@@ -149,13 +153,14 @@ export default function CodeBlock(props: CodeBlockProps) {
     );
   }
 
-  const { children, className, ...rest } = props;
+  const { children, className, language, ...rest } = props;
+  const headerLabel = formatCodeLanguageLabel(language);
 
   return (
     <div className="group my-8 overflow-hidden rounded-2xl border border-zinc-200 bg-white/80 dark:border-zinc-800 dark:bg-zinc-950/80">
       <div className="flex items-center justify-between border-b border-zinc-200 bg-zinc-50/80 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/80">
         <p className="truncate text-sm font-medium text-zinc-600 dark:text-zinc-400">
-          {'Code'}
+          {headerLabel}
         </p>
         <MdxCopyButton
           getContent={() => preRef.current?.textContent?.replace(/\n$/, "") ?? ""}
