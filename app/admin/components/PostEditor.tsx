@@ -2,7 +2,16 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, Menu, Save, Send, Settings2, X } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Loader2,
+  Menu,
+  Save,
+  Send,
+  Settings2,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ImmersiveMarkdownEditor, {
@@ -29,6 +38,8 @@ type AuthorOption = { _id: string; name: string };
 type PostFormState = PostMetadataForm & {
   content: string;
 };
+
+const POST_SAVE_SUCCESS_KEY = "post-editor-save-success";
 
 const emptyForm: PostFormState = {
   title: "",
@@ -57,6 +68,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
   const [loading, setLoading] = useState(!!postId);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [metadataOpen, setMetadataOpen] = useState(false);
   const [editorSelection, setEditorSelection] = useState<EditorSelection | null>(
     null
@@ -107,6 +119,19 @@ export default function PostEditor({ postId }: PostEditorProps) {
   });
 
   useEffect(() => {
+    const message = sessionStorage.getItem(POST_SAVE_SUCCESS_KEY);
+    if (!message) return;
+    sessionStorage.removeItem(POST_SAVE_SUCCESS_KEY);
+    setSuccess(message);
+  }, []);
+
+  useEffect(() => {
+    if (!success) return;
+    const timer = window.setTimeout(() => setSuccess(""), 3000);
+    return () => window.clearTimeout(timer);
+  }, [success]);
+
+  useEffect(() => {
     fetch("/api/admin/authors")
       .then((r) => r.json())
       .then((data) => {
@@ -141,6 +166,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
     const missing = getMissingFields();
     if (missing.length === 0) return true;
 
+    setSuccess("");
     setError(`请在设置中填写：${missing.join("、")}`);
     setMetadataOpen(true);
     return false;
@@ -190,6 +216,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
 
     setSaving(true);
     setError("");
+    setSuccess("");
 
     const isPublished = options?.publish ?? form.isPublished;
 
@@ -229,8 +256,24 @@ export default function PostEditor({ postId }: PostEditorProps) {
         setForm((prev) => ({ ...prev, isPublished: true }));
       }
 
-      router.push("/admin/posts");
-      router.refresh();
+      const successMessage = options?.publish
+        ? "发布成功"
+        : isPublished
+          ? "保存成功"
+          : "草稿已保存";
+
+      if (postId) {
+        setSuccess(successMessage);
+        router.refresh();
+      } else {
+        sessionStorage.setItem(POST_SAVE_SUCCESS_KEY, successMessage);
+        if (data._id) {
+          router.push(`/admin/posts/${data._id}`);
+        } else {
+          router.push("/admin/posts");
+        }
+        router.refresh();
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Save failed");
     } finally {
@@ -351,6 +394,23 @@ export default function PostEditor({ postId }: PostEditorProps) {
           />
         </div>
       </header>
+
+      {success && (
+        <div className="flex shrink-0 items-center gap-2 border-b border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300">
+          <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden />
+          <p className="min-w-0 flex-1">{success}</p>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 shrink-0 text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200"
+            onClick={() => setSuccess("")}
+            aria-label="关闭"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
 
       {error && (
         <div className="flex shrink-0 items-center gap-2 border-b border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/40">
