@@ -1,6 +1,6 @@
 export type ImageInput = {
   assetId: string;
-  alt?: string;
+  alt?: string | null;
 };
 
 export function buildSlugField(slug: string) {
