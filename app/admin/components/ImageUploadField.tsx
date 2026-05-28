@@ -85,7 +85,7 @@ export default function ImageUploadField({
         )}
       </div>
       <Input
-        placeholder="Alt text"
+        placeholder="Alt text（选填，留空则前台用标题）"
         value={value?.alt ?? ""}
         onChange={(e) =>
           onChange(

@@ -184,7 +184,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
           canonicalLink: data.canonicalLink ?? "",
           date: data.date ? data.date.slice(0, 16) : "",
           coverImage: data.coverImage?.assetId
-            ? { assetId: data.coverImage.assetId, alt: data.coverImage.alt }
+            ? { assetId: data.coverImage.assetId, alt: data.coverImage.alt ?? "" }
             : null,
           coverImageUrl: data.coverImage?.url,
           featured: data.featured ?? false,

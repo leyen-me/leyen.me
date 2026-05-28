@@ -3,7 +3,7 @@ import { SLUG_REGEX } from "@/lib/utils";
 
 export const imageInputSchema = z.object({
   assetId: z.string().min(1),
-  alt: z.string().optional(),
+  alt: z.string().nullish(),
 });
 
 export const slugSchema = z
