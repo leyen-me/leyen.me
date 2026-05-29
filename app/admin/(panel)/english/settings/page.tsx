@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ENGLISH_RESET_CONFIRM_PHRASE } from "@/lib/admin/content-models";
 import {
   Select,
   SelectContent,
@@ -44,11 +45,30 @@ export default function EnglishSettingsPage() {
   const [saving, setSaving] = useState(false);
   const [advice, setAdvice] = useState<LevelAdvice | null>(null);
   const [adviceLoading, setAdviceLoading] = useState(false);
+  const [dataCounts, setDataCounts] = useState<{
+    englishWord: number;
+    englishSettings: number;
+    englishDailyLog: number;
+    total: number;
+  } | null>(null);
+  const [resetConfirm, setResetConfirm] = useState("");
+  const [resetting, setResetting] = useState(false);
+  const [resetMessage, setResetMessage] = useState("");
 
   useEffect(() => {
-    fetch("/api/admin/english/settings")
-      .then((r) => r.json())
-      .then(setSettings)
+    Promise.all([
+      fetch("/api/admin/english/settings").then((r) => r.json()),
+      fetch("/api/admin/english/reset").then((r) => r.json()),
+    ])
+      .then(([settingsData, countsData]) => {
+        setSettings(settingsData);
+        if (countsData.counts) {
+          setDataCounts({
+            ...countsData.counts,
+            total: countsData.total ?? 0,
+          });
+        }
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -60,6 +80,41 @@ export default function EnglishSettingsPage() {
       body: JSON.stringify(settings),
     });
     setSaving(false);
+  }
+
+  async function resetEnglishData() {
+    if (resetConfirm !== ENGLISH_RESET_CONFIRM_PHRASE) return;
+
+    setResetting(true);
+    setResetMessage("");
+    try {
+      const res = await fetch("/api/admin/english/reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: ENGLISH_RESET_CONFIRM_PHRASE }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "清空失败");
+
+      setResetConfirm("");
+      setAdvice(null);
+      setResetMessage(
+        `已清空：${data.total ?? 0} 条记录（单词 ${data.deleted?.englishWord ?? 0}、设置 ${data.deleted?.englishSettings ?? 0}、日志 ${data.deleted?.englishDailyLog ?? 0}）`
+      );
+      setDataCounts({
+        englishWord: 0,
+        englishSettings: 0,
+        englishDailyLog: 0,
+        total: 0,
+      });
+
+      const settingsRes = await fetch("/api/admin/english/settings");
+      setSettings(await settingsRes.json());
+    } catch (err) {
+      setResetMessage(err instanceof Error ? err.message : "清空失败");
+    } finally {
+      setResetting(false);
+    }
   }
 
   async function loadAdvice() {
@@ -209,6 +264,63 @@ export default function EnglishSettingsPage() {
                 推荐等级：{ENGLISH_LEVEL_LABELS[advice.recommendedLevel as keyof typeof ENGLISH_LEVEL_LABELS] ?? advice.recommendedLevel}
               </p>
             </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card className="border-red-200 dark:border-red-900">
+        <CardHeader>
+          <CardTitle className="text-lg text-red-700 dark:text-red-400">
+            重置学习数据
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            将永久删除所有英语学习相关数据，包括单词、学习设置、每日打卡记录与缓存题目。此操作不可恢复。
+          </p>
+          {dataCounts && (
+            <ul className="text-sm text-zinc-500">
+              <li>单词：{dataCounts.englishWord} 条</li>
+              <li>设置：{dataCounts.englishSettings} 条</li>
+              <li>每日记录：{dataCounts.englishDailyLog} 条</li>
+              <li className="font-medium text-zinc-700 dark:text-zinc-300">
+                合计：{dataCounts.total} 条
+              </li>
+            </ul>
+          )}
+          <div className="space-y-2">
+            <Label htmlFor="resetConfirm">
+              请输入「{ENGLISH_RESET_CONFIRM_PHRASE}」以确认
+            </Label>
+            <Input
+              id="resetConfirm"
+              value={resetConfirm}
+              onChange={(e) => setResetConfirm(e.target.value)}
+              placeholder={ENGLISH_RESET_CONFIRM_PHRASE}
+              autoComplete="off"
+            />
+          </div>
+          <Button
+            variant="destructive"
+            onClick={resetEnglishData}
+            disabled={
+              resetting ||
+              resetConfirm !== ENGLISH_RESET_CONFIRM_PHRASE ||
+              (dataCounts?.total ?? 0) === 0
+            }
+          >
+            {resetting ? "清空中..." : "一键清空 English 数据"}
+          </Button>
+          {resetMessage && (
+            <p
+              className={`text-sm ${
+                resetMessage.startsWith("已清空")
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-red-600 dark:text-red-400"
+              }`}
+            >
+              {resetMessage}
+            </p>
           )}
         </CardContent>
       </Card>

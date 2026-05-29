@@ -157,6 +157,12 @@ export const englishSettingsSchema = z.object({
   masteredThreshold: z.number().int().min(1).max(10).optional(),
 });
 
+export const ENGLISH_RESET_CONFIRM_PHRASE = "清空英语学习数据";
+
+export const englishResetConfirmSchema = z.object({
+  confirm: z.literal(ENGLISH_RESET_CONFIRM_PHRASE),
+});
+
 export const englishWordPatchSchema = z.object({
   status: englishWordStatusSchema.optional(),
 });
