@@ -10,12 +10,20 @@ const CONTEXT_BEFORE_AFTER = 300;
 const CONTEXT_CONTINUE_MAX = 4000;
 
 export type PostAiAction = "polish" | "continue";
+export type PostPolishMode = "light" | "deep" | "styled";
+
+export const POST_POLISH_MODE_LABEL: Record<PostPolishMode, string> = {
+  light: "轻度润色",
+  deep: "深度润色",
+  styled: "风格化润色",
+};
 
 export type PostAiPreview = {
   action: PostAiAction;
   original: string;
   result: string;
   apply: () => void;
+  polishMode?: PostPolishMode;
 };
 
 type UsePostAiActionOptions = {
@@ -41,7 +49,7 @@ export function usePostAiAction({
   const [preview, setPreview] = useState<PostAiPreview | null>(null);
 
   const runAction = useCallback(
-    async (action: PostAiAction) => {
+    async (action: PostAiAction, polishMode: PostPolishMode = "light") => {
       setError("");
 
       const trimmedTitle = title.trim();
@@ -69,6 +77,7 @@ export function usePostAiAction({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               action: "polish",
+              mode: polishMode,
               title: trimmedTitle,
               selection: selection.text,
               before: content.slice(
@@ -96,6 +105,7 @@ export function usePostAiAction({
             action,
             original: selection.text,
             result,
+            polishMode,
             apply: () => {
               editorRef.current?.replaceRange(
                 selection.start,
@@ -160,7 +170,10 @@ export function usePostAiAction({
     [title, content, editorRef, getPolishSelection]
   );
 
-  const runPolish = useCallback(() => runAction("polish"), [runAction]);
+  const runPolish = useCallback(
+    (mode: PostPolishMode) => runAction("polish", mode),
+    [runAction]
+  );
   const runContinue = useCallback(() => runAction("continue"), [runAction]);
 
   const applyPreview = useCallback(() => {
@@ -175,8 +188,9 @@ export function usePostAiAction({
   const retryPreview = useCallback(() => {
     if (!preview) return;
     const action = preview.action;
+    const polishMode = preview.polishMode ?? "light";
     setPreview(null);
-    void runAction(action);
+    void runAction(action, polishMode);
   }, [preview, runAction]);
 
   return {

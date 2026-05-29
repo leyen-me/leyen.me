@@ -4,7 +4,10 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MarkdownPreview from "@/app/admin/components/MarkdownPreview";
-import type { PostAiPreview } from "@/app/admin/hooks/usePostAiAction";
+import {
+  POST_POLISH_MODE_LABEL,
+  type PostAiPreview,
+} from "@/app/admin/hooks/usePostAiAction";
 
 type PostAiPreviewDialogProps = {
   preview: PostAiPreview | null;
@@ -20,6 +23,10 @@ export default function PostAiPreviewDialog({
   onDismiss,
 }: PostAiPreviewDialogProps) {
   const isPolish = preview?.action === "polish";
+  const polishTitle =
+    isPolish && preview?.polishMode
+      ? `${POST_POLISH_MODE_LABEL[preview.polishMode]}预览`
+      : "润色预览";
 
   return (
     <Dialog.Root open={!!preview} onOpenChange={(open) => !open && onDismiss()}>
@@ -28,7 +35,7 @@ export default function PostAiPreviewDialog({
         <Dialog.Content className="fixed left-1/2 top-1/2 z-50 flex max-h-[85vh] w-[min(960px,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 flex-col rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <Dialog.Title className="text-base font-medium">
-              {isPolish ? "润色预览" : "续写预览"}
+              {isPolish ? polishTitle : "续写预览"}
             </Dialog.Title>
             <Dialog.Close asChild>
               <Button type="button" variant="ghost" size="icon" className="h-8 w-8">

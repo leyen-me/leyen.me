@@ -2,8 +2,11 @@ import { z } from "zod";
 import { createChatCompletion } from "@/lib/admin/ai/client";
 import { getAiModel } from "@/lib/admin/ai/config";
 
+const polishModeSchema = z.enum(["light", "deep", "styled"]);
+
 const polishInputSchema = z.object({
   action: z.literal("polish"),
+  mode: polishModeSchema.default("light"),
   title: z.string().trim().min(1, "Title is required"),
   selection: z.string().trim().min(1, "Selection is required"),
   before: z.string().optional(),
@@ -22,6 +25,7 @@ export const postContentInputSchema = z.discriminatedUnion("action", [
 ]);
 
 export type PostContentInput = z.infer<typeof postContentInputSchema>;
+type PostPolishMode = z.infer<typeof polishModeSchema>;
 
 const SYSTEM_PROMPT = [
   "You are a blog writing assistant.",
@@ -41,55 +45,107 @@ function countParagraphs(text: string): number {
   return text.trim().split(/\n\s*\n/).filter(Boolean).length;
 }
 
-function polishMaxTokens(selection: string): number {
+function polishMaxTokens(selection: string, mode: PostPolishMode): number {
   const charCount = selection.trim().length;
-  return Math.min(1024, Math.max(128, Math.ceil(charCount * 1.5)));
+  const multiplier = mode === "light" ? 1.5 : 2;
+  const cap = mode === "light" ? 1024 : 1280;
+  return Math.min(cap, Math.max(160, Math.ceil(charCount * multiplier)));
 }
 
 function buildPolishUserPrompt(input: {
+  mode: PostPolishMode;
   title: string;
   selection: string;
   before?: string;
   after?: string;
 }): string {
-  const parts = [`Article title: ${input.title}`];
+  const sections = [
+    "<ARTICLE_TITLE>",
+    input.title,
+    "</ARTICLE_TITLE>",
+    "",
+    "<REFERENCE_CONTEXT_BEFORE>",
+    input.before?.trim() || "(empty)",
+    "</REFERENCE_CONTEXT_BEFORE>",
+    "",
+    "<SELECTED_TEXT>",
+    input.selection.trim(),
+    "</SELECTED_TEXT>",
+    "",
+    "<REFERENCE_CONTEXT_AFTER>",
+    input.after?.trim() || "(empty)",
+    "</REFERENCE_CONTEXT_AFTER>",
+  ];
 
-  const contextLines: string[] = [];
-  if (input.before?.trim()) {
-    contextLines.push(`Before selection:\n${input.before.trim()}`);
-  }
-  if (input.after?.trim()) {
-    contextLines.push(`After selection:\n${input.after.trim()}`);
-  }
-  if (contextLines.length > 0) {
-    parts.push(
+  if (input.mode === "styled") {
+    sections.push(
+      "",
+      "<STYLE_PROFILE>",
       [
-        "Surrounding context (reference only — do NOT output, repeat, or continue into this):",
-        contextLines.join("\n\n"),
-      ].join("\n")
+        "Write in a crisp, analytical long-form column style.",
+        "Lead with the key point early.",
+        "Use concrete wording and tighter rhythm.",
+        "Stay confident and sharp, but not sensational or preachy.",
+        "Prefer high signal density over filler phrasing.",
+      ].join("\n"),
+      "</STYLE_PROFILE>"
     );
   }
 
-  parts.push(
-    [
-      "Selected text (rewrite ONLY this block):",
-      input.selection.trim(),
-    ].join("\n")
-  );
-
-  return parts.join("\n\n");
+  return sections.join("\n");
 }
 
-const POLISH_SYSTEM_PROMPT = [
-  SYSTEM_PROMPT,
-  "Rewrite ONLY the selected text block for clarity, flow, and wording.",
-  "Do not change facts, meaning, or argument.",
-  "Keep the same structure: same number of paragraphs, headings, and list items.",
-  "Surrounding context is for tone and continuity reference only.",
-  "Never output, paraphrase, summarize, or continue into the before/after context.",
-  "Never add new paragraphs, sections, or bullet points.",
-  "Return ONLY the polished selected text — no preamble, no explanation.",
-].join("\n");
+const POLISH_PROMPTS: Record<PostPolishMode, string> = {
+  light: [
+    SYSTEM_PROMPT,
+    "You are lightly editing a selected passage from a blog post.",
+    "Rewrite <SELECTED_TEXT> only.",
+    "Read <REFERENCE_CONTEXT_BEFORE> and <REFERENCE_CONTEXT_AFTER> only for tone and continuity.",
+    "Do not change facts, meaning, or viewpoint.",
+    "Preserve Markdown formatting.",
+    "Keep the same structure: same number of paragraphs, headings, and list items.",
+    "Prefer local edits and faithful wording improvements.",
+    "Do not add new paragraphs, sections, bullet points, examples, transitions, or conclusions.",
+    "Do not output, repeat, summarize, paraphrase, or continue any text from <REFERENCE_CONTEXT_BEFORE> or <REFERENCE_CONTEXT_AFTER>.",
+    "Return ONLY the rewritten <SELECTED_TEXT> with no surrounding tags, no preamble, and no explanation.",
+  ].join("\n"),
+  deep: [
+    SYSTEM_PROMPT,
+    "You are performing a deep editorial rewrite of a selected passage from a blog post.",
+    "Rewrite <SELECTED_TEXT> only.",
+    "Read <REFERENCE_CONTEXT_BEFORE> and <REFERENCE_CONTEXT_AFTER> only for tone and continuity.",
+    "Do not change facts, meaning, or viewpoint.",
+    "Preserve Markdown formatting.",
+    "You may substantially rewrite wording, sentence structure, and paragraph flow for clarity and force.",
+    "You may tighten redundancy, reorder clauses, split or merge sentences, and sharpen transitions.",
+    "Keep roughly the same overall length and information density.",
+    "Do not add new claims, examples, evidence, bullet points, or conclusions that are not supported by the original text.",
+    "Do not output, repeat, summarize, paraphrase, or continue any text from <REFERENCE_CONTEXT_BEFORE> or <REFERENCE_CONTEXT_AFTER>.",
+    "Do not continue the article beyond <SELECTED_TEXT>.",
+    "Return ONLY the rewritten <SELECTED_TEXT> with no surrounding tags, no preamble, and no explanation.",
+  ].join("\n"),
+  styled: [
+    SYSTEM_PROMPT,
+    "You are performing a style-driven editorial rewrite of a selected passage from a blog post.",
+    "Rewrite <SELECTED_TEXT> only.",
+    "Read <REFERENCE_CONTEXT_BEFORE> and <REFERENCE_CONTEXT_AFTER> only for tone and continuity.",
+    "Follow <STYLE_PROFILE> as a stylistic target, while preserving facts, meaning, and viewpoint.",
+    "Preserve Markdown formatting.",
+    "You may substantially rewrite wording, sentence structure, emphasis, and paragraph flow to better fit the style.",
+    "Make the passage sharper, cleaner, and more distinctive, but keep it credible and grounded.",
+    "Keep roughly the same overall length and information density.",
+    "Do not add new claims, examples, evidence, bullet points, or conclusions that are not supported by the original text.",
+    "Do not output, repeat, summarize, paraphrase, or continue any text from <REFERENCE_CONTEXT_BEFORE> or <REFERENCE_CONTEXT_AFTER>.",
+    "Do not continue the article beyond <SELECTED_TEXT>.",
+    "Return ONLY the rewritten <SELECTED_TEXT> with no surrounding tags, no preamble, and no explanation.",
+  ].join("\n"),
+};
+
+const POLISH_TEMPERATURE: Record<PostPolishMode, number> = {
+  light: 0.45,
+  deep: 0.72,
+  styled: 0.8,
+};
 
 export async function generatePostContent(
   input: PostContentInput
@@ -97,21 +153,23 @@ export async function generatePostContent(
   const model = getAiModel();
 
   if (input.action === "polish") {
+    const mode = input.mode;
     const selection = input.selection.trim();
     const selectionParagraphs = countParagraphs(selection);
 
     const raw = await createChatCompletion({
       model,
-      temperature: 0.5,
-      max_tokens: polishMaxTokens(selection),
+      temperature: POLISH_TEMPERATURE[mode],
+      max_tokens: polishMaxTokens(selection, mode),
       messages: [
         {
           role: "system",
-          content: POLISH_SYSTEM_PROMPT,
+          content: POLISH_PROMPTS[mode],
         },
         {
           role: "user",
           content: buildPolishUserPrompt({
+            mode,
             title: input.title,
             selection,
             before: input.before,
@@ -124,7 +182,7 @@ export async function generatePostContent(
     let text = stripMarkdownFence(raw);
     if (!text) throw new Error("AI 返回了空内容，请重试");
 
-    if (countParagraphs(text) > selectionParagraphs) {
+    if (mode === "light" && countParagraphs(text) > selectionParagraphs) {
       text = text
         .trim()
         .split(/\n\s*\n/)

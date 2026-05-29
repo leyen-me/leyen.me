@@ -382,10 +382,12 @@ export default function PostEditor({ postId }: PostEditorProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-1 overflow-x-auto border-t border-zinc-100 pt-2 dark:border-zinc-800">
-          <MarkdownFormatToolbar
-            onAction={(action) => editorRef.current?.applyFormat(action)}
-          />
+        <div className="flex items-start justify-between gap-2 border-t border-zinc-100 pt-2 dark:border-zinc-800">
+          <div className="min-w-0 flex-1 overflow-x-auto">
+            <MarkdownFormatToolbar
+              onAction={(action) => editorRef.current?.applyFormat(action)}
+            />
+          </div>
           <PostAiToolbar
             loadingAction={ai.loadingAction}
             hasSelection={!!editorSelection?.text.trim()}
