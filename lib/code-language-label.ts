@@ -1,4 +1,5 @@
 import { Children, isValidElement, type ReactNode } from "react";
+import { REFRACTOR_REGISTERED_LANGUAGES } from "@/lib/refractor-languages";
 
 /** Markdown 围栏语言别名 → 顶栏展示名 */
 const LANGUAGE_LABELS: Record<string, string> = {
@@ -48,6 +49,13 @@ const LANGUAGE_LABELS: Record<string, string> = {
   "c#": "C#",
   zig: "Zig",
   prisma: "Prisma",
+  docker: "Docker",
+  dockerfile: "Docker",
+  toml: "TOML",
+  nginx: "Nginx",
+  makefile: "Makefile",
+  diff: "Diff",
+  ini: "INI",
   plaintext: "Plain Text",
   text: "Plain Text",
   txt: "Plain Text",
@@ -98,31 +106,26 @@ const REFRACTOR_LANGUAGE_ALIASES: Record<string, string> = {
   txt: "markdown",
   text: "markdown",
   plaintext: "markdown",
+  yml: "yaml",
+  gql: "graphql",
+  rb: "ruby",
+  golang: "go",
+  rs: "rust",
+  cs: "csharp",
+  csharp: "csharp",
+  "c#": "csharp",
+  cpp: "cpp",
+  "c++": "cpp",
+  dockerfile: "docker",
+  makefile: "makefile",
+  mf: "makefile",
 };
-
-const REFRACTOR_LANGUAGES = new Set([
-  "javascript",
-  "typescript",
-  "jsx",
-  "tsx",
-  "sql",
-  "bash",
-  "markdown",
-  "css",
-  "scss",
-  "python",
-  "markup",
-  "yaml",
-  "graphql",
-  "json",
-  "java",
-]);
 
 export function resolveHighlightLanguage(lang?: string | null): string {
   if (!lang?.trim()) return "markdown";
   const key = lang.trim().toLowerCase().replace(/^language-/, "");
   const resolved = REFRACTOR_LANGUAGE_ALIASES[key] || key;
-  return REFRACTOR_LANGUAGES.has(resolved) ? resolved : "markdown";
+  return REFRACTOR_REGISTERED_LANGUAGES.has(resolved) ? resolved : "markdown";
 }
 
 export function formatCodeLanguageLabel(lang?: string | null): string {
