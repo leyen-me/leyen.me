@@ -177,6 +177,12 @@ export const englishDailyUpdateSchema = z.object({
   examScore: z.number().min(0).max(100).optional(),
 });
 
+export const englishStudyProgressSchema = z.object({
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  learnWordIndex: z.number().int().min(0).optional(),
+  reviewWordIndex: z.number().int().min(0).optional(),
+});
+
 export const englishReviewResultSchema = z.object({
   results: z.array(
     z.object({

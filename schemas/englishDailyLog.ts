@@ -49,6 +49,22 @@ export const englishDailyLog = defineType({
         { name: "exam", title: "考试", type: "boolean", initialValue: false },
       ],
     }),
+    defineField({
+      name: "learnWordIndex",
+      title: "新词学习进度",
+      type: "number",
+      description: "今日词表中当前学到第几个（0 起）",
+      initialValue: 0,
+      validation: (Rule) => Rule.min(0),
+    }),
+    defineField({
+      name: "reviewWordIndex",
+      title: "复习进度",
+      type: "number",
+      description: "待复习列表中当前复习到第几个（0 起）",
+      initialValue: 0,
+      validation: (Rule) => Rule.min(0),
+    }),
   ],
   preview: {
     select: { title: "date", subtitle: "activityLevel" },

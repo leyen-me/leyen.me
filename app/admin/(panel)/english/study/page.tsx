@@ -17,7 +17,14 @@ type TodayState = {
   reviewWords: WordDetail[];
   todayWords: WordDetail[];
   hasTodayBatch: boolean;
+  learnWordIndex: number;
+  reviewWordIndex: number;
 };
+
+function clampIndex(index: number, length: number) {
+  if (length <= 0) return 0;
+  return Math.min(Math.max(0, index), length - 1);
+}
 
 export default function EnglishStudyPage() {
   const [state, setState] = useState<TodayState | null>(null);
@@ -31,6 +38,7 @@ export default function EnglishStudyPage() {
   const [learnIndex, setLearnIndex] = useState(0);
   const [error, setError] = useState("");
   const reviewAutoStarted = useRef(false);
+  const learnAutoStarted = useRef(false);
 
   const currentRawWord = state?.todayWords[learnIndex] ?? null;
   const {
@@ -51,7 +59,26 @@ export default function EnglishStudyPage() {
     }
     setState(data);
     setStep(data.currentStep);
+    setLearnIndex(clampIndex(data.learnWordIndex ?? 0, data.todayWords?.length ?? 0));
+    setReviewIndex(clampIndex(data.reviewWordIndex ?? 0, data.reviewWords?.length ?? 0));
     setLoading(false);
+  }
+
+  function persistProgress(patch: {
+    learnWordIndex?: number;
+    reviewWordIndex?: number;
+  }) {
+    if (!state) return;
+    void fetch("/api/admin/english/study/progress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date: state.today, ...patch }),
+    });
+  }
+
+  function goToLearnIndex(index: number) {
+    setLearnIndex(index);
+    persistProgress({ learnWordIndex: index });
   }
 
   useEffect(() => {
@@ -62,14 +89,25 @@ export default function EnglishStudyPage() {
     if (step !== "review") {
       reviewAutoStarted.current = false;
     }
+    if (step !== "learn") {
+      learnAutoStarted.current = false;
+    }
   }, [step]);
 
   useEffect(() => {
     if (loading || !state || step !== "review" || reviewing) return;
     if (!state.reviewWords.length || reviewAutoStarted.current) return;
+    const startIndex = clampIndex(state.reviewWordIndex ?? 0, state.reviewWords.length);
     reviewAutoStarted.current = true;
-    void beginReview(state.reviewWords[0]._id);
+    void beginReview(state.reviewWords[startIndex]._id, startIndex);
   }, [loading, state, step, reviewing]);
+
+  useEffect(() => {
+    if (loading || !state || step !== "learn" || generating) return;
+    if (state.hasTodayBatch || learnAutoStarted.current) return;
+    learnAutoStarted.current = true;
+    void generateTodayWords();
+  }, [loading, state, step, generating]);
 
   async function generateTodayWords() {
     setGenerating(true);
@@ -84,9 +122,9 @@ export default function EnglishStudyPage() {
       if (!res.ok) throw new Error(data.error ?? "生成失败");
       await loadState();
       setStep("learn");
-      setLearnIndex(0);
     } catch (err) {
       setError(err instanceof Error ? err.message : "生成失败");
+      learnAutoStarted.current = false;
     } finally {
       setGenerating(false);
     }
@@ -120,9 +158,9 @@ export default function EnglishStudyPage() {
     }
   }
 
-  async function beginReview(firstWordId: string) {
+  async function beginReview(firstWordId: string, startIndex = 0) {
     setReviewing(true);
-    setReviewIndex(0);
+    setReviewIndex(startIndex);
     setQuestions([]);
     const ok = await loadQuiz("review", [firstWordId]);
     if (!ok) {
@@ -159,6 +197,7 @@ export default function EnglishStudyPage() {
 
     const nextIndex = reviewIndex + 1;
     setReviewIndex(nextIndex);
+    persistProgress({ reviewWordIndex: nextIndex });
     setQuestions([]);
     await loadQuiz("review", [state.reviewWords[nextIndex]._id]);
   }
@@ -260,19 +299,17 @@ export default function EnglishStudyPage() {
           <h2 className="text-xl font-semibold">第二步：学习新词</h2>
           {!state?.hasTodayBatch ? (
             <div className="space-y-3">
-              <p className="text-zinc-500">
-                AI 将根据你的等级生成今日新单词（仅词表，详解在学习时逐词生成）。
-              </p>
-              <Button onClick={generateTodayWords} disabled={generating}>
-                {generating ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    AI 生成中...
-                  </>
-                ) : (
-                  "生成今日单词"
-                )}
-              </Button>
+              {generating || !error ? (
+                <div className="flex items-center gap-2 text-zinc-500">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  AI 正在生成今日单词...
+                </div>
+              ) : (
+                <>
+                  <p className="text-zinc-500">{error}</p>
+                  <Button onClick={generateTodayWords}>重新生成</Button>
+                </>
+              )}
             </div>
           ) : (
             <>
@@ -296,12 +333,12 @@ export default function EnglishStudyPage() {
                 <Button
                   variant="outline"
                   disabled={learnIndex === 0 || enriching}
-                  onClick={() => setLearnIndex((i) => i - 1)}
+                  onClick={() => goToLearnIndex(learnIndex - 1)}
                 >
                   上一个
                 </Button>
                 {learnIndex < state.todayWords.length - 1 ? (
-                  <Button disabled={enriching} onClick={() => setLearnIndex((i) => i + 1)}>
+                  <Button disabled={enriching} onClick={() => goToLearnIndex(learnIndex + 1)}>
                     下一个
                     <ArrowRight className="h-4 w-4" />
                   </Button>

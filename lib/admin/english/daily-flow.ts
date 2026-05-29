@@ -65,6 +65,8 @@ export type EnglishDailyLogDoc = {
   reviewCount: number;
   examScore: number;
   activityLevel: number;
+  learnWordIndex?: number;
+  reviewWordIndex?: number;
   completedSteps: {
     review: boolean;
     learn: boolean;
@@ -82,6 +84,8 @@ export type TodayStudyState = {
   reviewWords: EnglishWordDoc[];
   todayWords: EnglishWordDoc[];
   hasTodayBatch: boolean;
+  learnWordIndex: number;
+  reviewWordIndex: number;
 };
 
 function resolveCurrentStep(
@@ -139,6 +143,8 @@ export async function getTodayStudyState(): Promise<TodayStudyState> {
     reviewWords,
     todayWords,
     hasTodayBatch: todayWords.length > 0,
+    learnWordIndex: dailyLog?.learnWordIndex ?? 0,
+    reviewWordIndex: dailyLog?.reviewWordIndex ?? 0,
     currentStep: resolveCurrentStep(dailyLog, reviewWords, todayWords),
   };
 }

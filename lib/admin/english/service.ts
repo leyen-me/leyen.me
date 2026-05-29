@@ -69,6 +69,8 @@ export async function getOrCreateDailyLog(
     reviewCount: 0,
     examScore: 0,
     activityLevel: 0,
+    learnWordIndex: 0,
+    reviewWordIndex: 0,
     completedSteps: { review: false, learn: false, exam: false },
   });
 
@@ -79,6 +81,8 @@ export async function getOrCreateDailyLog(
     reviewCount: 0,
     examScore: 0,
     activityLevel: 0,
+    learnWordIndex: 0,
+    reviewWordIndex: 0,
     completedSteps: { review: false, learn: false, exam: false },
   };
 }

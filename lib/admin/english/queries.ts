@@ -74,6 +74,8 @@ export const adminEnglishDailyLogByDateQuery = groq`*[
   reviewCount,
   examScore,
   activityLevel,
+  learnWordIndex,
+  reviewWordIndex,
   completedSteps { review, learn, exam }
 }`;
 
@@ -87,6 +89,8 @@ export const adminEnglishDailyLogsQuery = groq`*[
   reviewCount,
   examScore,
   activityLevel,
+  learnWordIndex,
+  reviewWordIndex,
   completedSteps { review, learn, exam }
 }`;
 
