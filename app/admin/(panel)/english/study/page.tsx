@@ -26,6 +26,8 @@ export default function EnglishStudyPage() {
   const [generating, setGenerating] = useState(false);
   const [quizLoading, setQuizLoading] = useState(false);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [reviewIndex, setReviewIndex] = useState(0);
+  const [reviewing, setReviewing] = useState(false);
   const [learnIndex, setLearnIndex] = useState(0);
   const [error, setError] = useState("");
 
@@ -104,23 +106,41 @@ export default function EnglishStudyPage() {
       setStep("learn");
       return;
     }
-    await loadQuiz(
-      "review",
-      state.reviewWords.map((w) => w._id)
-    );
+    setReviewing(true);
+    setReviewIndex(0);
+    await loadQuiz("review", [state.reviewWords[0]._id]);
   }
 
   async function handleReviewSubmit(
     results: Array<{ wordId: string; correct: boolean }>
   ) {
-    await fetch("/api/admin/english/study/review", {
+    if (!state?.reviewWords.length) return;
+
+    const isLast = reviewIndex >= state.reviewWords.length - 1;
+    const res = await fetch("/api/admin/english/study/review", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ results }),
+      body: JSON.stringify({ results, completeStep: isLast }),
     });
-    await loadState();
-    setStep("learn");
+    if (!res.ok) {
+      const data = await res.json();
+      setError(data.error ?? "提交失败");
+      return;
+    }
+
+    if (isLast) {
+      await loadState();
+      setStep("learn");
+      setQuestions([]);
+      setReviewing(false);
+      setReviewIndex(0);
+      return;
+    }
+
+    const nextIndex = reviewIndex + 1;
+    setReviewIndex(nextIndex);
     setQuestions([]);
+    await loadQuiz("review", [state.reviewWords[nextIndex]._id]);
   }
 
   async function finishLearning() {
@@ -187,25 +207,29 @@ export default function EnglishStudyPage() {
           {state?.reviewWords.length ? (
             <>
               <p className="text-zinc-500">
-                有 {state.reviewWords.length} 个单词到期复习，先完成复习考试再学新词。
+                有 {state.reviewWords.length} 个单词到期复习，逐个作答后再学新词。
               </p>
-              {questions.length === 0 ? (
+              {!reviewing ? (
                 <Button onClick={handleReviewStart} disabled={quizLoading}>
-                  {quizLoading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      出题中...
-                    </>
-                  ) : (
-                    "开始复习考试"
-                  )}
+                  开始复习
                 </Button>
+              ) : questions.length > 0 ? (
+                <>
+                  <p className="text-sm text-zinc-500">
+                    进度 {reviewIndex + 1} / {state.reviewWords.length}
+                  </p>
+                  <QuizPanel
+                    key={state.reviewWords[reviewIndex]?._id ?? reviewIndex}
+                    questions={questions}
+                    title="复习"
+                    onSubmit={handleReviewSubmit}
+                  />
+                </>
               ) : (
-                <QuizPanel
-                  questions={questions}
-                  title="复习考试"
-                  onSubmit={handleReviewSubmit}
-                />
+                <div className="flex items-center gap-2 text-zinc-500">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  AI 正在出第 {reviewIndex + 1} 题...
+                </div>
               )}
             </>
           ) : (

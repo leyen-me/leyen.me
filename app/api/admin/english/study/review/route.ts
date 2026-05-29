@@ -6,6 +6,7 @@ import { getTodayDateString } from "@/lib/admin/english/constants";
 import { adminEnglishWordByIdQuery } from "@/lib/admin/english/queries";
 import { applySrsCorrect, applySrsWrong } from "@/lib/admin/english/srs";
 import {
+  getOrCreateDailyLog,
   getOrCreateSettings,
   updateDailyLog,
   updateStreakAfterStudy,
@@ -49,13 +50,19 @@ export async function POST(req: NextRequest) {
       })
     );
 
-    await updateDailyLog(today, {
-      reviewCount: parsed.data.results.length,
-      completedSteps: { review: true },
-    });
-    await updateStreakAfterStudy();
+    const completeStep = parsed.data.completeStep ?? true;
+    const dailyLog = await getOrCreateDailyLog(today);
 
-    return NextResponse.json({ success: true });
+    await updateDailyLog(today, {
+      reviewCount: (dailyLog.reviewCount ?? 0) + parsed.data.results.length,
+      ...(completeStep ? { completedSteps: { review: true } } : {}),
+    });
+
+    if (completeStep) {
+      await updateStreakAfterStudy();
+    }
+
+    return NextResponse.json({ success: true, completeStep });
   } catch (error) {
     console.error("Failed to submit review results:", error);
     return NextResponse.json(

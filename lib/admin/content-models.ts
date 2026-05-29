@@ -178,6 +178,8 @@ export const englishReviewResultSchema = z.object({
       correct: z.boolean(),
     })
   ),
+  /** 为 false 时只更新 SRS，不标记当日「复习」步骤完成 */
+  completeStep: z.boolean().optional(),
 });
 
 export const englishExamResultSchema = z.object({
