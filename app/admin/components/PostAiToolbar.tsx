@@ -20,11 +20,11 @@ type PostAiToolbarProps = {
 
 const POLISH_OPTIONS: Array<{
   mode: PostPolishMode;
-  description: string;
+  hint: string;
 }> = [
-  { mode: "light", description: "忠实原意，主要优化措辞与节奏" },
-  { mode: "deep", description: "更主动重写句式，压缩冗余" },
-  { mode: "styled", description: "按专栏风格重写，表达更鲜明" },
+  { mode: "light", hint: "忠实原意，微调措辞" },
+  { mode: "deep", hint: "重写句式，压缩冗余" },
+  { mode: "styled", hint: "专栏风格，表达更鲜明" },
 ];
 
 export default function PostAiToolbar({
@@ -93,26 +93,20 @@ export default function PostAiToolbar({
           />
         </Button>
         {menuOpen ? (
-          <div className="absolute left-0 top-[calc(100%+0.35rem)] z-20 min-w-64 overflow-hidden rounded-md border border-zinc-200 bg-white p-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
+          <div className="absolute right-0 top-[calc(100%+0.35rem)] z-20 w-max min-w-[8.5rem] rounded-md border border-zinc-200 bg-white p-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
             {POLISH_OPTIONS.map((option) => (
               <button
                 key={option.mode}
                 type="button"
-                className="block w-full rounded-md px-3 py-2 text-left hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                title={option.hint}
+                className="block w-full whitespace-nowrap rounded-md px-3 py-1.5 text-left text-sm text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-900"
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => {
                   setMenuOpen(false);
                   onPolish(option.mode);
                 }}
               >
-                <span className="block min-w-0">
-                  <span className="block text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                    {POST_POLISH_MODE_LABEL[option.mode]}
-                  </span>
-                  <span className="block text-xs text-zinc-500 dark:text-zinc-400">
-                    {option.description}
-                  </span>
-                </span>
+                {POST_POLISH_MODE_LABEL[option.mode]}
               </button>
             ))}
           </div>
