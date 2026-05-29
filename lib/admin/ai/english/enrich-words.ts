@@ -28,7 +28,7 @@ async function patchWordEnrichment(
       phonetic: enriched.phonetic,
       partOfSpeech: enriched.partOfSpeech,
       meaningZh: enriched.meaningZh,
-      ...(enriched.etymology ? { etymology: enriched.etymology } : {}),
+      ...(enriched.morphology ? { morphology: enriched.morphology } : {}),
       phrases: enriched.phrases,
       examples: enriched.examples,
       derivations: enriched.derivations,

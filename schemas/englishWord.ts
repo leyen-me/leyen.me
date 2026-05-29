@@ -92,8 +92,8 @@ export const englishWord = defineType({
       ],
     }),
     defineField({
-      name: "etymology",
-      title: "词源",
+      name: "morphology",
+      title: "词根词缀",
       type: "object",
       options: { collapsible: true, collapsed: false },
       fields: [
@@ -101,33 +101,39 @@ export const englishWord = defineType({
           name: "breakdown",
           title: "构词拆解",
           type: "string",
-          description: "如 re-(回) + duce(引导)",
+          description: "如 in-(不) + struct(建造) + -ion(名词后缀)",
         },
         {
-          name: "roots",
-          title: "词根 / 词缀",
+          name: "parts",
+          title: "词素拆解",
           type: "array",
           of: [
             {
               type: "object",
               fields: [
-                { name: "part", title: "词根/词缀", type: "string" },
+                {
+                  name: "type",
+                  title: "类型",
+                  type: "string",
+                  options: {
+                    list: [
+                      { title: "前缀", value: "prefix" },
+                      { title: "词根", value: "root" },
+                      { title: "后缀", value: "suffix" },
+                    ],
+                  },
+                },
+                { name: "text", title: "词素", type: "string" },
                 { name: "meaning", title: "含义", type: "string" },
               ],
             },
           ],
         },
         {
-          name: "origin",
-          title: "词源本义",
-          type: "text",
-          description: "来源语言及本义，如 来自拉丁语 reducere（带回）",
-        },
-        {
           name: "memoryTip",
           title: "串联记忆",
           type: "text",
-          description: "用词根义串联出当前释义的记忆线索",
+          description: "用各词素含义串联出当前释义的记忆线索",
         },
       ],
     }),

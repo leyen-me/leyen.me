@@ -12,10 +12,9 @@ export type WordDetail = {
   phonetic?: string;
   partOfSpeech?: string;
   meaningZh?: string;
-  etymology?: {
+  morphology?: {
     breakdown?: string;
-    roots?: Array<{ part: string; meaning: string }>;
-    origin?: string;
+    parts?: Array<{ type?: "prefix" | "root" | "suffix"; text: string; meaning: string }>;
     memoryTip?: string;
   };
   phrases?: Array<{ phrase: string; meaningZh: string }>;
@@ -38,6 +37,12 @@ const SOURCE_LABELS: Record<string, string> = {
   toefl: "托福",
   movie: "电影",
   general: "通用",
+};
+
+const MORPHEME_TYPE_LABELS: Record<"prefix" | "root" | "suffix", string> = {
+  prefix: "前缀",
+  root: "词根",
+  suffix: "后缀",
 };
 
 type WordDetailViewProps = {
@@ -98,46 +103,44 @@ export default function WordDetailView({
         )}
       </div>
 
-      {word.etymology &&
-        (word.etymology.breakdown ||
-          word.etymology.memoryTip ||
-          word.etymology.origin ||
-          (word.etymology.roots && word.etymology.roots.length > 0)) && (
+      {word.morphology &&
+        (word.morphology.breakdown ||
+          word.morphology.memoryTip ||
+          (word.morphology.parts && word.morphology.parts.length > 0)) && (
           <section className="space-y-3 rounded-lg border border-amber-200 bg-amber-50/60 p-4 dark:border-amber-900/60 dark:bg-amber-950/30">
             <h2 className="flex items-center gap-2 text-lg font-semibold text-amber-900 dark:text-amber-200">
-              词源记忆
+              词根词缀
             </h2>
-            {word.etymology.breakdown && (
+            {word.morphology.breakdown && (
               <p className="text-base font-medium tracking-wide">
-                {word.etymology.breakdown}
+                {word.morphology.breakdown}
               </p>
             )}
-            {word.etymology.roots && word.etymology.roots.length > 0 && (
-              <ul className="flex flex-wrap gap-2">
-                {word.etymology.roots.map((r, i) => (
+            {word.morphology.parts && word.morphology.parts.length > 0 && (
+              <ul className="space-y-2">
+                {word.morphology.parts.map((p, i) => (
                   <li
                     key={i}
-                    className="rounded-md border border-amber-300 bg-white px-2 py-1 text-sm dark:border-amber-800 dark:bg-zinc-900"
+                    className="flex items-center gap-2 rounded-md border border-amber-300 bg-white px-2.5 py-1.5 text-sm dark:border-amber-800 dark:bg-zinc-900"
                   >
-                    <span className="font-mono font-semibold">{r.part}</span>
-                    <span className="mx-1.5 text-zinc-400">→</span>
+                    {p.type && (
+                      <Badge variant="secondary" className="shrink-0">
+                        {MORPHEME_TYPE_LABELS[p.type]}
+                      </Badge>
+                    )}
+                    <span className="font-mono font-semibold">{p.text}</span>
+                    <span className="text-zinc-400">→</span>
                     <span className="text-zinc-600 dark:text-zinc-300">
-                      {r.meaning}
+                      {p.meaning}
                     </span>
                   </li>
                 ))}
               </ul>
             )}
-            {word.etymology.origin && (
-              <p className="text-sm text-zinc-600 dark:text-zinc-300">
-                <span className="font-medium text-zinc-500">本义：</span>
-                {word.etymology.origin}
-              </p>
-            )}
-            {word.etymology.memoryTip && (
+            {word.morphology.memoryTip && (
               <p className="text-sm text-amber-800 dark:text-amber-200">
                 <span className="font-medium">助记：</span>
-                {word.etymology.memoryTip}
+                {word.morphology.memoryTip}
               </p>
             )}
           </section>

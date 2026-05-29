@@ -29,16 +29,23 @@ type RawEnrichedWord = {
   phonetic?: unknown;
   partOfSpeech?: unknown;
   meaningZh?: unknown;
-  etymology?: unknown;
+  morphology?: unknown;
   phrases?: unknown;
   examples?: unknown;
   derivations?: unknown;
 };
 
-export type EtymologyData = {
+export type MorphemeType = "prefix" | "root" | "suffix";
+
+export type Morpheme = {
+  type?: MorphemeType;
+  text: string;
+  meaning: string;
+};
+
+export type MorphologyData = {
   breakdown?: string;
-  roots?: Array<{ part: string; meaning: string }>;
-  origin?: string;
+  parts?: Morpheme[];
   memoryTip?: string;
 };
 
@@ -46,37 +53,46 @@ function asTrimmedString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
 
-function normalizeEtymology(raw: unknown): EtymologyData | undefined {
+function normalizeMorphemeType(value: unknown): MorphemeType | undefined {
+  if (typeof value !== "string") return undefined;
+  const v = value.toLowerCase().trim();
+  if (v === "prefix" || v.includes("前缀")) return "prefix";
+  if (v === "suffix" || v.includes("后缀")) return "suffix";
+  if (v === "root" || v.includes("词根")) return "root";
+  return undefined;
+}
+
+function normalizeMorphology(raw: unknown): MorphologyData | undefined {
   if (!raw || typeof raw !== "object") return undefined;
   const data = raw as {
     breakdown?: unknown;
-    roots?: unknown;
-    origin?: unknown;
+    parts?: unknown;
     memoryTip?: unknown;
   };
 
-  const roots = Array.isArray(data.roots)
-    ? data.roots
+  const parts = Array.isArray(data.parts)
+    ? data.parts
         .map((item) => {
           if (!item || typeof item !== "object") return null;
-          const r = item as { part?: unknown; meaning?: unknown };
-          const part = asTrimmedString(r.part);
-          const meaning = asTrimmedString(r.meaning);
-          if (!part || !meaning) return null;
-          return { part, meaning };
+          const p = item as { type?: unknown; text?: unknown; meaning?: unknown };
+          const text = asTrimmedString(p.text);
+          const meaning = asTrimmedString(p.meaning);
+          if (!text || !meaning) return null;
+          const morpheme: Morpheme = { text, meaning };
+          const type = normalizeMorphemeType(p.type);
+          if (type) morpheme.type = type;
+          return morpheme;
         })
-        .filter((item): item is { part: string; meaning: string } => Boolean(item))
+        .filter((item): item is Morpheme => Boolean(item))
     : [];
 
-  const result: EtymologyData = {
+  const result: MorphologyData = {
     breakdown: asTrimmedString(data.breakdown),
-    roots: roots.length > 0 ? roots : undefined,
-    origin: asTrimmedString(data.origin),
+    parts: parts.length > 0 ? parts : undefined,
     memoryTip: asTrimmedString(data.memoryTip),
   };
 
-  const hasContent =
-    result.breakdown || result.roots || result.origin || result.memoryTip;
+  const hasContent = result.breakdown || result.parts || result.memoryTip;
   return hasContent ? result : undefined;
 }
 
@@ -85,7 +101,7 @@ export function normalizeEnrichedWord(raw: unknown): {
   phonetic: string;
   partOfSpeech: string;
   meaningZh: string;
-  etymology?: EtymologyData;
+  morphology?: MorphologyData;
   phrases: Array<{ phrase: string; meaningZh: string }>;
   examples: Array<{
     sentence: string;
@@ -188,7 +204,7 @@ export function normalizeEnrichedWord(raw: unknown): {
         ? data.partOfSpeech.trim()
         : "n.",
     meaningZh: data.meaningZh.trim(),
-    etymology: normalizeEtymology(data.etymology),
+    morphology: normalizeMorphology(data.morphology),
     phrases,
     examples,
     derivations,

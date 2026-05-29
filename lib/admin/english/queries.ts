@@ -8,7 +8,7 @@ export const englishWordFields = groq`
   phonetic,
   partOfSpeech,
   meaningZh,
-  etymology { breakdown, roots[] { part, meaning }, origin, memoryTip },
+  morphology { breakdown, parts[] { type, text, meaning }, memoryTip },
   phrases[] { phrase, meaningZh },
   examples[] { sentence, source, translationZh },
   derivations[] { word, partOfSpeech, meaningZh },

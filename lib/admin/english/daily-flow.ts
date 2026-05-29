@@ -14,10 +14,9 @@ export type EnglishWordDoc = {
   phonetic?: string;
   partOfSpeech?: string;
   meaningZh?: string;
-  etymology?: {
+  morphology?: {
     breakdown?: string;
-    roots?: Array<{ part: string; meaning: string }>;
-    origin?: string;
+    parts?: Array<{ type?: "prefix" | "root" | "suffix"; text: string; meaning: string }>;
     memoryTip?: string;
   };
   phrases?: Array<{ phrase: string; meaningZh: string }>;
