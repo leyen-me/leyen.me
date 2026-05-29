@@ -23,6 +23,7 @@ export default function PostAiPreviewDialog({
   onDismiss,
 }: PostAiPreviewDialogProps) {
   const isPolish = preview?.action === "polish";
+  const isContinue = preview?.action === "continue";
   const polishTitle =
     isPolish && preview?.polishMode
       ? `${POST_POLISH_MODE_LABEL[preview.polishMode]}预览`
@@ -48,7 +49,7 @@ export default function PostAiPreviewDialog({
           <div className="grid min-h-0 flex-1 grid-cols-1 gap-0 overflow-hidden md:grid-cols-2">
             <div className="flex min-h-0 flex-col border-b border-zinc-200 dark:border-zinc-800 md:border-b-0 md:border-r">
               <div className="shrink-0 px-4 py-2 text-xs font-medium text-zinc-500">
-                {isPolish ? "原文" : "上文（光标前）"}
+                {isPolish ? "原文" : isContinue ? "光标附近上下文" : "上文（光标前）"}
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">
                 <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">

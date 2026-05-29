@@ -16,7 +16,8 @@ const polishInputSchema = z.object({
 const continueInputSchema = z.object({
   action: z.literal("continue"),
   title: z.string().trim().min(1, "Title is required"),
-  content: z.string(),
+  before: z.string(),
+  after: z.string().optional(),
 });
 
 export const postContentInputSchema = z.discriminatedUnion("action", [
@@ -93,6 +94,26 @@ function buildPolishUserPrompt(input: {
   }
 
   return sections.join("\n");
+}
+
+function buildContinueUserPrompt(input: {
+  title: string;
+  before: string;
+  after?: string;
+}): string {
+  return [
+    "<ARTICLE_TITLE>",
+    input.title,
+    "</ARTICLE_TITLE>",
+    "",
+    "<TEXT_BEFORE_CURSOR>",
+    input.before || "(empty)",
+    "</TEXT_BEFORE_CURSOR>",
+    "",
+    "<TEXT_AFTER_CURSOR>",
+    input.after || "(empty)",
+    "</TEXT_AFTER_CURSOR>",
+  ].join("\n");
 }
 
 const POLISH_PROMPTS: Record<PostPolishMode, string> = {
@@ -195,8 +216,8 @@ export async function generatePostContent(
     return text;
   }
 
-  const content = input.content.trim();
-  if (!content) {
+  const before = input.before;
+  if (!before.trim()) {
     throw new Error("请先输入一些正文内容再续写");
   }
 
@@ -209,15 +230,23 @@ export async function generatePostContent(
         role: "system",
         content: [
           SYSTEM_PROMPT,
-          "Continue writing from where the article left off.",
-          "Output only new content — do not repeat existing text.",
-          "Match the tone and style of the existing article.",
-          "If the last sentence is incomplete, finish it naturally before adding new paragraphs.",
+          "You are writing text to be inserted at the current cursor position inside an existing article.",
+          "Use <TEXT_BEFORE_CURSOR> as the immediate context before the insertion point.",
+          "Use <TEXT_AFTER_CURSOR> as the immediate context after the insertion point.",
+          "Output only the text that should be inserted at the cursor — do not repeat the surrounding context.",
+          "Match the tone, style, structure, and Markdown formatting of the surrounding article.",
+          "If the sentence before the cursor is incomplete, continue it naturally.",
+          "If text exists after the cursor, make the inserted text connect smoothly into it without duplicating, contradicting, or preempting it.",
+          "Do not act like the article ends at the cursor unless the after-context is empty.",
         ].join("\n"),
       },
       {
         role: "user",
-        content: `Article title: ${input.title}\n\nExisting content:\n${content}`,
+        content: buildContinueUserPrompt({
+          title: input.title,
+          before: input.before,
+          after: input.after,
+        }),
       },
     ],
   });

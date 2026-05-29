@@ -8,6 +8,7 @@ import type {
 
 const CONTEXT_BEFORE_AFTER = 300;
 const CONTEXT_CONTINUE_MAX = 4000;
+const CONTEXT_CONTINUE_AFTER_MAX = 1200;
 
 export type PostAiAction = "polish" | "continue";
 export type PostPolishMode = "light" | "deep" | "styled";
@@ -36,6 +37,11 @@ type UsePostAiActionOptions = {
 function truncateTail(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
   return text.slice(-maxLength);
+}
+
+function truncateHead(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength);
 }
 
 export function usePostAiAction({
@@ -123,11 +129,14 @@ export function usePostAiAction({
       }
 
       const cursor = textarea.selectionStart;
-      const contentBeforeCursor = content.slice(0, cursor).trim();
-      if (!contentBeforeCursor) {
+      const contentBeforeCursor = content.slice(0, cursor);
+      if (!contentBeforeCursor.trim()) {
         setError("请先输入一些正文内容再续写");
         return;
       }
+      const contentAfterCursor = content.slice(cursor);
+      const beforeContext = truncateTail(contentBeforeCursor, CONTEXT_CONTINUE_MAX);
+      const afterContext = truncateHead(contentAfterCursor, CONTEXT_CONTINUE_AFTER_MAX);
 
       setLoadingAction("continue");
 
@@ -138,7 +147,8 @@ export function usePostAiAction({
           body: JSON.stringify({
             action: "continue",
             title: trimmedTitle,
-            content: truncateTail(contentBeforeCursor, CONTEXT_CONTINUE_MAX),
+              before: beforeContext,
+              after: afterContext,
           }),
         });
         const data = await res.json();
@@ -154,8 +164,11 @@ export function usePostAiAction({
 
         setPreview({
           action,
-          original:
-            content.slice(Math.max(0, cursor - 200), cursor) || "（光标位置）",
+          original: [
+            truncateTail(contentBeforeCursor, 200) || "（文首）",
+            "\n\n[在此续写]\n\n",
+            truncateHead(contentAfterCursor, 200) || "（文末）",
+          ].join(""),
           result,
           apply: () => {
             editorRef.current?.replaceRange(cursor, cursor, result);
