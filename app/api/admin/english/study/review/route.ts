@@ -4,6 +4,7 @@ import { parseBody } from "@/lib/admin/api-utils";
 import { englishReviewResultSchema } from "@/lib/admin/content-models";
 import { getTodayDateString } from "@/lib/admin/english/constants";
 import { adminEnglishWordByIdQuery } from "@/lib/admin/english/queries";
+import { clearCachedQuiz } from "@/lib/admin/english/quiz-cache";
 import { applySrsCorrect, applySrsWrong } from "@/lib/admin/english/srs";
 import {
   getOrCreateDailyLog,
@@ -47,6 +48,7 @@ export async function POST(req: NextRequest) {
           : applySrsWrong(current);
 
         await writeClient.patch(wordId).set(update).commit();
+        await clearCachedQuiz(wordId, "review");
       })
     );
 

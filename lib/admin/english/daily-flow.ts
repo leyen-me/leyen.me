@@ -34,6 +34,18 @@ export type EnglishWordDoc = {
   learnedAt?: string;
   lastReviewedAt?: string;
   dailyBatchDate?: string;
+  cachedReviewQuiz?: {
+    type: string;
+    prompt: string;
+    answer: string;
+    options?: string[];
+  };
+  cachedExamQuiz?: {
+    type: string;
+    prompt: string;
+    answer: string;
+    options?: string[];
+  };
 };
 
 export type EnglishSettingsDoc = {

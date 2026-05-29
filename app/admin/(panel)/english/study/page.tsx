@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,7 @@ export default function EnglishStudyPage() {
   const [reviewing, setReviewing] = useState(false);
   const [learnIndex, setLearnIndex] = useState(0);
   const [error, setError] = useState("");
+  const reviewAutoStarted = useRef(false);
 
   const currentRawWord = state?.todayWords[learnIndex] ?? null;
   const {
@@ -57,6 +58,19 @@ export default function EnglishStudyPage() {
     loadState();
   }, []);
 
+  useEffect(() => {
+    if (step !== "review") {
+      reviewAutoStarted.current = false;
+    }
+  }, [step]);
+
+  useEffect(() => {
+    if (loading || !state || step !== "review" || reviewing) return;
+    if (!state.reviewWords.length || reviewAutoStarted.current) return;
+    reviewAutoStarted.current = true;
+    void beginReview(state.reviewWords[0]._id);
+  }, [loading, state, step, reviewing]);
+
   async function generateTodayWords() {
     setGenerating(true);
     setError("");
@@ -78,7 +92,10 @@ export default function EnglishStudyPage() {
     }
   }
 
-  async function loadQuiz(mode: "review" | "new_words", wordIds: string[]) {
+  async function loadQuiz(
+    mode: "review" | "new_words",
+    wordIds: string[]
+  ): Promise<boolean> {
     setQuizLoading(true);
     setError("");
     try {
@@ -94,21 +111,24 @@ export default function EnglishStudyPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "出题失败");
       setQuestions(data.questions);
+      return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : "出题失败");
+      return false;
     } finally {
       setQuizLoading(false);
     }
   }
 
-  async function handleReviewStart() {
-    if (!state?.reviewWords.length) {
-      setStep("learn");
-      return;
-    }
+  async function beginReview(firstWordId: string) {
     setReviewing(true);
     setReviewIndex(0);
-    await loadQuiz("review", [state.reviewWords[0]._id]);
+    setQuestions([]);
+    const ok = await loadQuiz("review", [firstWordId]);
+    if (!ok) {
+      setReviewing(false);
+      reviewAutoStarted.current = false;
+    }
   }
 
   async function handleReviewSubmit(
@@ -207,24 +227,18 @@ export default function EnglishStudyPage() {
           {state?.reviewWords.length ? (
             <>
               <p className="text-zinc-500">
-                有 {state.reviewWords.length} 个单词到期复习，逐个作答后再学新词。
+                共 {state.reviewWords.length} 个单词待复习
+                {reviewing && questions.length > 0
+                  ? ` · 进度 ${reviewIndex + 1} / ${state.reviewWords.length}`
+                  : ""}
               </p>
-              {!reviewing ? (
-                <Button onClick={handleReviewStart} disabled={quizLoading}>
-                  开始复习
-                </Button>
-              ) : questions.length > 0 ? (
-                <>
-                  <p className="text-sm text-zinc-500">
-                    进度 {reviewIndex + 1} / {state.reviewWords.length}
-                  </p>
-                  <QuizPanel
-                    key={state.reviewWords[reviewIndex]?._id ?? reviewIndex}
-                    questions={questions}
-                    title="复习"
-                    onSubmit={handleReviewSubmit}
-                  />
-                </>
+              {questions.length > 0 ? (
+                <QuizPanel
+                  key={state.reviewWords[reviewIndex]?._id ?? reviewIndex}
+                  questions={questions}
+                  title="复习"
+                  onSubmit={handleReviewSubmit}
+                />
               ) : (
                 <div className="flex items-center gap-2 text-zinc-500">
                   <Loader2 className="h-4 w-4 animate-spin" />

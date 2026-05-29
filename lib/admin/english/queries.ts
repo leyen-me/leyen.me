@@ -19,7 +19,9 @@ export const englishWordFields = groq`
   wrongCount,
   learnedAt,
   lastReviewedAt,
-  dailyBatchDate
+  dailyBatchDate,
+  cachedReviewQuiz { type, prompt, answer, options },
+  cachedExamQuiz { type, prompt, answer, options }
 `;
 
 export const adminEnglishSettingsQuery = groq`*[_type == "englishSettings"][0] {

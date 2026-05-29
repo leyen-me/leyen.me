@@ -141,6 +141,40 @@ export const englishWord = defineType({
       title: "学习批次日期",
       type: "string",
     }),
+    defineField({
+      name: "cachedReviewQuiz",
+      title: "缓存复习题",
+      type: "object",
+      options: { collapsible: true, collapsed: true },
+      fields: [
+        { name: "type", title: "题型", type: "string" },
+        { name: "prompt", title: "题干", type: "text" },
+        { name: "answer", title: "答案", type: "string" },
+        {
+          name: "options",
+          title: "选项",
+          type: "array",
+          of: [{ type: "string" }],
+        },
+      ],
+    }),
+    defineField({
+      name: "cachedExamQuiz",
+      title: "缓存考试题",
+      type: "object",
+      options: { collapsible: true, collapsed: true },
+      fields: [
+        { name: "type", title: "题型", type: "string" },
+        { name: "prompt", title: "题干", type: "text" },
+        { name: "answer", title: "答案", type: "string" },
+        {
+          name: "options",
+          title: "选项",
+          type: "array",
+          of: [{ type: "string" }],
+        },
+      ],
+    }),
   ],
   preview: {
     select: { title: "word", subtitle: "meaningZh", status: "status" },

@@ -4,6 +4,7 @@ import { parseBody } from "@/lib/admin/api-utils";
 import { englishExamResultSchema } from "@/lib/admin/content-models";
 import { getTodayDateString } from "@/lib/admin/english/constants";
 import { adminEnglishWordByIdQuery } from "@/lib/admin/english/queries";
+import { clearCachedQuiz } from "@/lib/admin/english/quiz-cache";
 import { applySrsCorrect, applySrsWrong } from "@/lib/admin/english/srs";
 import {
   getOrCreateSettings,
@@ -54,6 +55,7 @@ export async function POST(req: NextRequest) {
         }
 
         await writeClient.patch(wordId).set(update).commit();
+        await clearCachedQuiz(wordId, "new_words");
       })
     );
 
