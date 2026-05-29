@@ -9,6 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import MarkdownPreview from "@/app/admin/components/MarkdownPreview";
+import { markdownParagraphTypographyClass } from "@/lib/markdown-paragraph-typography";
 import {
   applyTextareaUpdate,
   insertAtCursor,
@@ -173,7 +174,10 @@ const ImmersiveMarkdownEditor = forwardRef<
             onSelect={notifySelectionChange}
             onScroll={notifyContentScroll}
             placeholder="开始写作..."
-            className="min-h-0 flex-1 resize-none rounded-none border-0 bg-transparent px-4 py-4 font-mono text-sm leading-relaxed shadow-none focus-visible:ring-0"
+            className={cn(
+              "min-h-0 flex-1 resize-none rounded-none border-0 bg-transparent px-4 py-4 shadow-none focus-visible:ring-0",
+              markdownParagraphTypographyClass
+            )}
           />
         </div>
         <div

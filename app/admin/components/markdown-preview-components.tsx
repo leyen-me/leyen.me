@@ -4,11 +4,13 @@ import type { Components } from "react-markdown";
 import { BiLinkExternal } from "react-icons/bi";
 import RefLink from "@/app/components/shared/RefLink";
 import CodeBlock from "@/app/components/shared/CodeBlock";
+import { cn } from "@/lib/utils";
 import {
   extractLanguageFromPreChildren,
   parseLanguageFromClassName,
 } from "@/lib/code-language-label";
 import { slugifyHeading } from "@/lib/markdown-headings";
+import { markdownParagraphTypographyClass } from "@/lib/markdown-paragraph-typography";
 
 function flattenText(node: unknown): string {
   if (node === null || node === undefined || typeof node === "boolean") return "";
@@ -61,10 +63,7 @@ export const markdownPreviewComponents: Components = {
     "mb-3 mt-5 text-[1.25rem] font-semibold text-zinc-800 dark:text-zinc-100"
   ),
   p: ({ children, ...props }) => (
-    <p
-      {...props}
-      className="my-4 text-[0.98rem] leading-8 text-zinc-700 dark:text-zinc-300"
-    >
+    <p {...props} className={cn("my-4", markdownParagraphTypographyClass)}>
       {children}
     </p>
   ),
