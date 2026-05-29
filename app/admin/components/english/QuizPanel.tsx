@@ -72,9 +72,7 @@ export default function QuizPanel({
         <Card key={`${q.wordId}-${index}`}>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between gap-2">
-              <CardTitle className="text-base">
-                第 {index + 1} 题 · {q.word}
-              </CardTitle>
+              <CardTitle className="text-base">第 {index + 1} 题</CardTitle>
               <span className="text-xs text-zinc-500">{TYPE_LABELS[q.type]}</span>
             </div>
           </CardHeader>

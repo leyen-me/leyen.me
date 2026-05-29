@@ -1,5 +1,5 @@
 import { createChatCompletion } from "@/lib/admin/ai/client";
-import { getAiStructuredModel } from "@/lib/admin/ai/config";
+import { getAiFastModel } from "@/lib/admin/ai/config";
 import { parseJsonResponse, previewText } from "@/lib/admin/ai/parse-json";
 import {
   buildLevelContext,
@@ -57,7 +57,7 @@ export async function enrichWord(wordId: string): Promise<EnglishWordDoc> {
   const targetExam = settings?.targetExam ?? "none";
 
   const raw = await createChatCompletion({
-    model: getAiStructuredModel(),
+    model: getAiFastModel(),
     temperature: 0.3,
     max_tokens: 2048,
     response_format: { type: "json_object" },
