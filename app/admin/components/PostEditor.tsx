@@ -392,6 +392,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
             loadingAction={ai.loadingAction}
             hasSelection={!!editorSelection?.text.trim()}
             onPolish={ai.runPolish}
+            onTranslate={ai.runTranslate}
             onContinue={ai.runContinue}
           />
         </div>

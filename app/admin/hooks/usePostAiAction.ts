@@ -10,7 +10,7 @@ const CONTEXT_BEFORE_AFTER = 300;
 const CONTEXT_CONTINUE_MAX = 4000;
 const CONTEXT_CONTINUE_AFTER_MAX = 1200;
 
-export type PostAiAction = "polish" | "continue";
+export type PostAiAction = "polish" | "continue" | "translate";
 export type PostPolishMode = "light" | "deep" | "styled";
 
 export const POST_POLISH_MODE_LABEL: Record<PostPolishMode, string> = {
@@ -128,6 +128,65 @@ export function usePostAiAction({
         return;
       }
 
+      if (action === "translate") {
+        const selection =
+          editorRef.current?.getSelection() ?? getPolishSelection();
+        if (!selection?.text.trim()) {
+          setError("请先选中要翻译的文字");
+          return;
+        }
+
+        setLoadingAction("translate");
+
+        try {
+          const res = await fetch("/api/admin/ai/post-content", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "translate",
+              title: trimmedTitle,
+              selection: selection.text,
+              before: content.slice(
+                Math.max(0, selection.start - CONTEXT_BEFORE_AFTER),
+                selection.start
+              ),
+              after: content.slice(
+                selection.end,
+                selection.end + CONTEXT_BEFORE_AFTER
+              ),
+            }),
+          });
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.error || "AI 请求失败");
+          }
+
+          const result = typeof data.text === "string" ? data.text : "";
+          if (!result.trim()) {
+            throw new Error("AI 返回了空内容，请重试");
+          }
+
+          setPreview({
+            action,
+            original: selection.text,
+            result,
+            apply: () => {
+              editorRef.current?.replaceRange(
+                selection.start,
+                selection.end,
+                result
+              );
+            },
+          });
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "AI 请求失败");
+        } finally {
+          setLoadingAction(null);
+        }
+        return;
+      }
+
       const cursor = textarea.selectionStart;
       const contentBeforeCursor = content.slice(0, cursor);
       if (!contentBeforeCursor.trim()) {
@@ -187,6 +246,7 @@ export function usePostAiAction({
     (mode: PostPolishMode) => runAction("polish", mode),
     [runAction]
   );
+  const runTranslate = useCallback(() => runAction("translate"), [runAction]);
   const runContinue = useCallback(() => runAction("continue"), [runAction]);
 
   const applyPreview = useCallback(() => {
@@ -211,6 +271,7 @@ export function usePostAiAction({
     error,
     preview,
     runPolish,
+    runTranslate,
     runContinue,
     applyPreview,
     dismissPreview,

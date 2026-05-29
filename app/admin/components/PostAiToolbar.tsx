@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Loader2, PenLine, Sparkles, Wand2 } from "lucide-react";
+import { ChevronDown, Languages, Loader2, PenLine, Sparkles, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -14,6 +14,7 @@ type PostAiToolbarProps = {
   loadingAction: PostAiAction | null;
   hasSelection: boolean;
   onPolish: (mode: PostPolishMode) => void;
+  onTranslate: () => void;
   onContinue: () => void;
   className?: string;
 };
@@ -31,6 +32,7 @@ export default function PostAiToolbar({
   loadingAction,
   hasSelection,
   onPolish,
+  onTranslate,
   onContinue,
   className,
 }: PostAiToolbarProps) {
@@ -112,6 +114,23 @@ export default function PostAiToolbar({
           </div>
         ) : null}
       </div>
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        className="h-8 shrink-0 gap-1.5 px-2 text-xs sm:text-sm"
+        disabled={isBusy || !hasSelection}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={onTranslate}
+        title="翻译选中文本（英译中 / 中译英，结合上下文）"
+      >
+        {loadingAction === "translate" ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Languages className="h-4 w-4" />
+        )}
+        翻译
+      </Button>
       <Button
         type="button"
         variant="ghost"

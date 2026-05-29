@@ -20,9 +20,18 @@ const continueInputSchema = z.object({
   after: z.string().optional(),
 });
 
+const translateInputSchema = z.object({
+  action: z.literal("translate"),
+  title: z.string().trim().min(1, "Title is required"),
+  selection: z.string().trim().min(1, "Selection is required"),
+  before: z.string().optional(),
+  after: z.string().optional(),
+});
+
 export const postContentInputSchema = z.discriminatedUnion("action", [
   polishInputSchema,
   continueInputSchema,
+  translateInputSchema,
 ]);
 
 export type PostContentInput = z.infer<typeof postContentInputSchema>;
@@ -94,6 +103,31 @@ function buildPolishUserPrompt(input: {
   }
 
   return sections.join("\n");
+}
+
+function buildTranslateUserPrompt(input: {
+  title: string;
+  selection: string;
+  before?: string;
+  after?: string;
+}): string {
+  return [
+    "<ARTICLE_TITLE>",
+    input.title,
+    "</ARTICLE_TITLE>",
+    "",
+    "<REFERENCE_CONTEXT_BEFORE>",
+    input.before?.trim() || "(empty)",
+    "</REFERENCE_CONTEXT_BEFORE>",
+    "",
+    "<SELECTED_TEXT>",
+    input.selection.trim(),
+    "</SELECTED_TEXT>",
+    "",
+    "<REFERENCE_CONTEXT_AFTER>",
+    input.after?.trim() || "(empty)",
+    "</REFERENCE_CONTEXT_AFTER>",
+  ].join("\n");
 }
 
 function buildContinueUserPrompt(input: {
@@ -168,10 +202,69 @@ const POLISH_TEMPERATURE: Record<PostPolishMode, number> = {
   styled: 0.8,
 };
 
+const TRANSLATE_SYSTEM_PROMPT = [
+  "You are a professional bilingual translator for blog posts.",
+  "Output Markdown only — no explanations, no code fences wrapping the whole response.",
+  "Preserve Markdown structure: headings, lists, links, code blocks, and inline formatting.",
+  "Translate <SELECTED_TEXT> only.",
+  "Detect the language of <SELECTED_TEXT>: if it is English, translate into natural Chinese; if it is Chinese, translate into natural English.",
+  "Read <REFERENCE_CONTEXT_BEFORE> and <REFERENCE_CONTEXT_AFTER> only to resolve meaning, terminology, tone, and continuity.",
+  "Use context to choose accurate terms, pronouns, and phrasing, but do not translate or output the surrounding context.",
+  "Keep technical terms, product names, and proper nouns consistent with the article context when appropriate.",
+  "Do not add, omit, or reinterpret content beyond what is needed for a faithful translation.",
+  "Return ONLY the translated <SELECTED_TEXT> with no surrounding tags, no preamble, and no explanation.",
+].join("\n");
+
+function translateMaxTokens(selection: string): number {
+  const charCount = selection.trim().length;
+  return Math.min(1280, Math.max(160, Math.ceil(charCount * 2)));
+}
+
 export async function generatePostContent(
   input: PostContentInput
 ): Promise<string> {
   const model = getAiModel();
+
+  if (input.action === "translate") {
+    const selection = input.selection.trim();
+    const selectionParagraphs = countParagraphs(selection);
+
+    const raw = await createChatCompletion({
+      model,
+      temperature: 0.3,
+      max_tokens: translateMaxTokens(selection),
+      messages: [
+        {
+          role: "system",
+          content: TRANSLATE_SYSTEM_PROMPT,
+        },
+        {
+          role: "user",
+          content: buildTranslateUserPrompt({
+            title: input.title,
+            selection,
+            before: input.before,
+            after: input.after,
+          }),
+        },
+      ],
+    });
+
+    let text = stripMarkdownFence(raw);
+    if (!text) throw new Error("AI 返回了空内容，请重试");
+
+    if (countParagraphs(text) > selectionParagraphs) {
+      text = text
+        .trim()
+        .split(/\n\s*\n/)
+        .slice(0, selectionParagraphs)
+        .join("\n\n")
+        .trim();
+    }
+
+    if (!text) throw new Error("AI 返回了空内容，请重试");
+    return text;
+  }
 
   if (input.action === "polish") {
     const mode = input.mode;
