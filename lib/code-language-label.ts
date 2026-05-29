@@ -71,6 +71,60 @@ export function extractLanguageFromPreChildren(children: ReactNode): string | un
   return undefined;
 }
 
+export function extractCodeTextFromPreChildren(children: ReactNode): string {
+  for (const child of Children.toArray(children)) {
+    if (!isValidElement(child)) continue;
+    const props = child.props as { children?: ReactNode };
+    if (typeof props.children === "string") {
+      return props.children.replace(/\n$/, "");
+    }
+    const nested = extractCodeTextFromPreChildren(props.children);
+    if (nested) return nested;
+  }
+  return "";
+}
+
+const REFRACTOR_LANGUAGE_ALIASES: Record<string, string> = {
+  js: "javascript",
+  ts: "typescript",
+  py: "python",
+  md: "markdown",
+  sh: "bash",
+  shell: "bash",
+  shellscript: "bash",
+  zsh: "bash",
+  html: "markup",
+  xml: "markup",
+  txt: "markdown",
+  text: "markdown",
+  plaintext: "markdown",
+};
+
+const REFRACTOR_LANGUAGES = new Set([
+  "javascript",
+  "typescript",
+  "jsx",
+  "tsx",
+  "sql",
+  "bash",
+  "markdown",
+  "css",
+  "scss",
+  "python",
+  "markup",
+  "yaml",
+  "graphql",
+  "json",
+  "java",
+]);
+
+export function resolveHighlightLanguage(lang?: string | null): string {
+  if (!lang?.trim()) return "markdown";
+  const key = lang.trim().toLowerCase().replace(/^language-/, "");
+  const resolved = REFRACTOR_LANGUAGE_ALIASES[key] || key;
+  return REFRACTOR_LANGUAGES.has(resolved) ? resolved : "markdown";
+}
+
 export function formatCodeLanguageLabel(lang?: string | null): string {
   if (!lang?.trim()) return "Code";
   const key = lang.trim().toLowerCase().replace(/^language-/, "");

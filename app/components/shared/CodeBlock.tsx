@@ -19,7 +19,12 @@ import yaml from "refractor/lang/yaml";
 import graphql from "refractor/lang/graphql";
 import json from "refractor/lang/json";
 import java from "refractor/lang/java";
-import { formatCodeLanguageLabel } from "@/lib/code-language-label";
+import { cn } from "@/lib/utils";
+import {
+  extractCodeTextFromPreChildren,
+  formatCodeLanguageLabel,
+  resolveHighlightLanguage,
+} from "@/lib/code-language-label";
 
 // Supported languages: https://prismjs.com/#supported-languages
 Refractor.registerLanguage(js);
@@ -128,11 +133,46 @@ function isPortableTextCodeProps(
   return "value" in props;
 }
 
+function CodeWithLineNumbers({
+  code,
+  language,
+  className,
+}: {
+  code: string;
+  language: string;
+  className?: string;
+}) {
+  const lines = code.split("\n");
+
+  return (
+    <div className="flex overflow-x-auto">
+      <div
+        className="shrink-0 select-none border-r border-zinc-200 bg-zinc-50/50 py-4 pl-3 pr-3 text-right font-mono text-[0.83rem] font-extralight leading-[1.5] text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-500"
+        aria-hidden="true"
+      >
+        {lines.map((_, index) => (
+          <span key={index} className="block tabular-nums">
+            {index + 1}
+          </span>
+        ))}
+      </div>
+      <div className="min-w-0 flex-1">
+        <Refractor
+          language={language}
+          value={code}
+          className={cn("text-sm tracking-normal !my-0", className)}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function CodeBlock(props: CodeBlockProps) {
   const preRef = useRef<HTMLPreElement>(null);
 
   if (isPortableTextCodeProps(props)) {
     const { value } = props;
+    const language = resolveHighlightLanguage(value.language);
 
     return (
       <div className="my-8 overflow-hidden rounded-2xl border border-zinc-200 bg-white/80 dark:border-zinc-800 dark:bg-zinc-950/80">
@@ -144,17 +184,15 @@ export default function CodeBlock(props: CodeBlockProps) {
           </p>
           <CopyButton content={value.code} />
         </div>
-        <Refractor
-          language={value.language ?? "jsx"}
-          value={value.code}
-          className="text-sm tracking-normal"
-        />
+        <CodeWithLineNumbers code={value.code} language={language} />
       </div>
     );
   }
 
   const { children, className, language, ...rest } = props;
   const headerLabel = formatCodeLanguageLabel(language);
+  const code = extractCodeTextFromPreChildren(children);
+  const highlightLanguage = resolveHighlightLanguage(language);
 
   return (
     <div className="group my-8 overflow-hidden rounded-2xl border border-zinc-200 bg-white/80 dark:border-zinc-800 dark:bg-zinc-950/80">
@@ -162,17 +200,23 @@ export default function CodeBlock(props: CodeBlockProps) {
         <p className="truncate text-sm font-medium text-zinc-600 dark:text-zinc-400">
           {headerLabel}
         </p>
-        <MdxCopyButton
-          getContent={() => preRef.current?.textContent?.replace(/\n$/, "") ?? ""}
-        />
+        <MdxCopyButton getContent={() => code} />
       </div>
-      <pre
-        ref={preRef}
-        {...rest}
-        className={`w-full max-w-full overflow-x-auto px-4 py-4 text-sm ${className || ""}`}
-      >
-        {children}
-      </pre>
+      {code ? (
+        <CodeWithLineNumbers
+          code={code}
+          language={highlightLanguage}
+          className={className}
+        />
+      ) : (
+        <pre
+          ref={preRef}
+          {...rest}
+          className={`w-full max-w-full overflow-x-auto px-4 py-4 text-sm ${className || ""}`}
+        >
+          {children}
+        </pre>
+      )}
     </div>
   );
 }
