@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createChatCompletion } from "@/lib/admin/ai/client";
-import { getAiEnglishModel } from "@/lib/admin/ai/config";
+import { getAiModel } from "@/lib/admin/ai/config";
 import { parseJsonResponse, previewText } from "@/lib/admin/ai/parse-json";
 import {
   buildLevelContext,
@@ -37,7 +37,7 @@ export async function generateGrammarExercises(input: {
   const topic = input.topic ?? "综合语法";
 
   const raw = await createChatCompletion({
-    model: getAiEnglishModel(),
+    model: getAiModel(),
     temperature: 0.5,
     max_tokens: 3072,
     response_format: { type: "json_object" },

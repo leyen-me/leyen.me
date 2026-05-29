@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createChatCompletion } from "@/lib/admin/ai/client";
-import { getAiEnglishModel } from "@/lib/admin/ai/config";
+import { getAiModel } from "@/lib/admin/ai/config";
 import { parseJsonResponse, previewText } from "@/lib/admin/ai/parse-json";
 import {
   EXPLAIN_SYSTEM_PROMPT,
@@ -21,7 +21,7 @@ export async function explainEnglishQuestion(input: {
   context?: string;
 }): Promise<string> {
   const content = await createChatCompletion({
-    model: getAiEnglishModel(),
+    model: getAiModel(),
     temperature: 0.4,
     max_tokens: 1024,
     messages: [
@@ -55,7 +55,7 @@ export async function generateLevelAdvice(): Promise<z.infer<typeof levelAdviceS
   ]);
 
   const raw = await createChatCompletion({
-    model: getAiEnglishModel(),
+    model: getAiModel(),
     temperature: 0.4,
     max_tokens: 1024,
     response_format: { type: "json_object" },

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createChatCompletion } from "@/lib/admin/ai/client";
-import { getAiFastModel } from "@/lib/admin/ai/config";
+import { getAiModel } from "@/lib/admin/ai/config";
 import { parseJsonResponse, previewText } from "@/lib/admin/ai/parse-json";
 import { isValidSlug, normalizeSlug } from "@/lib/utils";
 
@@ -15,7 +15,7 @@ const slugResponseSchema = z.object({
 });
 
 export async function generatePostSlug(input: PostSlugInput): Promise<string> {
-  const model = getAiFastModel();
+  const model = getAiModel();
 
   const raw = await createChatCompletion({
     model,
