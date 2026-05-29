@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createChatCompletion } from "@/lib/admin/ai/client";
-import { getAiFastModel } from "@/lib/admin/ai/config";
+import { getAiEnglishModel } from "@/lib/admin/ai/config";
 import { parseJsonResponse, previewText } from "@/lib/admin/ai/parse-json";
 import {
   buildLevelContext,
@@ -47,7 +47,7 @@ export async function generateDailyWords(batchDate?: string): Promise<{
   const known = knownWords.map((w) => w.word.toLowerCase());
 
   const raw = await createChatCompletion({
-    model: getAiFastModel(),
+    model: getAiEnglishModel(),
     temperature: 0.4,
     max_tokens: 1024,
     response_format: { type: "json_object" },

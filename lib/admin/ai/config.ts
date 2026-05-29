@@ -54,6 +54,20 @@ export function getAiFastModel(): string {
   return configured;
 }
 
+/** English module (words, quiz, enrich, grammar, explain) — JSON output, no reasoning. */
+export function getAiEnglishModel(): string {
+  const configured = process.env.AI_ENGLISH_MODEL ?? "deepseek-chat";
+
+  if (isLikelyReasoningModel(configured)) {
+    console.warn(
+      `[ai] AI_ENGLISH_MODEL "${configured}" uses reasoning/thinking. Falling back to deepseek-chat for English tasks.`
+    );
+    return "deepseek-chat";
+  }
+
+  return configured;
+}
+
 export function requireAiConfig() {
   const apiKey = getAiApiKey();
   if (!apiKey) {

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createChatCompletion } from "@/lib/admin/ai/client";
-import { getAiFastModel } from "@/lib/admin/ai/config";
+import { getAiEnglishModel } from "@/lib/admin/ai/config";
 import { parseJsonResponse, previewText } from "@/lib/admin/ai/parse-json";
 import { GENERATE_QUIZ_SYSTEM_PROMPT } from "@/lib/admin/ai/english/prompts";
 import type { EnglishWordDoc } from "@/lib/admin/english/daily-flow";
@@ -65,7 +65,7 @@ async function generateViaAi(
   types: Array<"dictation" | "multiple_choice" | "fill_blank">
 ): Promise<QuizQuestion[]> {
   const raw = await createChatCompletion({
-    model: getAiFastModel(),
+    model: getAiEnglishModel(),
     temperature: 0.5,
     max_tokens: 4096,
     response_format: { type: "json_object" },
