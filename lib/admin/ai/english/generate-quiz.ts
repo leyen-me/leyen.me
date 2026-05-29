@@ -20,6 +20,7 @@ const questionSchema = z.object({
   prompt: z.string(),
   answer: z.string(),
   options: z.array(z.string()),
+  phonetic: z.string().optional(),
 });
 
 const quizResponseSchema = z.object({
@@ -27,6 +28,16 @@ const quizResponseSchema = z.object({
 });
 
 export type QuizQuestion = z.infer<typeof questionSchema>;
+
+function attachWordHints(
+  question: QuizQuestion,
+  word: EnglishWordDoc
+): QuizQuestion {
+  return {
+    ...question,
+    phonetic: word.phonetic,
+  };
+}
 
 function readCachedQuestion(
   word: EnglishWordDoc,
@@ -37,12 +48,15 @@ function readCachedQuestion(
   const cached = parseCachedQuiz(raw);
   if (!cached) return null;
 
-  return {
-    wordId: word._id,
-    word: word.word,
-    ...cached,
-    options: cached.options ?? [],
-  };
+  return attachWordHints(
+    {
+      wordId: word._id,
+      word: word.word,
+      ...cached,
+      options: cached.options ?? [],
+    },
+    word
+  );
 }
 
 async function generateViaAi(
@@ -148,7 +162,11 @@ export async function generateQuiz(input: {
       generated.map(async (q) => {
         const { wordId, word: _word, ...quiz } = q;
         await saveCachedQuiz(wordId, mode, quiz);
-        cachedById.set(wordId, q);
+        const word = wordById.get(wordId);
+        cachedById.set(
+          wordId,
+          word ? attachWordHints(q, word) : q
+        );
       })
     );
 
@@ -164,7 +182,12 @@ export async function generateQuiz(input: {
   }
 
   const ordered = input.wordIds
-    .map((id) => cachedById.get(id))
+    .map((id) => {
+      const q = cachedById.get(id);
+      const word = wordById.get(id);
+      if (!q) return null;
+      return word ? attachWordHints(q, word) : q;
+    })
     .filter((q): q is QuizQuestion => Boolean(q));
 
   if (ordered.length === 0) {

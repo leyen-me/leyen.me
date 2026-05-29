@@ -131,6 +131,7 @@ export default function EnglishGrammarPage() {
           <QuizPanel
             questions={questions}
             title="语法测验"
+            retryUntilCorrect={false}
             onSubmit={handleSubmit}
           />
           {submitted && wrongIndexes.length > 0 && (

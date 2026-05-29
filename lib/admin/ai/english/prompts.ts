@@ -25,7 +25,7 @@ export const ENRICH_WORD_SYSTEM_PROMPT = [
   '输出必须是合法 JSON 对象，不要 markdown 代码块。格式：',
   '{"word":"...","phonetic":"/.../","partOfSpeech":"n.","meaningZh":"...","phrases":[{"phrase":"...","meaningZh":"..."}],"examples":[{"sentence":"...","source":"ielts|toefl|movie|general","translationZh":"..."}],"derivations":[{"word":"...","partOfSpeech":"...","meaningZh":"..."}]}',
   "要求：",
-  "- phonetic 使用 IPA",
+  "- phonetic 使用 IPA，格式如 /bʊk/",
   "- 2-3 个短语",
   "- 2-3 个例句，至少 1 个标注 source 为 ielts、toefl 或 movie（电影例句注明片名）",
   "- 1-2 个派生词",
