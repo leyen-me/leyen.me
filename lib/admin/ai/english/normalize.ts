@@ -29,16 +29,63 @@ type RawEnrichedWord = {
   phonetic?: unknown;
   partOfSpeech?: unknown;
   meaningZh?: unknown;
+  etymology?: unknown;
   phrases?: unknown;
   examples?: unknown;
   derivations?: unknown;
 };
+
+export type EtymologyData = {
+  breakdown?: string;
+  roots?: Array<{ part: string; meaning: string }>;
+  origin?: string;
+  memoryTip?: string;
+};
+
+function asTrimmedString(value: unknown): string | undefined {
+  return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+function normalizeEtymology(raw: unknown): EtymologyData | undefined {
+  if (!raw || typeof raw !== "object") return undefined;
+  const data = raw as {
+    breakdown?: unknown;
+    roots?: unknown;
+    origin?: unknown;
+    memoryTip?: unknown;
+  };
+
+  const roots = Array.isArray(data.roots)
+    ? data.roots
+        .map((item) => {
+          if (!item || typeof item !== "object") return null;
+          const r = item as { part?: unknown; meaning?: unknown };
+          const part = asTrimmedString(r.part);
+          const meaning = asTrimmedString(r.meaning);
+          if (!part || !meaning) return null;
+          return { part, meaning };
+        })
+        .filter((item): item is { part: string; meaning: string } => Boolean(item))
+    : [];
+
+  const result: EtymologyData = {
+    breakdown: asTrimmedString(data.breakdown),
+    roots: roots.length > 0 ? roots : undefined,
+    origin: asTrimmedString(data.origin),
+    memoryTip: asTrimmedString(data.memoryTip),
+  };
+
+  const hasContent =
+    result.breakdown || result.roots || result.origin || result.memoryTip;
+  return hasContent ? result : undefined;
+}
 
 export function normalizeEnrichedWord(raw: unknown): {
   word: string;
   phonetic: string;
   partOfSpeech: string;
   meaningZh: string;
+  etymology?: EtymologyData;
   phrases: Array<{ phrase: string; meaningZh: string }>;
   examples: Array<{
     sentence: string;
@@ -141,6 +188,7 @@ export function normalizeEnrichedWord(raw: unknown): {
         ? data.partOfSpeech.trim()
         : "n.",
     meaningZh: data.meaningZh.trim(),
+    etymology: normalizeEtymology(data.etymology),
     phrases,
     examples,
     derivations,

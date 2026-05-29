@@ -92,6 +92,46 @@ export const englishWord = defineType({
       ],
     }),
     defineField({
+      name: "etymology",
+      title: "词源",
+      type: "object",
+      options: { collapsible: true, collapsed: false },
+      fields: [
+        {
+          name: "breakdown",
+          title: "构词拆解",
+          type: "string",
+          description: "如 re-(回) + duce(引导)",
+        },
+        {
+          name: "roots",
+          title: "词根 / 词缀",
+          type: "array",
+          of: [
+            {
+              type: "object",
+              fields: [
+                { name: "part", title: "词根/词缀", type: "string" },
+                { name: "meaning", title: "含义", type: "string" },
+              ],
+            },
+          ],
+        },
+        {
+          name: "origin",
+          title: "词源本义",
+          type: "text",
+          description: "来源语言及本义，如 来自拉丁语 reducere（带回）",
+        },
+        {
+          name: "memoryTip",
+          title: "串联记忆",
+          type: "text",
+          description: "用词根义串联出当前释义的记忆线索",
+        },
+      ],
+    }),
+    defineField({
       name: "level",
       title: "等级",
       type: "string",

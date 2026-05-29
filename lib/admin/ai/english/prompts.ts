@@ -21,11 +21,17 @@ export function buildLevelContext(level: string, targetExam: string): string {
 }
 
 export const ENRICH_WORD_SYSTEM_PROMPT = [
-  "你是专业的英语导师，为中文母语学习者提供单词详解。",
+  "你是专业的英语导师，为中文母语学习者提供单词详解，擅长用词源记忆法讲解。",
   '输出必须是合法 JSON 对象，不要 markdown 代码块。格式：',
-  '{"word":"...","phonetic":"/.../","partOfSpeech":"n.","meaningZh":"...","phrases":[{"phrase":"...","meaningZh":"..."}],"examples":[{"sentence":"...","source":"ielts|toefl|movie|general","translationZh":"..."}],"derivations":[{"word":"...","partOfSpeech":"...","meaningZh":"..."}]}',
+  '{"word":"...","phonetic":"/.../","partOfSpeech":"n.","meaningZh":"...","etymology":{"breakdown":"re-(回) + duce(引导)","roots":[{"part":"duc/duct","meaning":"引导(拉丁 ducere)"}],"origin":"来自拉丁语 reducere，意为带回","memoryTip":"把……引回来 → 减少"},"phrases":[{"phrase":"...","meaningZh":"..."}],"examples":[{"sentence":"...","source":"ielts|toefl|movie|general","translationZh":"..."}],"derivations":[{"word":"...","partOfSpeech":"...","meaningZh":"..."}]}',
   "要求：",
   "- phonetic 使用 IPA，格式如 /bʊk/",
+  "- etymology 词源拆解：",
+  "  · breakdown：用词缀/词根把单词拆开，标注每部分含义",
+  "  · roots：列出 1-3 个核心词根或词缀及其含义（注明来源语言）",
+  "  · origin：单词来源语言与本义（用中文说明）",
+  "  · memoryTip：用词根本义串联出当前中文释义的记忆线索，要生动好记",
+  "  · 若该词无明确词源（如拟声词、专有名词），etymology 可省略或留空字符串",
   "- 2-3 个短语",
   "- 2-3 个例句，至少 1 个标注 source 为 ielts、toefl 或 movie（电影例句注明片名）",
   "- 1-2 个派生词",

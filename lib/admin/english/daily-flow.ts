@@ -14,6 +14,12 @@ export type EnglishWordDoc = {
   phonetic?: string;
   partOfSpeech?: string;
   meaningZh?: string;
+  etymology?: {
+    breakdown?: string;
+    roots?: Array<{ part: string; meaning: string }>;
+    origin?: string;
+    memoryTip?: string;
+  };
   phrases?: Array<{ phrase: string; meaningZh: string }>;
   examples?: Array<{
     sentence: string;

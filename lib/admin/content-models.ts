@@ -150,6 +150,18 @@ export const englishDerivationSchema = z.object({
   meaningZh: z.string(),
 });
 
+export const englishEtymologyRootSchema = z.object({
+  part: z.string(),
+  meaning: z.string(),
+});
+
+export const englishEtymologySchema = z.object({
+  breakdown: z.string().optional(),
+  roots: z.array(englishEtymologyRootSchema).optional(),
+  origin: z.string().optional(),
+  memoryTip: z.string().optional(),
+});
+
 export const englishSettingsSchema = z.object({
   currentLevel: englishLevelSchema,
   targetExam: englishTargetExamSchema,
