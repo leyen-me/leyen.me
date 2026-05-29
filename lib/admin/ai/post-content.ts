@@ -37,46 +37,102 @@ function stripMarkdownFence(text: string): string {
   return trimmed;
 }
 
+function countParagraphs(text: string): number {
+  return text.trim().split(/\n\s*\n/).filter(Boolean).length;
+}
+
+function polishMaxTokens(selection: string): number {
+  const charCount = selection.trim().length;
+  return Math.min(1024, Math.max(128, Math.ceil(charCount * 1.5)));
+}
+
+function buildPolishUserPrompt(input: {
+  title: string;
+  selection: string;
+  before?: string;
+  after?: string;
+}): string {
+  const parts = [`Article title: ${input.title}`];
+
+  const contextLines: string[] = [];
+  if (input.before?.trim()) {
+    contextLines.push(`Before selection:\n${input.before.trim()}`);
+  }
+  if (input.after?.trim()) {
+    contextLines.push(`After selection:\n${input.after.trim()}`);
+  }
+  if (contextLines.length > 0) {
+    parts.push(
+      [
+        "Surrounding context (reference only — do NOT output, repeat, or continue into this):",
+        contextLines.join("\n\n"),
+      ].join("\n")
+    );
+  }
+
+  parts.push(
+    [
+      "Selected text (rewrite ONLY this block):",
+      input.selection.trim(),
+    ].join("\n")
+  );
+
+  return parts.join("\n\n");
+}
+
+const POLISH_SYSTEM_PROMPT = [
+  SYSTEM_PROMPT,
+  "Rewrite ONLY the selected text block for clarity, flow, and wording.",
+  "Do not change facts, meaning, or argument.",
+  "Keep the same structure: same number of paragraphs, headings, and list items.",
+  "Surrounding context is for tone and continuity reference only.",
+  "Never output, paraphrase, summarize, or continue into the before/after context.",
+  "Never add new paragraphs, sections, or bullet points.",
+  "Return ONLY the polished selected text — no preamble, no explanation.",
+].join("\n");
+
 export async function generatePostContent(
   input: PostContentInput
 ): Promise<string> {
   const model = getAiModel();
 
   if (input.action === "polish") {
-    const contextParts: string[] = [];
-    if (input.before?.trim()) {
-      contextParts.push(`Text before selection:\n${input.before.trim()}`);
-    }
-    contextParts.push(`Selected text to polish:\n${input.selection.trim()}`);
-    if (input.after?.trim()) {
-      contextParts.push(`Text after selection:\n${input.after.trim()}`);
-    }
+    const selection = input.selection.trim();
+    const selectionParagraphs = countParagraphs(selection);
 
     const raw = await createChatCompletion({
       model,
       temperature: 0.5,
-      max_tokens: 1024,
+      max_tokens: polishMaxTokens(selection),
       messages: [
         {
           role: "system",
-          content: [
-            SYSTEM_PROMPT,
-            "Improve clarity and flow without changing facts or meaning.",
-            "Do not add or remove sections; keep the same structure.",
-            "Return only the polished version of the selected text.",
-          ].join("\n"),
+          content: POLISH_SYSTEM_PROMPT,
         },
         {
           role: "user",
-          content: [
-            `Article title: ${input.title}`,
-            ...contextParts,
-          ].join("\n\n"),
+          content: buildPolishUserPrompt({
+            title: input.title,
+            selection,
+            before: input.before,
+            after: input.after,
+          }),
         },
       ],
     });
 
-    const text = stripMarkdownFence(raw);
+    let text = stripMarkdownFence(raw);
+    if (!text) throw new Error("AI 返回了空内容，请重试");
+
+    if (countParagraphs(text) > selectionParagraphs) {
+      text = text
+        .trim()
+        .split(/\n\s*\n/)
+        .slice(0, selectionParagraphs)
+        .join("\n\n")
+        .trim();
+    }
+
     if (!text) throw new Error("AI 返回了空内容，请重试");
     return text;
   }
