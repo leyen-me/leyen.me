@@ -1,6 +1,6 @@
 import { PortableText, PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
-import { MdxMarkdownBody } from "@/app/components/shared/MdxMarkdownBody";
+import { MarkdownBody } from "@/app/components/shared/MarkdownBody";
 import { CustomPortableText } from "@/app/components/shared/CustomPortableText";
 
 type MarkdownOrPortableTextProps = {
@@ -17,7 +17,7 @@ export async function MarkdownOrPortableText({
   components = CustomPortableText,
 }: MarkdownOrPortableTextProps) {
   if (typeof value === "string" && value.trim()) {
-    return <MdxMarkdownBody markdown={value} />;
+    return <MarkdownBody markdown={value} />;
   }
 
   if (isPortableText(value)) {

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { sanityFetch } from "@/lib/sanity.client";
 import { singleInterviewQuery } from "@/lib/sanity.query";
 import type { InterviewQuestionType } from "@/types";
-import { MdxMarkdownBody } from "@/app/components/shared/MdxMarkdownBody";
+import { MarkdownBody } from "@/app/components/shared/MarkdownBody";
 import { Slide } from "@/app/animation/Slide";
 import { formatDate } from "@/app/utils/date";
 import { getInterviewCategoryLabel } from "@/lib/interview-categories";
@@ -86,9 +86,7 @@ export default async function InterviewDetailPage({ params }: Props) {
             面试回答
           </h2>
           {markdown ? (
-            <div className="article-content min-w-0">
-              <MdxMarkdownBody markdown={markdown} />
-            </div>
+            <MarkdownBody markdown={markdown} />
           ) : (
             <p className="text-zinc-500 text-sm italic">
               可在 Studio 中补充「面试回答」Markdown。

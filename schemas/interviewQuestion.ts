@@ -59,7 +59,7 @@ export const interviewQuestion = defineType({
       title: "面试回答 (Markdown)",
       type: "text",
       description:
-        "与博客正文相同：Markdown + MDX。自定义 React 组件请在仓库 mdx-components 中注册。",
+        "与博客正文相同：标准 Markdown（GFM）。自定义样式见 app/components/shared/markdown-components.tsx。",
       rows: 24,
       validation: (Rule) => Rule.required().min(1),
     }),

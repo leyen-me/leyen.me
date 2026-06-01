@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { PostType } from "@/types";
 import { singlePostQuery } from "@/lib/sanity.query";
-import { MdxMarkdownBody } from "@/app/components/shared/MdxMarkdownBody";
+import { MarkdownBody } from "@/app/components/shared/MarkdownBody";
 import { BiChevronRight, BiSolidTime } from "react-icons/bi";
 import { formatDate } from "../../utils/date";
 import SharePost from "../../components/shared/SharePost";
@@ -179,9 +179,7 @@ export default async function Post({ params }: Props) {
           </header>
 
           <Slide delay={0.1}>
-            <div className="article-content mt-8 min-w-0">
-              <MdxMarkdownBody markdown={markdown} />
-            </div>
+            <MarkdownBody markdown={markdown} className="mt-8" />
           </Slide>
 
           <Slide delay={0.15}>
