@@ -12,10 +12,6 @@ import { quote } from "./quote";
 import { interviewQuestion } from "./interviewQuestion";
 import passwordVault from "./passwordVault";
 import passwordEntry from "./passwordEntry";
-import { englishSettings } from "./englishSettings";
-import { englishWord } from "./englishWord";
-import { englishDailyLog } from "./englishDailyLog";
-
 export const schemaTypes = [
   profile,
   job,
@@ -27,9 +23,6 @@ export const schemaTypes = [
   interviewQuestion,
   passwordVault,
   passwordEntry,
-  englishSettings,
-  englishWord,
-  englishDailyLog,
 
   // Reference types
   blockContent,
