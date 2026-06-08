@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Loader2, Sparkles, X } from "lucide-react";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,8 +13,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ImageUploadField from "@/app/admin/components/ImageUploadField";
+import SlugField from "@/app/admin/components/SlugField";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
-import { cn, normalizeSlug } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 type AuthorOption = { _id: string; name: string };
 
@@ -66,40 +66,6 @@ export default function PostMetadataPanel({
   onFieldChange,
   onTitleChange,
 }: PostMetadataPanelProps) {
-  const [generatingSlug, setGeneratingSlug] = useState(false);
-  const [slugError, setSlugError] = useState("");
-
-  async function handleGenerateSlug() {
-    if (!form.title.trim()) {
-      setSlugError("请先填写标题");
-      return;
-    }
-
-    setGeneratingSlug(true);
-    setSlugError("");
-
-    try {
-      const res = await fetch("/api/admin/ai/post-slug", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: form.title.trim(),
-        }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "生成 Slug 失败");
-      }
-
-      onFieldChange("slug", data.slug);
-    } catch (err) {
-      setSlugError(err instanceof Error ? err.message : "生成 Slug 失败");
-    } finally {
-      setGeneratingSlug(false);
-    }
-  }
-
   return (
     <>
       {open && (
@@ -147,46 +113,19 @@ export default function PostMetadataPanel({
             />
           </div>
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between gap-2">
-              <Label htmlFor="meta-slug">
+          <SlugField
+            id="meta-slug"
+            value={form.slug}
+            onChange={(slug) => onFieldChange("slug", slug)}
+            sourceTitle={form.title}
+            kind="post"
+            placeholder="my-first-post"
+            label={
+              <>
                 Slug <RequiredMark />
-              </Label>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="h-7 gap-1.5 px-2 text-xs text-zinc-600 dark:text-zinc-400"
-                onClick={handleGenerateSlug}
-                disabled={generatingSlug || !form.title.trim()}
-              >
-                {generatingSlug ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Sparkles className="h-3.5 w-3.5" />
-                )}
-                AI 生成
-              </Button>
-            </div>
-            <Input
-              id="meta-slug"
-              value={form.slug}
-              onChange={(e) => {
-                setSlugError("");
-                onFieldChange("slug", normalizeSlug(e.target.value));
-              }}
-              placeholder="my-first-post"
-              pattern="[a-z][a-z0-9-]*"
-              required
-            />
-            {slugError ? (
-              <p className="text-xs text-red-500">{slugError}</p>
-            ) : (
-              <p className="text-xs text-zinc-500">
-                只需填写标题即可 AI 生成；小写字母开头，仅允许英文字母、数字和中划线
-              </p>
-            )}
-          </div>
+              </>
+            }
+          />
 
           <div className="space-y-2">
             <Label htmlFor="meta-description">

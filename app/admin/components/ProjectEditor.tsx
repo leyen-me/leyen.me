@@ -10,6 +10,7 @@ import ImageUploadField from "@/app/admin/components/ImageUploadField";
 import { normalizeSlug, slugify } from "@/lib/utils";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
 import AdminFormActions from "@/app/admin/components/AdminFormActions";
+import SlugField from "@/app/admin/components/SlugField";
 
 export default function ProjectEditor({ itemId }: { itemId?: string }) {
   const router = useRouter();
@@ -66,7 +67,7 @@ export default function ProjectEditor({ itemId }: { itemId?: string }) {
       <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑 Project" : "新建 Project"}</h1>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>名称</Label><Input value={name} onChange={(e) => { setName(e.target.value); if (!itemId && !slug) setSlug(slugify(e.target.value)); }} required /></div>
-        <div className="space-y-2"><Label>Slug</Label><Input value={slug} onChange={(e) => setSlug(normalizeSlug(e.target.value))} placeholder="my-project" pattern="[a-z][a-z0-9-]*" required /></div>
+        <SlugField value={slug} onChange={setSlug} sourceTitle={name} kind="project" placeholder="my-project" />
       </div>
       <div className="space-y-2"><Label>Tagline</Label><Input value={tagline} onChange={(e) => setTagline(e.target.value)} maxLength={60} required /></div>
       <div className="grid gap-4 md:grid-cols-2">

@@ -11,6 +11,7 @@ import ImageUploadField from "@/app/admin/components/ImageUploadField";
 import { normalizeSlug, slugify } from "@/lib/utils";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
 import AdminFormActions from "@/app/admin/components/AdminFormActions";
+import SlugField from "@/app/admin/components/SlugField";
 
 export default function MovieEditor({ itemId }: { itemId?: string }) {
   const router = useRouter();
@@ -72,7 +73,7 @@ export default function MovieEditor({ itemId }: { itemId?: string }) {
       <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑 Movie" : "新建 Movie"}</h1>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>标题</Label><Input value={title} onChange={(e) => { setTitle(e.target.value); if (!itemId && !slug) setSlug(slugify(e.target.value)); }} required /></div>
-        <div className="space-y-2"><Label>Slug</Label><Input value={slug} onChange={(e) => setSlug(normalizeSlug(e.target.value))} placeholder="my-movie" pattern="[a-z][a-z0-9-]*" required /></div>
+        <SlugField value={slug} onChange={setSlug} sourceTitle={title} kind="movie" placeholder="my-movie" />
       </div>
       <div className="space-y-2"><Label>类型</Label><Select value={mediaType} onValueChange={(v) => setMediaType(v as "movie" | "tv")}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="movie">Movie</SelectItem><SelectItem value="tv">TV Show</SelectItem></SelectContent></Select></div>
       <ImageUploadField label="封面" value={coverImage} previewUrl={coverUrl} onChange={setCoverImage} />

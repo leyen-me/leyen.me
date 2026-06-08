@@ -11,6 +11,7 @@ import MarkdownEditor from "@/app/admin/components/MarkdownEditor";
 import { normalizeSlug, slugify } from "@/lib/utils";
 import { INTERVIEW_CATEGORY_OPTIONS } from "@/lib/interview-categories";
 import AdminFormActions from "@/app/admin/components/AdminFormActions";
+import SlugField from "@/app/admin/components/SlugField";
 
 export default function InterviewEditor({ itemId }: { itemId?: string }) {
   const router = useRouter();
@@ -61,7 +62,7 @@ export default function InterviewEditor({ itemId }: { itemId?: string }) {
       <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑面试题" : "新建面试题"}</h1>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>题目</Label><Input value={title} onChange={(e) => { setTitle(e.target.value); if (!itemId && !slug) setSlug(slugify(e.target.value)); }} required /></div>
-        <div className="space-y-2"><Label>Slug</Label><Input value={slug} onChange={(e) => setSlug(normalizeSlug(e.target.value))} placeholder="my-interview" pattern="[a-z][a-z0-9-]*" required /></div>
+        <SlugField value={slug} onChange={setSlug} sourceTitle={title} kind="interview" placeholder="my-interview" />
       </div>
       <div className="space-y-2">
         <Label>分类</Label>
