@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import AdminPageHeader from "@/app/admin/components/AdminPageHeader";
 import AdminTableShell from "@/app/admin/components/AdminTableShell";
+import { getQuoteContentTypeLabel } from "@/lib/quote-content-types";
 
 type Quote = {
   _id: string;
@@ -63,7 +64,7 @@ export default function QuotesListPage() {
                 <p className="line-clamp-3 text-sm">{item.quote}</p>
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <span className="text-xs text-zinc-500">{item.author}</span>
-                  <Badge variant="secondary">{item.contentType}</Badge>
+                  <Badge variant="secondary">{getQuoteContentTypeLabel(item.contentType)}</Badge>
                 </div>
                 <div className="mt-3 flex gap-2">
                   <Button asChild variant="outline" size="sm" className="flex-1">
@@ -105,7 +106,7 @@ export default function QuotesListPage() {
                     <td className="max-w-md truncate px-4 py-3">{item.quote}</td>
                     <td className="px-4 py-3">{item.author}</td>
                     <td className="px-4 py-3">
-                      <Badge variant="secondary">{item.contentType}</Badge>
+                      <Badge variant="secondary">{getQuoteContentTypeLabel(item.contentType)}</Badge>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex gap-2">

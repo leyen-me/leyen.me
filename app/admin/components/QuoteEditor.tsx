@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import AdminFormActions from "@/app/admin/components/AdminFormActions";
+import { QUOTE_CONTENT_TYPE_OPTIONS } from "@/lib/quote-content-types";
 
 export default function QuoteEditor({ itemId }: { itemId?: string }) {
   const router = useRouter();
@@ -54,11 +55,25 @@ export default function QuoteEditor({ itemId }: { itemId?: string }) {
   return (
     <form onSubmit={handleSubmit} className="mx-auto w-full max-w-2xl space-y-6">
       <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑 Quote" : "新建 Quote"}</h1>
-      <div className="space-y-2"><Label>类型</Label><Select value={contentType} onValueChange={(v) => setContentType(v as "quote" | "essay")}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="quote">Short Quote</SelectItem><SelectItem value="essay">Short Essay</SelectItem></SelectContent></Select></div>
+      <div className="space-y-2">
+        <Label>类型</Label>
+        <Select value={contentType} onValueChange={(v) => setContentType(v as "quote" | "essay")}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {QUOTE_CONTENT_TYPE_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
       <div className="space-y-2"><Label>内容</Label><Textarea value={quote} onChange={(e) => setQuote(e.target.value)} rows={6} /></div>
       <div className="space-y-2"><Label>作者</Label><Input value={author} onChange={(e) => setAuthor(e.target.value)} required /></div>
-      <div className="space-y-2"><Label>Context</Label><Input value={context} onChange={(e) => setContext(e.target.value)} /></div>
-      <div className="space-y-2"><Label>Tags（逗号分隔）</Label><Input value={tags} onChange={(e) => setTags(e.target.value)} required /></div>
+      <div className="space-y-2"><Label>语境 / 主题</Label><Input value={context} onChange={(e) => setContext(e.target.value)} /></div>
+      <div className="space-y-2"><Label>标签（逗号分隔）</Label><Input value={tags} onChange={(e) => setTags(e.target.value)} required /></div>
       <AdminFormActions saving={saving} onCancel={() => router.push("/admin/quotes")} />
     </form>
   );
