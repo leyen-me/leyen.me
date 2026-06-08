@@ -12,7 +12,6 @@ import {
   Briefcase,
   FolderKanban,
   UserCircle,
-  Lock,
   LogOut,
   X,
 } from "lucide-react";
@@ -35,7 +34,6 @@ export const adminNavItems: Array<{
   { href: "/admin/jobs", label: "Jobs", icon: Briefcase },
   { href: "/admin/projects", label: "Projects", icon: FolderKanban },
   { href: "/admin/profile", label: "Profile", icon: UserCircle },
-  { href: "/admin/password", label: "Password", icon: Lock },
 ] ;
 
 type AdminSidebarProps = {

@@ -14,6 +14,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (pathname === "/admin/password" || pathname.startsWith("/admin/password/")) {
+    return NextResponse.redirect(new URL("/password", request.url));
+  }
+
   const response = NextResponse.next();
   const session = await getIronSession<AdminSessionData>(
     request,

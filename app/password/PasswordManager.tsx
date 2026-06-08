@@ -344,7 +344,7 @@ export default function PasswordManager({ embedded = false }: { embedded?: boole
 
   if (!verified) {
     return (
-      <div className="max-w-md mx-auto mt-20">
+      <div className={`max-w-md mx-auto ${embedded ? "mt-0" : "mt-20"}`}>
         <Slide>
           <div className="dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 rounded-xl p-8">
             <div className="flex items-center gap-3 mb-6">
