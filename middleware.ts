@@ -5,8 +5,11 @@ import { getIronSession } from "iron-session";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const isAdminRoute = pathname.startsWith("/admin");
+  const isPasswordRoute =
+    pathname === "/password" || pathname.startsWith("/password/");
 
-  if (!pathname.startsWith("/admin")) {
+  if (!isAdminRoute && !isPasswordRoute) {
     return NextResponse.next();
   }
 
@@ -35,5 +38,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/password", "/password/:path*"],
 };

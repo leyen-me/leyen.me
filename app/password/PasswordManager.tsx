@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Slide } from "@/app/animation/Slide";
 import {
@@ -60,6 +61,7 @@ export default function PasswordManager({ embedded = false }: { embedded?: boole
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState("");
   const [isSetup, setIsSetup] = useState(false);
+  const [needsAdminLogin, setNeedsAdminLogin] = useState(false);
   const [decryptedEntries, setDecryptedEntries] = useState<DecryptedEntry[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -111,17 +113,29 @@ export default function PasswordManager({ embedded = false }: { embedded?: boole
         headers: { Pragma: "no-cache" },
       });
       const data = await res.json();
+
+      if (res.status === 401) {
+        setNeedsAdminLogin(true);
+        return;
+      }
+
+      if (!res.ok) {
+        setError(data.error || "无法加载保险库");
+        return;
+      }
+
       if (data.vault) {
         setVault({
           salt: data.vault.salt,
           verificationCipher: data.vault.verificationCipher,
         });
         setEntries(data.entries || []);
+        setIsSetup(false);
       } else {
         setIsSetup(true);
       }
-    } catch (err) {
-      setError("无法加载保险库"); 
+    } catch {
+      setError("无法加载保险库");
     } finally {
       setLoading(false);
     }
@@ -175,16 +189,24 @@ export default function PasswordManager({ embedded = false }: { embedded?: boole
     if (isSetup) {
       try {
         const { salt, verificationCipher } = await setupVault(masterPassword);
-        await fetch("/api/password/setup", {
+        const res = await fetch("/api/password/setup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ salt, verificationCipher }),
         });
+        if (res.status === 401) {
+          setNeedsAdminLogin(true);
+          return;
+        }
+        if (!res.ok) {
+          setError("设置失败，请重试");
+          return;
+        }
         setVault({ salt, verificationCipher });
         setVerified(true);
         setDecryptedEntries([]);
         setIsSetup(false);
-      } catch (err) {
+      } catch {
         setError("设置失败，请重试");
       }
     } else if (vault) {
@@ -338,6 +360,30 @@ export default function PasswordManager({ embedded = false }: { embedded?: boole
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <p className="dark:text-zinc-400 text-zinc-600">加载中...</p>
+      </div>
+    );
+  }
+
+  if (needsAdminLogin) {
+    return (
+      <div className={`max-w-md mx-auto ${embedded ? "mt-0" : "mt-20"}`}>
+        <Slide>
+          <div className="dark:bg-primary-bg bg-zinc-100 border dark:border-zinc-700 border-zinc-200 rounded-xl p-8 text-center">
+            <BiLockAlt className="text-3xl dark:text-primary-color text-secondary-color mx-auto mb-4" />
+            <h1 className="font-incognito font-semibold text-2xl tracking-tight mb-3">
+              需要 Admin 登录
+            </h1>
+            <p className="text-sm dark:text-zinc-400 text-zinc-600 mb-6">
+              密码库需要先登录管理后台才能访问，登录后会返回此页面。
+            </p>
+            <Link
+              href="/admin/login?from=/password"
+              className="inline-flex w-full items-center justify-center py-3 rounded-lg font-incognito font-semibold dark:bg-primary-color bg-secondary-color dark:text-white text-zinc-800 hover:opacity-90 transition"
+            >
+              前往 Admin 登录
+            </Link>
+          </div>
+        </Slide>
       </div>
     );
   }
