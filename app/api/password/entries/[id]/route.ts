@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
-import { requireAdmin } from "@/lib/admin/auth-guard";
 import { writeClient } from "@/lib/sanity.write";
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const unauthorized = await requireAdmin();
-  if (unauthorized) return unauthorized;
 
   try {
     const { encryptedData } = await req.json();
@@ -42,8 +39,6 @@ export async function DELETE(
   _req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const unauthorized = await requireAdmin();
-  if (unauthorized) return unauthorized;
 
   try {
     const { id } = params;

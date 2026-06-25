@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { unstable_noStore } from "next/cache";
-import { requireAdmin } from "@/lib/admin/auth-guard";
 import { writeClient } from "@/lib/sanity.write";
 import {
   passwordVaultQuery,
@@ -10,8 +9,6 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const unauthorized = await requireAdmin();
-  if (unauthorized) return unauthorized;
 
   unstable_noStore();
   try {

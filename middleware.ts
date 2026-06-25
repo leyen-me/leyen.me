@@ -21,6 +21,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/password", request.url));
   }
 
+  if (isPasswordRoute) {
+    return NextResponse.next();
+  }
+
   const response = NextResponse.next();
   const session = await getIronSession<AdminSessionData>(
     request,
