@@ -26,6 +26,7 @@ import PostMetadataPanel, {
 } from "@/app/admin/components/PostMetadataPanel";
 import { useAdminLayout } from "@/app/admin/components/AdminLayoutContext";
 import { usePostAiAction } from "@/app/admin/hooks/usePostAiAction";
+import { useTagSuggestions } from "@/app/admin/hooks/useTagSuggestions";
 import {
   useModKeyLabel,
   usePostEditorShortcuts,
@@ -66,7 +67,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
   const { toggleSidebar } = useAdminLayout();
   const [form, setForm] = useState<PostFormState>(emptyForm);
   const [authors, setAuthors] = useState<AuthorOption[]>([]);
-  const [tagSuggestions, setTagSuggestions] = useState<string[]>([]);
+  const tagSuggestions = useTagSuggestions("post");
   const [loading, setLoading] = useState(!!postId);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -146,18 +147,6 @@ export default function PostEditor({ postId }: PostEditorProps) {
         }
       });
   }, [postId]);
-
-  useEffect(() => {
-    fetch("/api/admin/tags")
-      .then((r) => (r.ok ? r.json() : { tags: [] }))
-      .then((data) => {
-        setTagSuggestions(Array.isArray(data?.tags) ? data.tags : []);
-      })
-      .catch(() => {
-        // Suggestions are a convenience; the editor still works without them.
-        setTagSuggestions([]);
-      });
-  }, []);
 
   function getMissingFields(): string[] {
     const missing: string[] = [];

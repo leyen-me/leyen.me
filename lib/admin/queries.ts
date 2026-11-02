@@ -197,6 +197,9 @@ export const adminProjectByIdQuery = groq`*[_type == "project" && _id == $id][0]
 /** Every distinct tag already used by posts, for the tag picker suggestions. */
 export const adminPostTagsQuery = groq`array::unique(*[_type == "Post" && defined(tags)].tags[])`;
 
+/** Same for quotes — the two vocabularies are intentionally kept apart. */
+export const adminQuoteTagsQuery = groq`array::unique(*[_type == "quote" && defined(tags)].tags[])`;
+
 export const adminProfileQuery = groq`*[_type == "profile"][0] {
   _id,
   fullName,
