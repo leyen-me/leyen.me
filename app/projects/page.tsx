@@ -7,6 +7,7 @@ import EmptyState from "../components/shared/EmptyState";
 import { Slide } from "../animation/Slide";
 import { sanityFetch } from "@/lib/sanity.client";
 import PageHeading from "../components/shared/PageHeading";
+import { FALLBACK_COVER_IMAGE } from "@/lib/fallback-images";
 
 export const metadata: Metadata = {
   title: "Project | Leyen",
@@ -16,8 +17,7 @@ export const metadata: Metadata = {
     title: "Projects | Leyen",
     url: "https://leyen.me/projects",
     description: "Explore projects built by Leyen",
-    images:
-      "https://res.cloudinary.com/victoreke/image/upload/v1692636087/victoreke/projects.png",
+    images: FALLBACK_COVER_IMAGE,
   },
 };
 

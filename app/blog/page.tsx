@@ -4,6 +4,7 @@ import Posts from "../components/pages/Posts";
 import Social from "../components/shared/Social";
 import { Slide } from "../animation/Slide";
 import PageHeading from "@/app/components/shared/PageHeading";
+import { FALLBACK_COVER_IMAGE } from "@/lib/fallback-images";
 
 export const metadata: Metadata = {
   title: "Blog | Leyen",
@@ -13,8 +14,7 @@ export const metadata: Metadata = {
     title: "Blog | Leyen",
     url: "https://leyen.me/blog",
     description: "Read latest stories from Leyen's Blog",
-    images:
-      "https://res.cloudinary.com/victoreke/image/upload/v1692636087/victoreke/blog.png",
+    images: FALLBACK_COVER_IMAGE,
   },
 };
 

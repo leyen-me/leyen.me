@@ -8,8 +8,8 @@ import { formatDate } from "../../utils/date";
 import { HiCalendar } from "react-icons/hi";
 import { sanityFetch } from "@/lib/sanity.client";
 import { readTime } from "@/app/utils/readTime";
-const fallbackImage: string =
-  "https://res.cloudinary.com/victoreke/image/upload/v1692608339/victoreke/blog.png";
+import { FALLBACK_COVER_IMAGE } from "@/lib/fallback-images";
+const fallbackImage = FALLBACK_COVER_IMAGE;
 
 export default async function Posts() {
   const posts: PostType[] = await sanityFetch({

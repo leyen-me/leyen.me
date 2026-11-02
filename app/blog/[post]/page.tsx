@@ -17,6 +17,7 @@ import { HiCalendar } from "react-icons/hi";
 import { sanityFetch } from "@/lib/sanity.client";
 import { readTime } from "@/app/utils/readTime";
 import { extractMarkdownHeadings } from "@/lib/markdown-headings";
+import { FALLBACK_COVER_IMAGE } from "@/lib/fallback-images";
 
 type Props = {
   params: {
@@ -24,8 +25,7 @@ type Props = {
   };
 };
 
-const fallbackImage: string =
-  "https://res.cloudinary.com/victoreke/image/upload/v1692636087/victoreke/blog.png";
+const fallbackImage = FALLBACK_COVER_IMAGE;
 
 // Dynamic metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

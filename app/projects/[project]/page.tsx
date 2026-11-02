@@ -7,6 +7,7 @@ import { urlFor } from "@/lib/sanity.image";
 import { sanityFetch } from "@/lib/sanity.client";
 import { BiLinkExternal, BiLogoGithub } from "react-icons/bi";
 import { MarkdownOrPortableText } from "@/app/components/shared/MarkdownOrPortableText";
+import { FALLBACK_COVER_IMAGE } from "@/lib/fallback-images";
 
 type Props = {
   params: {
@@ -14,8 +15,7 @@ type Props = {
   };
 };
 
-const fallbackImage: string =
-  "https://res.cloudinary.com/victoreke/image/upload/v1692636087/victoreke/projects.png";
+const fallbackImage = FALLBACK_COVER_IMAGE;
 
 // Dynamic metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
