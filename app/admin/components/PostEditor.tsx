@@ -260,6 +260,14 @@ export default function PostEditor({ postId }: PostEditorProps) {
           setMetadataOpen(true);
           throw new Error("部分字段未通过校验，请在设置中检查并补全");
         }
+
+        // A deleted upload cannot be written back; clear it so the post can be
+        // saved again after the user picks a new cover.
+        if (res.status === 409 && /封面图/.test(data.error ?? "")) {
+          setForm((prev) => ({ ...prev, coverImage: null, coverImageUrl: undefined }));
+          setMetadataOpen(true);
+        }
+
         throw new Error(data.error || "Save failed");
       }
 

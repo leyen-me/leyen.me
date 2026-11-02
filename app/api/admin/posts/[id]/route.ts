@@ -8,6 +8,7 @@ import {
   buildSlugField,
 } from "@/lib/admin/sanity-helpers";
 import { revalidateContentType } from "@/lib/admin/revalidate";
+import { getMissingReferenceMessage } from "@/lib/admin/sanity-errors";
 import { writeClient } from "@/lib/sanity.write";
 import { adminPostByIdQuery } from "@/lib/admin/queries";
 
@@ -58,6 +59,11 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
     revalidateContentType("Post");
     return NextResponse.json({ success: true });
   } catch (error) {
+    const missingReference = getMissingReferenceMessage(error);
+    if (missingReference) {
+      return NextResponse.json({ error: missingReference }, { status: 409 });
+    }
+
     console.error("Failed to update post:", error);
     return NextResponse.json({ error: "Failed to update post" }, { status: 500 });
   }

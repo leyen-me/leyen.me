@@ -8,6 +8,7 @@ import {
   buildSlugField,
 } from "@/lib/admin/sanity-helpers";
 import { revalidateContentType } from "@/lib/admin/revalidate";
+import { getMissingReferenceMessage } from "@/lib/admin/sanity-errors";
 import { writeClient } from "@/lib/sanity.write";
 import { adminPostsQuery } from "@/lib/admin/queries";
 
@@ -54,6 +55,11 @@ export async function POST(req: NextRequest) {
     revalidateContentType("Post");
     return NextResponse.json({ success: true, _id: doc._id });
   } catch (error) {
+    const missingReference = getMissingReferenceMessage(error);
+    if (missingReference) {
+      return NextResponse.json({ error: missingReference }, { status: 409 });
+    }
+
     console.error("Failed to create post:", error);
     return NextResponse.json({ error: "Failed to create post" }, { status: 500 });
   }
