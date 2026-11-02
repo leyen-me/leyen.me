@@ -58,7 +58,7 @@ export default function JobEditor({ itemId }: { itemId?: string }) {
         <div className="space-y-2"><Label>公司</Label><Input value={name} onChange={(e) => setName(e.target.value)} required /></div>
         <div className="space-y-2"><Label>职位</Label><Input value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required /></div>
       </div>
-      <ImageUploadField label="Logo" value={logo} previewUrl={logoUrl} onChange={setLogo} />
+      <ImageUploadField label="Logo" value={logo} previewUrl={logoUrl} onChange={setLogo} aspect={1} />
       <div className="space-y-2"><Label>公司网站</Label><Input value={url} onChange={(e) => setUrl(e.target.value)} /></div>
       <div className="space-y-2"><Label>描述</Label><Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} /></div>
       <div className="grid gap-4 md:grid-cols-2">

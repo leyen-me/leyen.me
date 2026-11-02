@@ -75,8 +75,8 @@ export default function ProjectEditor({ itemId }: { itemId?: string }) {
         <div className="space-y-2"><Label>Repository</Label><Input value={repository} onChange={(e) => setRepository(e.target.value)} /></div>
       </div>
       <div className="space-y-2"><Label>排序</Label><Input type="number" min={0} value={order} onChange={(e) => setOrder(e.target.value)} /></div>
-      <ImageUploadField label="Logo" value={logo} previewUrl={logoUrl} onChange={setLogo} />
-      <ImageUploadField label="封面" value={coverImage} previewUrl={coverUrl} onChange={setCoverImage} />
+      <ImageUploadField label="Logo" value={logo} previewUrl={logoUrl} onChange={setLogo} aspect={1} />
+      <ImageUploadField label="封面" value={coverImage} previewUrl={coverUrl} onChange={setCoverImage} aspect={16 / 9} />
       <MarkdownEditor label="描述 (Markdown)" value={description} onChange={setDescription} />
       <AdminFormActions saving={saving} onCancel={() => router.push("/admin/projects")} />
     </form>

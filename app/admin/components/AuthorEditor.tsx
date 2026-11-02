@@ -51,7 +51,7 @@ export default function AuthorEditor({ itemId }: { itemId?: string }) {
       <h1 className="text-2xl font-bold sm:text-3xl">{itemId ? "编辑作者" : "新建作者"}</h1>
       <div className="space-y-2"><Label>姓名</Label><Input value={name} onChange={(e) => setName(e.target.value)} required /></div>
       <div className="space-y-2"><Label>Twitter URL</Label><Input value={twitterUrl} onChange={(e) => setTwitterUrl(e.target.value)} required /></div>
-      <ImageUploadField label="头像" value={photo} previewUrl={photoUrl} onChange={setPhoto} />
+      <ImageUploadField label="头像" value={photo} previewUrl={photoUrl} onChange={setPhoto} aspect={1} />
       {error && <p className="text-sm text-red-600">{error}</p>}
       <AdminFormActions saving={saving} onCancel={() => router.push("/admin/authors")} />
     </form>

@@ -76,7 +76,7 @@ export default function MovieEditor({ itemId }: { itemId?: string }) {
         <SlugField value={slug} onChange={setSlug} sourceTitle={title} kind="movie" placeholder="my-movie" />
       </div>
       <div className="space-y-2"><Label>类型</Label><Select value={mediaType} onValueChange={(v) => setMediaType(v as "movie" | "tv")}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="movie">Movie</SelectItem><SelectItem value="tv">TV Show</SelectItem></SelectContent></Select></div>
-      <ImageUploadField label="封面" value={coverImage} previewUrl={coverUrl} onChange={setCoverImage} />
+      <ImageUploadField label="封面" value={coverImage} previewUrl={coverUrl} onChange={setCoverImage} aspect={2 / 3} />
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>评分 (0-10)</Label><Input type="number" min={0} max={10} step={0.1} value={rating} onChange={(e) => setRating(e.target.value)} /></div>
         <div className="space-y-2"><Label>发布日期</Label><Input type="date" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} /></div>

@@ -200,6 +200,7 @@ export default function PostMetadataPanel({
 
           <ImageUploadField
             label="封面图"
+            aspect={16 / 9}
             value={form.coverImage}
             previewUrl={form.coverImageUrl}
             onChange={(coverImage) => onFieldChange("coverImage", coverImage)}

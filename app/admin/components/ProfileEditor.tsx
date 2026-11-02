@@ -94,7 +94,7 @@ export default function ProfileEditor() {
       <div className="space-y-2"><Label>Headline</Label><Input value={headline} onChange={(e) => setHeadline(e.target.value)} required /></div>
       <div className="space-y-2"><Label>位置</Label><Input value={location} onChange={(e) => setLocation(e.target.value)} required /></div>
       <div className="space-y-2"><Label>Short Bio</Label><Textarea value={shortBio} onChange={(e) => setShortBio(e.target.value)} rows={4} required /></div>
-      <ImageUploadField label="头像" value={profileImage} previewUrl={profileImageUrl} onChange={setProfileImage} />
+      <ImageUploadField label="头像" value={profileImage} previewUrl={profileImageUrl} onChange={setProfileImage} aspect={1} />
       <div className="space-y-2">
         <Label>Resume</Label>
         {resumeURL && <p className="text-sm text-zinc-500">当前: {resumeURL}</p>}
