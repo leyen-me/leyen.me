@@ -4,131 +4,163 @@
 
 <div align="center">
 <h1>leyen.me</h1>
-<p>My personal portfolio website</p>
+<p>Personal portfolio — built with Next.js, Sanity CMS, and Tailwind CSS</p>
 </div>
 
-# Tech Stack
+<p align="center">
+  <a href="https://leyen.me"><strong>Live Site</strong></a> ·
+  <a href="https://leyen.me/admin"><strong>Studio</strong></a>
+</p>
 
-- [NextJS][nextjs] - UI framework
-- [Vercel][vercel] - Hosting and Deployment
-- [Sanity.io][sanity]: Headless CMS and Content Lake
-- [TailwindCSS][tailwind] / CSS - Styling and UI
-- [Next Themes][nexttheme]: Color Theme
-- [React Refractor][reactrefractor]: Syntax Highlighting
+<br/>
 
-## Project Overview
+## Overview
 
-| [Site][site]          | [Studio][studio]                 |
-| --------------------- | -------------------------------- |
-| ![Site][site-preview] | ![Sanity Studio][studio-preview] |
+A modern personal website featuring:
 
-## Run Project Locally
+- **Blog** — Markdown-powered articles with syntax highlighting and table of contents
+- **Projects** — Portfolio showcase with live previews and source links
+- **Quotes** — Curated collection organised by content type
+- **Interviews** — Q&A-style interview archive with category filtering
+- **Movies** — Personal movie watchlist with genre filtering
+- **Resume** — Downloadable résumé with a custom-printed template mode
+- **Password Vault** — Encrypted, slide-captcha-protected credential manager
+- **Photos** — Image showcase page
+- **3D Hero** — Interactive WebGL (Three.js / React Three Fiber) hero section
+- **Admin Panel** — Full CRUD admin dashboard for managing all content types, plus AI-powered writing assistance (slug generation, content drafting, markdown preview)
 
-Follow this guide to get this site runnning locally:
+<br/>
 
-### Clone Repository
+## Tech Stack
 
-```js
+| Layer            | Technology                                                   |
+| ---------------- | ------------------------------------------------------------ |
+| **Framework**    | [Next.js 14](https://nextjs.org) (App Router, RSC, Server Actions) |
+| **CMS**          | [Sanity.io](https://sanity.io) — headless content lake       |
+| **Styling**      | [Tailwind CSS 3](https://tailwindcss.com) + [Framer Motion](https://framer.com/motion) |
+| **3D Graphics**  | [Three.js](https://threejs.org) / [React Three Fiber](https://r3f.docs.pmnd.rs) / [Drei](https://github.com/pmndrs/drei) |
+| **Auth**         | [iron-session](https://github.com/vvo/iron-session) — encrypted session cookies |
+| **Theme**        | [next-themes](https://github.com/pacocoursey/next-themes) — dark/light mode |
+| **Database**     | Sanity (for content), local encrypted storage (for password vault) |
+| **Deployment**   | [Vercel](https://vercel.com)                                  |
+| **Assets**       | Custom fonts (Incognito, Gitlab Mono), custom SVG icons       |
+
+<br/>
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- A [Sanity.io](https://sanity.io) account
+
+### Clone & Install
+
+```bash
 git clone https://github.com/leyen-me/leyen.me.git
-
 cd leyen.me
-
 npm install
 ```
 
-- Rename [`.env.example`][env-example] to `.env.local`
+### Configure Environment
 
-### Get Env variables
-
-The minimal `env` variables required to boot this project locally includes:
-
-- `Project Id`
-- `Dataset`
-- `API Version`
-- `Access Token`
-
-These variables come from Sanity. To get them, you need to setup your own Sanity instance. Follow the steps below to do this:
-
-### Create a new sanity project
-
-Run the command below in a terminal to create a new Sanity project:
-
-```js
-npm create sanity@latest -- --template clean --create-project "John Doe" --dataset production
-```
-
-- **Create an account**: If you already have a Sanity account, this will automatically connect to it, if not, select a login provider from the list of options, hit `Enter` and follow the prompt to create one.
-- **Choose an Output path**: Hit the `Enter` key to select the default path.
-- Install the dependencies with your preferred package manager
-
-Once completed open up the studio directory.
-
-```js
-cd john-doe
-
-code .
-```
-
-- Navigate to the `sanity.config.ts` file in the root directory and copy the `projectId`. Now you can close the studio file.
-
-### Update Env Variables
-
-Open up the cloned repository and do the following:
-
-- Set `NEXT_PUBLIC_SANITY_PROJECT_ID` to the project id you copied earlier
-- Set `NEXT_PUBLIC_SANITY_DATASET` to `production` or the dataset name you used.
-- Set `NEXT_PUBLIC_SANITY_API_VERSION` to your current date in **YYYY-MM-DD** format or leave as is
-- If you want to use an access token, visit [sanity.io/manage][sanity-manage] > **project name** > **API** > **Token** to create one. Once generated, copy the token and set it to `NEXT_PUBLIC_SANITY_ACCESS_TOKEN`.
-
-> [!Warning]
-> If you don't want to use a token, comment it out in the [env.api.ts][env-api] file or else it will throw errors.
-
-- Now run `npm run dev` and you can visit [http://localhost:3000][localhost] to see the project live.
-
-By default the UI will be blank. To start adding data to the site, visit your studio at [http://localhost:3000/admin][localhost-studio] to create your own documents.
-
-If you expereinced any issues or enquiries, please raise an issue to discuss it.
-
-## Additional Information
-
-Need more guidiance, check out this [tutorial][sanity-guide] that provides a step-by-step guide to setting up Sanity studio for your portfolio site.
-
-## Build
+Copy the example env file:
 
 ```bash
-npm run build
+cp .env.example .env.local
 ```
 
-### Important files and folders
+You'll need the following Sanity credentials:
 
-| File(s)                                        | Description                                     |
-| ---------------------------------------------- | ----------------------------------------------- |
-| [`sanity.config.ts`](sanity.config.ts)         | Config file for Sanity Studio                   |
-| [`sanity.client.ts`](lib/sanity.client.ts)     | Config file for Sanity CLI                      |
-| [`admin`](./app/admin/[[...index]]/page.tsx)   | Where Sanity Studio is mounted                  |
-| [`schemas`](./schemas)                         | Where Sanity Studio gets its content types from |
-| [`sanity.query.ts`](./lib/sanity.query.ts)     | Groq query for Sanity Schema data               |
+| Variable                          | Description                    |
+| --------------------------------- | ------------------------------ |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID`   | Your Sanity project ID         |
+| `NEXT_PUBLIC_SANITY_DATASET`     | Dataset name (e.g. `production`) |
+| `NEXT_PUBLIC_SANITY_API_VERSION`  | API version in `YYYY-MM-DD` format |
+| `SANITY_API_ACCESS_TOKEN`         | (Optional) API access token |
 
-## License & Usage
+### Set Up Sanity
 
-This portfolio is MIT-licensed so you are free to use it as an inspiration or you can just copy the whole thing (excluding my personal content of course), I don't really mind. Just make sure you link back to [leyen.me][site] on the footer section as attribution to the original source.
+```bash
+npm create sanity@latest -- --template clean --create-project "My Portfolio" --dataset production
+```
 
-<!-- Link Refs -->
+After setup, copy the `projectId` from the generated `sanity.config.ts` into your `.env.local`.
 
-[nextjs]: https://nextjs.org
-[vercel]: https://vercel.com
-[sanity]: https://sanity.io
-[tailwind]: https://tailwindcss.com
-[planetscale]: https://planetscale.com/
-[nexttheme]: https://github.com/pacocoursey/next-themes
-[reactrefractor]: https://github.com/rexxars/react-refractor
-[site]: https://leyen.me
-[studio]: https://leyen.me/admin
-[studio-preview]: https://github.com/Evavic44/leyen.me/assets/62628408/a2574479-a352-4437-ba67-14bd976e48eb
-[site-preview]: https://github.com/Evavic44/leyen.me/assets/62628408/e84ac72f-1ba1-4c46-bfc0-2512ffa0e5fa
-[env-example]: https://github.com/Evavic44/leyen.me/blob/main/.env.example
-[localhost]: http://localhost:3000
-[localhost-studio]: http://localhost:3000/admin
-[env-api]: https://github.com/Evavic44/leyen.me/blob/main/lib/env.api.ts
-[sanity-manage]: https://sanity.io/manage
-[sanity-guide]: https://www.freecodecamp.org/news/how-to-build-a-portfolio-site-with-sanity-and-nextjs
+### Run
+
+```bash
+npm run dev
+```
+
+Visit **http://localhost:3000** for the frontend, and **http://localhost:3000/admin** for the Sanity Studio.
+
+> The UI starts blank. Use the admin panel to create your own content.
+
+<br/>
+
+## Project Structure
+
+```
+app/                  — Next.js App Router pages and API routes
+├── admin/            — Admin dashboard, Sanity Studio mounting
+├── api/              — API routes (admin CRUD, auth, AI, upload, revalidate)
+├── blog/             — Blog listing and post pages
+├── components/       — React components (global, shared, page-specific)
+├── data/             — Static data (social links, graph theme)
+├── interviews/       — Interview archive and detail pages
+├── movies/           — Movie watchlist page
+├── password/         — Encrypted password vault
+├── photos/           — Photo gallery page
+├── projects/         — Project listing and detail pages
+├── quotes/           — Quote collection page
+├── resume/           — Résumé page and print template
+└── styles/           — Global CSS and Prism theme
+
+lib/                  — Business logic, Sanity queries, utilities
+schemas/              — Sanity content type schemas
+components/ui/        — Reusable UI primitives (shadcn-style)
+public/               — Static assets (images, 3D models)
+types/                — TypeScript type definitions
+```
+
+<br/>
+
+## Scripts
+
+| Command             | Description                               |
+| ------------------- | ----------------------------------------- |
+| `npm run dev`       | Start Next.js development server          |
+| `npm run build`     | Lint then build for production            |
+| `npm run start`     | Start production server                   |
+| `npm run migrate:pt-to-md` | Migrate Portable Text to Markdown  |
+
+<br/>
+
+## Key Features
+
+### Admin Dashboard
+
+Full CRUD management for posts, projects, interviews, movies, quotes, jobs, authors, and profile. Includes AI-powered tools for:
+
+- Content drafting and rewriting
+- Slug generation
+- Markdown preview
+
+### Password Vault
+
+A slide-captcha-protected, locally encrypted password manager. Credentials are encrypted with AES-256-GCM before being stored.
+
+### 3D Hero
+
+An interactive 3D scene on the homepage using React Three Fiber and a Tesla Cybertruck GLB model.
+
+### Blog
+
+Articles written in Markdown with GFM support, syntax highlighting via Refractor, reading time estimation, and a sticky table of contents.
+
+<br/>
+
+## License
+
+This project is [MIT](./LICENSE) licensed. You're free to use it as inspiration or directly — just link back to [leyen.me](https://leyen.me) in the footer as attribution.
