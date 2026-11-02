@@ -55,13 +55,6 @@ function countParagraphs(text: string): number {
   return text.trim().split(/\n\s*\n/).filter(Boolean).length;
 }
 
-function polishMaxTokens(selection: string, mode: PostPolishMode): number {
-  const charCount = selection.trim().length;
-  const multiplier = mode === "light" ? 1.5 : 2;
-  const cap = mode === "light" ? 1024 : 1280;
-  return Math.min(cap, Math.max(160, Math.ceil(charCount * multiplier)));
-}
-
 function buildPolishUserPrompt(input: {
   mode: PostPolishMode;
   title: string;
@@ -215,11 +208,6 @@ const TRANSLATE_SYSTEM_PROMPT = [
   "Return ONLY the translated <SELECTED_TEXT> with no surrounding tags, no preamble, and no explanation.",
 ].join("\n");
 
-function translateMaxTokens(selection: string): number {
-  const charCount = selection.trim().length;
-  return Math.min(1280, Math.max(160, Math.ceil(charCount * 2)));
-}
-
 export async function generatePostContent(
   input: PostContentInput
 ): Promise<string> {
@@ -232,7 +220,6 @@ export async function generatePostContent(
     const raw = await createChatCompletion({
       model,
       temperature: 0.3,
-      max_tokens: translateMaxTokens(selection),
       messages: [
         {
           role: "system",
@@ -274,7 +261,6 @@ export async function generatePostContent(
     const raw = await createChatCompletion({
       model,
       temperature: POLISH_TEMPERATURE[mode],
-      max_tokens: polishMaxTokens(selection, mode),
       messages: [
         {
           role: "system",
@@ -317,7 +303,6 @@ export async function generatePostContent(
   const raw = await createChatCompletion({
     model,
     temperature: 0.7,
-    max_tokens: 1536,
     messages: [
       {
         role: "system",

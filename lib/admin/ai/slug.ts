@@ -32,7 +32,6 @@ export async function generateSlug(input: SlugInput): Promise<string> {
   const raw = await createChatCompletion({
     model,
     temperature: 0.2,
-    max_tokens: 80,
     response_format: { type: "json_object" },
     messages: [
       {

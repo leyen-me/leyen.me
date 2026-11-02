@@ -1,4 +1,4 @@
-import { requireAiConfig } from "@/lib/admin/ai/config";
+import { AI_MAX_OUTPUT_TOKENS, requireAiConfig } from "@/lib/admin/ai/config";
 
 export type ChatRole = "system" | "user" | "assistant";
 
@@ -13,6 +13,8 @@ export type ChatCompletionOptions = {
   temperature?: number;
   max_tokens?: number;
   response_format?: { type: "json_object" | "text" };
+  /** DeepSeek thinking mode. Off by default so JSON responses aren't truncated. */
+  thinking?: "enabled" | "disabled";
 };
 
 export class AiRequestError extends Error {
@@ -42,11 +44,11 @@ function getEmptyResponseMessage(
   choice: NonNullable<OpenAIChatCompletionResponse["choices"]>[number] | undefined
 ): string {
   if (choice?.finish_reason === "length") {
-    return "AI 输出被截断（token 上限过低）。推理模型如 deepseek-v4-pro 需要更多 token，建议改用 deepseek-chat。";
+    return "AI 输出被截断（token 上限过低）。推理模型如 deepseek-v4-pro 需要更多 token，建议改用 deepseek-flash 并关闭思考模式。";
   }
 
   if (choice?.message?.reasoning_content?.trim()) {
-    return "AI 推理模型把 token 都用在了思考阶段，未生成最终结果。建议将 AI_MODEL 改为 deepseek-chat。";
+    return "AI 推理模型把 token 都用在了思考阶段，未生成最终结果。建议将 AI_MODEL 改为 deepseek-flash。";
   }
 
   return "AI 返回了空内容，请检查模型名称与 API 配置。";
@@ -67,7 +69,8 @@ export async function createChatCompletion(
       model: options.model ?? model,
       messages: options.messages,
       temperature: options.temperature ?? 0.3,
-      max_tokens: options.max_tokens ?? 256,
+      max_tokens: options.max_tokens ?? AI_MAX_OUTPUT_TOKENS,
+      thinking: { type: options.thinking ?? "disabled" },
       ...(options.response_format
         ? { response_format: options.response_format }
         : {}),

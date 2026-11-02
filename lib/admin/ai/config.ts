@@ -5,6 +5,10 @@ export class AiConfigError extends Error {
   }
 }
 
+/** DeepSeek-V4.1-Flash / V4-Pro limits from the official model list. */
+export const AI_CONTEXT_WINDOW = 1_048_576;
+export const AI_MAX_OUTPUT_TOKENS = 393_216;
+
 export function getAiApiKey(): string | undefined {
   return process.env.AI_API_KEY ?? process.env.OPENAI_API_KEY;
 }
@@ -19,19 +23,19 @@ export function getAiBaseUrl(): string {
 }
 
 function isLikelyReasoningModel(model: string): boolean {
-  return /reasoner|deepseek-v4|-pro$|-flash$/i.test(model);
+  return /reasoner|-pro$|-pro-/i.test(model);
 }
 
-/** All admin AI tasks — JSON output should use deepseek-chat, not reasoning models. */
+/** Admin AI tasks output JSON — use deepseek-flash with thinking mode disabled. */
 export function getAiModel(): string {
   const configured =
-    process.env.AI_MODEL ?? process.env.OPENAI_MODEL ?? "deepseek-chat";
+    process.env.AI_MODEL ?? process.env.OPENAI_MODEL ?? "deepseek-flash";
 
   if (isLikelyReasoningModel(configured)) {
     console.warn(
-      `[ai] AI_MODEL "${configured}" uses reasoning/thinking and may truncate JSON. Falling back to deepseek-chat.`
+      `[ai] AI_MODEL "${configured}" is a reasoning model and may truncate JSON. Falling back to deepseek-flash.`
     );
-    return "deepseek-chat";
+    return "deepseek-flash";
   }
 
   return configured;
