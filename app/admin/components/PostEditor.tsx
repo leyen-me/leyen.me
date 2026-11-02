@@ -31,6 +31,7 @@ import {
   usePostEditorShortcuts,
 } from "@/app/admin/hooks/usePostEditorShortcuts";
 import { cn, isValidSlug, normalizeSlug, slugify } from "@/lib/utils";
+import { normalizeTags } from "@/lib/admin/tags";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
 
 type AuthorOption = { _id: string; name: string };
@@ -49,7 +50,7 @@ const emptyForm: PostFormState = {
   date: new Date().toISOString().slice(0, 16),
   coverImage: null,
   featured: false,
-  tags: "",
+  tags: [],
   authorId: "",
   content: "",
   isPublished: false,
@@ -65,6 +66,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
   const { toggleSidebar } = useAdminLayout();
   const [form, setForm] = useState<PostFormState>(emptyForm);
   const [authors, setAuthors] = useState<AuthorOption[]>([]);
+  const [tagSuggestions, setTagSuggestions] = useState<string[]>([]);
   const [loading, setLoading] = useState(!!postId);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -145,6 +147,18 @@ export default function PostEditor({ postId }: PostEditorProps) {
       });
   }, [postId]);
 
+  useEffect(() => {
+    fetch("/api/admin/tags")
+      .then((r) => (r.ok ? r.json() : { tags: [] }))
+      .then((data) => {
+        setTagSuggestions(Array.isArray(data?.tags) ? data.tags : []);
+      })
+      .catch(() => {
+        // Suggestions are a convenience; the editor still works without them.
+        setTagSuggestions([]);
+      });
+  }, []);
+
   function getMissingFields(): string[] {
     const missing: string[] = [];
     const slug = normalizeSlug(form.slug || slugify(form.title));
@@ -156,7 +170,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
     }
     if (!form.description.trim()) missing.push("描述");
     if (!form.authorId) missing.push("作者");
-    if (!form.tags.split(",").map((t) => t.trim()).filter(Boolean).length) {
+    if (!form.tags.length) {
       missing.push("标签");
     }
     return missing;
@@ -188,7 +202,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
             : null,
           coverImageUrl: data.coverImage?.url,
           featured: data.featured ?? false,
-          tags: (data.tags ?? []).join(", "),
+          tags: normalizeTags(data.tags),
           authorId: data.authorId ?? "",
           content: data.content ?? "",
           isPublished: data.isPublished ?? false,
@@ -229,10 +243,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
         date: form.date ? new Date(form.date).toISOString() : undefined,
         coverImage: form.coverImage,
         featured: form.featured,
-        tags: form.tags
-          .split(",")
-          .map((t) => t.trim())
-          .filter(Boolean),
+        tags: form.tags,
         authorId: form.authorId,
         content: form.content,
         isPublished,
@@ -467,6 +478,7 @@ export default function PostEditor({ postId }: PostEditorProps) {
         onOpenChange={setMetadataOpen}
         form={form}
         authors={authors}
+        tagSuggestions={tagSuggestions}
         postId={postId}
         onFieldChange={(key, value) =>
           updateField(key, value as PostFormState[typeof key])

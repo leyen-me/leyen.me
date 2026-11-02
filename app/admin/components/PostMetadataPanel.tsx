@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import ImageUploadField from "@/app/admin/components/ImageUploadField";
 import SlugField from "@/app/admin/components/SlugField";
+import TagInput from "@/app/admin/components/TagInput";
 import type { ImageInput } from "@/lib/admin/sanity-helpers";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +29,7 @@ type PostFormState = {
   coverImage: ImageInput | null;
   coverImageUrl?: string;
   featured: boolean;
-  tags: string;
+  tags: string[];
   authorId: string;
   content: string;
   isPublished: boolean;
@@ -49,6 +50,7 @@ type PostMetadataPanelProps = {
   onOpenChange: (open: boolean) => void;
   form: PostMetadataForm;
   authors: AuthorOption[];
+  tagSuggestions?: string[];
   postId?: string;
   onFieldChange: <K extends keyof PostMetadataForm>(
     key: K,
@@ -62,6 +64,7 @@ export default function PostMetadataPanel({
   onOpenChange,
   form,
   authors,
+  tagSuggestions = [],
   postId,
   onFieldChange,
   onTitleChange,
@@ -172,15 +175,18 @@ export default function PostMetadataPanel({
 
           <div className="space-y-2">
             <Label htmlFor="meta-tags">
-              标签（逗号分隔） <RequiredMark />
+              标签 <RequiredMark />
             </Label>
-            <Input
+            <TagInput
               id="meta-tags"
               value={form.tags}
-              onChange={(e) => onFieldChange("tags", e.target.value)}
-              placeholder="react, nextjs"
-              required
+              onChange={(tags) => onFieldChange("tags", tags)}
+              suggestions={tagSuggestions}
+              placeholder="搜索或新增标签，回车确认"
             />
+            <p className="text-xs text-zinc-500">
+              从已有标签中选择，或直接输入新标签
+            </p>
           </div>
 
           <div className="space-y-2">
