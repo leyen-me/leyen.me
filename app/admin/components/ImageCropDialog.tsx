@@ -2,28 +2,27 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Crop, Loader2, RotateCcw, X } from "lucide-react";
+import { Loader2, Minus, Plus, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-
-/** Normalised crop rect: 0..1 relative to the natural image size. */
-type CropRect = { x: number; y: number; w: number; h: number };
-
-type DragMode = "move" | "nw" | "ne" | "sw" | "se";
 
 type ImageCropDialogProps = {
   open: boolean;
   src: string | null;
-  /** Locked pixel aspect ratio (width / height); each field enforces its own. */
+  /** Locked pixel aspect ratio (width / height). */
   aspect: number;
-  /** True while the caller uploads the cropped result. */
   busy?: boolean;
   onCancel: () => void;
   onConfirm: (result: { blob: Blob; width: number; height: number }) => void;
 };
 
-const MIN_BOX = 0.02;
+const FOCUSABLE =
+  'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+const MIN_SCALE = 1;
+const MAX_SCALE = 4;
 const MAX_CANVAS_EDGE = 4096;
+/** How much of the viewport the crop frame may occupy. */
+const FRAME_FILL = 0.94;
 
 const KNOWN_ASPECTS: Array<{ label: string; value: number }> = [
   { label: "1:1", value: 1 },
@@ -44,19 +43,11 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
-/** Largest rect with the given normalised w/h ratio, centred in the image. */
-function centredRect(normRatio: number): CropRect {
-  let w = 1;
-  let h = w / normRatio;
-
-  if (h > 1) {
-    h = 1;
-    w = h * normRatio;
-  }
-
-  return { x: (1 - w) / 2, y: (1 - h) / 2, w, h };
-}
-
+/**
+ * WeChat-style cropper: the whole photo stays visible, the crop frame floats
+ * above it and everything outside the frame is dimmed, so users can see what
+ * they are cutting off and which direction still has room to drag.
+ */
 export default function ImageCropDialog({
   open,
   src,
@@ -65,145 +56,235 @@ export default function ImageCropDialog({
   onCancel,
   onConfirm,
 }: ImageCropDialogProps) {
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
+
+  const [mounted, setMounted] = useState(false);
+  const [viewport, setViewport] = useState({ width: 0, height: 0 });
+  const [viewportCap, setViewportCap] = useState(0);
   const [natural, setNatural] = useState<{ width: number; height: number } | null>(null);
-  const [rect, setRect] = useState<CropRect>({ x: 0, y: 0, w: 1, h: 1 });
+  const [scale, setScale] = useState(1);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [rendering, setRendering] = useState(false);
   const [error, setError] = useState("");
-  const [mounted, setMounted] = useState(false);
+
+  const pointers = useRef<Map<number, { x: number; y: number }>>(new Map());
+  const dragRef = useRef<{ startX: number; startY: number; originX: number; originY: number } | null>(null);
+  const pinchRef = useRef<{ distance: number; scale: number } | null>(null);
 
   useEffect(() => setMounted(true), []);
 
-  const dragRef = useRef<{
-    mode: DragMode;
-    bounds: DOMRect;
-    origin: CropRect;
-    grab: { dx: number; dy: number };
-  } | null>(null);
+  /**
+   * Crop frame geometry: as large as the target ratio allows inside the
+   * viewport. The viewport then shrinks to the frame plus its margin so the
+   * dialog keeps a stable size on both phone and desktop.
+   */
+  const frame = useMemo(() => {
+    if (!viewport.width || !viewportCap) return { width: 0, height: 0, left: 0, top: 0 };
 
-  /** w/h ratio expressed in normalised units. */
-  const normRatio = useMemo(() => {
-    if (!natural) return null;
-    return aspect * (natural.height / natural.width);
-  }, [aspect, natural]);
+    let width = viewport.width * FRAME_FILL;
+    let height = width / aspect;
+    if (height > viewportCap * FRAME_FILL) {
+      height = viewportCap * FRAME_FILL;
+      width = height * aspect;
+    }
+
+    return {
+      width,
+      height,
+      left: (viewport.width - width) / 2,
+      top: 0,
+    };
+  }, [aspect, viewport.width, viewportCap]);
+
+  const viewportHeight = frame.height > 0
+    ? Math.min(viewportCap, frame.height / FRAME_FILL)
+    : viewportCap;
+
+  /** Scale needed for the image to exactly cover the frame at zoom 1. */
+  const coverScale =
+    natural && frame.width
+      ? Math.max(frame.width / natural.width, frame.height / natural.height)
+      : 1;
+
+  const display = natural
+    ? {
+        width: natural.width * coverScale * scale,
+        height: natural.height * coverScale * scale,
+      }
+    : { width: 0, height: 0 };
+
+  const maxOffsetX = Math.max(0, (display.width - frame.width) / 2);
+  const maxOffsetY = Math.max(0, (display.height - frame.height) / 2);
 
   useEffect(() => {
     if (open) return;
     setNatural(null);
-    setRect({ x: 0, y: 0, w: 1, h: 1 });
+    setScale(1);
+    setOffset({ x: 0, y: 0 });
     setError("");
     setRendering(false);
+    pointers.current.clear();
+    dragRef.current = null;
+    pinchRef.current = null;
   }, [open]);
 
   useEffect(() => {
     if (!open) return;
 
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") onCancel();
+    function measure() {
+      const element = viewportRef.current;
+      if (element) setViewport({ width: element.clientWidth, height: element.clientHeight });
+      setViewportCap(Math.round(window.innerHeight * 0.62));
     }
+
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        onCancel();
+        return;
+      }
+
+      if (event.key === "Tab" && dialogRef.current) {
+        const focusable = Array.from(
+          dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)
+        );
+        if (focusable.length > 0) {
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
+      }
+
+      const step = event.shiftKey ? 40 : 10;
+      if (event.key === "ArrowLeft") setOffset((prev) => ({ ...prev, x: prev.x + step }));
+      if (event.key === "ArrowRight") setOffset((prev) => ({ ...prev, x: prev.x - step }));
+      if (event.key === "ArrowUp") setOffset((prev) => ({ ...prev, y: prev.y + step }));
+      if (event.key === "ArrowDown") setOffset((prev) => ({ ...prev, y: prev.y - step }));
+    }
+
     document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, [open, onCancel]);
 
-  const resetRect = useCallback(() => {
-    if (!normRatio) return;
-    setRect(centredRect(normRatio));
-  }, [normRatio]);
+  useEffect(() => {
+    setOffset((prev) => ({
+      x: clamp(prev.x, -maxOffsetX, maxOffsetX),
+      y: clamp(prev.y, -maxOffsetY, maxOffsetY),
+    }));
+  }, [maxOffsetX, maxOffsetY]);
 
-  function beginDrag(mode: DragMode, event: React.PointerEvent) {
-    const image = imageRef.current;
-    if (!image) return;
+  const zoomTo = useCallback((next: number) => {
+    setScale(clamp(next, MIN_SCALE, MAX_SCALE));
+  }, []);
 
-    event.preventDefault();
-    event.stopPropagation();
+  function onPointerDown(event: React.PointerEvent) {
     (event.currentTarget as Element).setPointerCapture?.(event.pointerId);
+    pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
-    const bounds = image.getBoundingClientRect();
-    const px = (event.clientX - bounds.left) / bounds.width;
-    const py = (event.clientY - bounds.top) / bounds.height;
+    if (pointers.current.size === 2) {
+      const [a, b] = Array.from(pointers.current.values());
+      pinchRef.current = { distance: Math.hypot(a.x - b.x, a.y - b.y), scale };
+      dragRef.current = null;
+      return;
+    }
 
     dragRef.current = {
-      mode,
-      bounds,
-      origin: rect,
-      grab: { dx: px - rect.x, dy: py - rect.y },
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: offset.x,
+      originY: offset.y,
     };
   }
 
   function onPointerMove(event: React.PointerEvent) {
-    const drag = dragRef.current;
-    if (!drag || !normRatio) return;
+    if (!pointers.current.has(event.pointerId)) return;
+    pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
-    const { bounds, origin, mode, grab } = drag;
-    const px = clamp((event.clientX - bounds.left) / bounds.width, 0, 1);
-    const py = clamp((event.clientY - bounds.top) / bounds.height, 0, 1);
-
-    if (mode === "move") {
-      setRect({
-        ...origin,
-        x: clamp(px - grab.dx, 0, 1 - origin.w),
-        y: clamp(py - grab.dy, 0, 1 - origin.h),
-      });
+    if (pointers.current.size === 2 && pinchRef.current) {
+      const [a, b] = Array.from(pointers.current.values());
+      const distance = Math.hypot(a.x - b.x, a.y - b.y);
+      if (pinchRef.current.distance > 0) {
+        zoomTo(pinchRef.current.scale * (distance / pinchRef.current.distance));
+      }
       return;
     }
 
-    // The corner opposite the dragged handle stays anchored.
-    const anchorX = mode === "nw" || mode === "sw" ? origin.x + origin.w : origin.x;
-    const anchorY = mode === "nw" || mode === "ne" ? origin.y + origin.h : origin.y;
+    const drag = dragRef.current;
+    if (!drag) return;
 
-    let w = clamp(Math.abs(px - anchorX), MIN_BOX, 1);
-    let h = clamp(Math.abs(py - anchorY), MIN_BOX, 1);
-
-    if (w / normRatio > h) h = w / normRatio;
-    else w = h * normRatio;
-
-    const maxW = px < anchorX ? anchorX : 1 - anchorX;
-    const maxH = py < anchorY ? anchorY : 1 - anchorY;
-    w = Math.max(MIN_BOX, Math.min(w, maxW, maxH * normRatio));
-    h = w / normRatio;
-
-    setRect({
-      x: px < anchorX ? anchorX - w : anchorX,
-      y: py < anchorY ? anchorY - h : anchorY,
-      w,
-      h,
+    setOffset({
+      x: clamp(drag.originX + (event.clientX - drag.startX), -maxOffsetX, maxOffsetX),
+      y: clamp(drag.originY + (event.clientY - drag.startY), -maxOffsetY, maxOffsetY),
     });
   }
 
-  function endDrag() {
-    dragRef.current = null;
+  function onPointerUp(event: React.PointerEvent) {
+    pointers.current.delete(event.pointerId);
+    if (pointers.current.size < 2) pinchRef.current = null;
+    if (pointers.current.size === 0) dragRef.current = null;
   }
+
+  function onWheel(event: React.WheelEvent) {
+    event.preventDefault();
+    zoomTo(scale * Math.exp(-event.deltaY * 0.0015));
+  }
+
+  /** Source pixels currently inside the frame. */
+  const visible = natural && frame.width > 0
+    ? {
+        width: frame.width / (coverScale * scale),
+        height: frame.height / (coverScale * scale),
+      }
+    : null;
 
   async function handleConfirm() {
     const image = imageRef.current;
-    if (!image || !natural) return;
+    if (!image || !natural || !visible) return;
 
     setRendering(true);
     setError("");
 
     try {
-      const sourceWidth = rect.w * natural.width;
-      const sourceHeight = rect.h * natural.height;
-      const scale = Math.min(1, MAX_CANVAS_EDGE / Math.max(sourceWidth, sourceHeight));
+      // Image top-left relative to the frame, in display pixels.
+      const imageLeft = (frame.width - display.width) / 2 + offset.x;
+      const imageTop = (frame.height - display.height) / 2 + offset.y;
+      const unit = coverScale * scale;
 
+      const sx = clamp(-imageLeft / unit, 0, Math.max(0, natural.width - visible.width));
+      const sy = clamp(-imageTop / unit, 0, Math.max(0, natural.height - visible.height));
+      const sw = Math.min(visible.width, natural.width - sx);
+      const sh = Math.min(visible.height, natural.height - sy);
+
+      const outputScale = Math.min(1, MAX_CANVAS_EDGE / Math.max(sw, sh));
       const canvas = document.createElement("canvas");
-      canvas.width = Math.max(1, Math.round(sourceWidth * scale));
-      canvas.height = Math.max(1, Math.round(sourceHeight * scale));
+      canvas.width = Math.max(1, Math.round(sw * outputScale));
+      canvas.height = Math.max(1, Math.round(sh * outputScale));
 
       const context = canvas.getContext("2d");
       if (!context) throw new Error("浏览器不支持画布裁剪");
 
-      context.drawImage(
-        image,
-        rect.x * natural.width,
-        rect.y * natural.height,
-        sourceWidth,
-        sourceHeight,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
+      context.drawImage(image, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
 
       const blob = await new Promise<Blob | null>((resolve) =>
         canvas.toBlob(resolve, "image/webp", 0.95)
@@ -220,155 +301,161 @@ export default function ImageCropDialog({
 
   if (!open || !src || !mounted) return null;
 
-  const outputWidth = natural ? Math.round(rect.w * natural.width) : 0;
-  const outputHeight = natural ? Math.round(rect.h * natural.height) : 0;
   const disabled = busy || rendering;
 
-  const maskTop = rect.y;
-  const maskBottom = 1 - rect.y - rect.h;
-  const maskLeft = rect.x;
-  const maskRight = 1 - rect.x - rect.w;
+  const imageStyle = natural
+    ? {
+        width: `${display.width}px`,
+        height: `${display.height}px`,
+        left: `${frame.left + (frame.width - display.width) / 2 + offset.x}px`,
+        top: `${frame.top + (frame.height - display.height) / 2 + offset.y}px`,
+        transform: "none" as const,
+      }
+    : undefined;
 
   return createPortal(
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4">
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label="裁剪图片"
-        className="flex max-h-full w-full max-w-3xl flex-col overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-950"
-      >
-        <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-          <div className="flex items-center gap-2">
-            <Crop className="h-4 w-4" aria-hidden />
-            <h2 className="text-sm font-semibold">裁剪图片</h2>
-            <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-              固定 {aspectLabel(aspect)}
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={resetRect}
-              disabled={!natural}
-            >
-              <RotateCcw className="h-3.5 w-3.5" />
-              重置
-            </Button>
-            <Button type="button" variant="ghost" size="icon" onClick={onCancel} aria-label="关闭裁剪">
-              <X className="h-4 w-4" />
-            </Button>
+    <div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="裁剪图片"
+      className="fixed inset-0 z-[80] flex flex-col bg-black"
+    >
+      <div className="flex items-center justify-between px-4 py-3">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={onCancel}
+          className="h-11 px-4 text-white hover:bg-white/15 hover:text-white"
+        >
+          取消
+        </Button>
+        <div className="text-center">
+          <p className="text-sm font-medium text-white">裁剪 · {aspectLabel(aspect)}</p>
+          <p className="text-[11px] text-white/50">框内为最终封面</p>
+        </div>
+        <Button
+          type="button"
+          size="sm"
+          onClick={handleConfirm}
+          disabled={disabled || !natural}
+          className="h-11 min-w-[72px]"
+        >
+          {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "完成"}
+        </Button>
+      </div>
+
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 px-4 pb-4">
+        <div
+          ref={viewportRef}
+          className="relative w-full touch-none select-none"
+          style={{ maxWidth: 900, height: viewportHeight || "62vh" }}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
+          onWheel={onWheel}
+        >
+          {/* image keeps its position in the whole photo; the frame floats above */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            ref={imageRef}
+            src={src}
+            alt="待裁剪图片"
+            crossOrigin="anonymous"
+            draggable={false}
+            onLoad={(event) =>
+              setNatural({
+                width: event.currentTarget.naturalWidth,
+                height: event.currentTarget.naturalHeight,
+              })
+            }
+            onError={() => setError("图片加载失败，可能是跨域限制，请重新上传后再裁剪")}
+            className="absolute cursor-grab active:cursor-grabbing"
+            style={imageStyle}
+          />
+
+          {/* everything outside the frame is dimmed, so the photo context stays visible */}
+          <div className="pointer-events-none absolute inset-0">
+            <div className="absolute bg-black/60" style={{ left: 0, top: 0, width: "100%", height: `${frame.top}px` }} />
+            <div
+              className="absolute bg-black/60"
+              style={{ left: 0, bottom: 0, width: "100%", height: `${Math.max(0, viewportHeight - frame.top - frame.height)}px` }}
+            />
+            <div
+              className="absolute bg-black/60"
+              style={{ left: 0, top: `${frame.top}px`, width: `${frame.left}px`, height: `${frame.height}px` }}
+            />
+            <div
+              className="absolute bg-black/60"
+              style={{
+                right: 0,
+                top: `${frame.top}px`,
+                width: `${viewport.width - frame.left - frame.width}px`,
+                height: `${frame.height}px`,
+              }}
+            />
+
+            {/* frame edge: white line + hairline shadow so it reads on any photo */}
+            <div
+              className="absolute border border-white/90 shadow-[0_0_0_1px_rgba(0,0,0,0.35)]"
+              style={{
+                left: `${frame.left}px`,
+                top: `${frame.top}px`,
+                width: `${frame.width}px`,
+                height: `${frame.height}px`,
+              }}
+            />
           </div>
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4">
-          <div className="flex justify-center rounded-md bg-zinc-100 p-3 dark:bg-zinc-900">
-            {/* overflow-hidden keeps the mask inside the image, never over the dialog chrome */}
-            <div className="relative inline-block select-none overflow-hidden rounded-sm">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                ref={imageRef}
-                src={src}
-                alt="待裁剪图片"
-                crossOrigin="anonymous"
-                draggable={false}
-                onLoad={(event) => {
-                  const element = event.currentTarget;
-                  const size = {
-                    width: element.naturalWidth,
-                    height: element.naturalHeight,
-                  };
-                  setNatural(size);
-                  setRect(centredRect(aspect * (size.height / size.width)));
-                }}
-                onError={() => setError("图片加载失败，可能是跨域限制，请重新上传后再裁剪")}
-                className="block max-h-[52vh] max-w-full"
-              />
-
-              {natural && (
-                <div
-                  className="absolute inset-0 touch-none"
-                  onPointerMove={onPointerMove}
-                  onPointerUp={endDrag}
-                  onPointerCancel={endDrag}
-                >
-                  <div
-                    className="absolute inset-x-0 top-0 bg-black/50"
-                    style={{ height: `${maskTop * 100}%` }}
-                    aria-hidden
-                  />
-                  <div
-                    className="absolute inset-x-0 bottom-0 bg-black/50"
-                    style={{ height: `${maskBottom * 100}%` }}
-                    aria-hidden
-                  />
-                  <div
-                    className="absolute left-0 bg-black/50"
-                    style={{
-                      top: `${rect.y * 100}%`,
-                      height: `${rect.h * 100}%`,
-                      width: `${maskLeft * 100}%`,
-                    }}
-                    aria-hidden
-                  />
-                  <div
-                    className="absolute right-0 bg-black/50"
-                    style={{
-                      top: `${rect.y * 100}%`,
-                      height: `${rect.h * 100}%`,
-                      width: `${maskRight * 100}%`,
-                    }}
-                    aria-hidden
-                  />
-
-                  <div
-                    role="presentation"
-                    className="absolute cursor-move border border-white"
-                    style={{
-                      left: `${rect.x * 100}%`,
-                      top: `${rect.y * 100}%`,
-                      width: `${rect.w * 100}%`,
-                      height: `${rect.h * 100}%`,
-                    }}
-                    onPointerDown={(event) => beginDrag("move", event)}
-                  >
-                    {(["nw", "ne", "sw", "se"] as const).map((corner) => (
-                      <span
-                        key={corner}
-                        role="presentation"
-                        onPointerDown={(event) => beginDrag(corner, event)}
-                        className={cn(
-                          "absolute h-3 w-3 rounded-sm border border-zinc-500 bg-white",
-                          corner === "nw" && "left-0 top-0 cursor-nwse-resize",
-                          corner === "ne" && "right-0 top-0 cursor-nesw-resize",
-                          corner === "sw" && "bottom-0 left-0 cursor-nesw-resize",
-                          corner === "se" && "bottom-0 right-0 cursor-nwse-resize"
-                        )}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <p className="text-center text-xs text-zinc-500">
-            拖动方框移动，拖动四角缩放，比例固定为 {aspectLabel(aspect)}
-            {outputWidth > 0 && ` · 输出约 ${outputWidth}×${outputHeight}px`}
-          </p>
-          {error && <p className="text-center text-sm text-red-600">{error}</p>}
-        </div>
-
-        <div className="flex items-center justify-end gap-2 border-t border-zinc-200 px-4 py-3 dark:border-zinc-800">
-          <Button type="button" variant="outline" onClick={onCancel} disabled={disabled}>
-            取消
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() => zoomTo(scale - 0.2)}
+            disabled={scale <= MIN_SCALE}
+            aria-label="缩小"
+            className="h-11 w-11 text-white hover:bg-white/15 hover:text-white"
+          >
+            <Minus className="h-4 w-4" />
           </Button>
-          <Button type="button" onClick={handleConfirm} disabled={disabled || !natural}>
-            {disabled ? <Loader2 className="h-4 w-4 animate-spin" /> : <Crop className="h-4 w-4" />}
-            {busy ? "上传中..." : "裁剪并上传"}
+          <span className="w-12 text-center text-xs tabular-nums text-white/80">
+            {Math.round(scale * 100)}%
+          </span>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() => zoomTo(scale + 0.2)}
+            disabled={scale >= MAX_SCALE}
+            aria-label="放大"
+            className="h-11 w-11 text-white hover:bg-white/15 hover:text-white"
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setScale(1);
+              setOffset({ x: 0, y: 0 });
+            }}
+            className="h-11 text-white hover:bg-white/15 hover:text-white"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            还原
           </Button>
         </div>
+
+        <p className="text-center text-xs text-white/60">
+          拖动图片调整取景，滚轮或双指缩放
+          {visible && ` · 输出约 ${Math.round(visible.width)}×${Math.round(visible.height)}px`}
+        </p>
+        {error && <p className="text-center text-sm text-red-400">{error}</p>}
       </div>
     </div>,
     document.body
