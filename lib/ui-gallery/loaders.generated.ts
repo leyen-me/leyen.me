@@ -5,10 +5,100 @@ import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
 
 export const galleryLoaders: Record<string, ComponentType> = {
+  "components/card/action-node": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/card/action-node/index")
+  ),
   "components/card/ascii-wake": dynamic(() =>
     import("@/app/components/ui-gallery/demos/components/card/ascii-wake/index")
   ),
+  "components/card/asset-swap": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/card/asset-swap/index")
+  ),
+  "components/input/assignees": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/input/assignees/index")
+  ),
+  "components/card/card-stack": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/card/card-stack/index")
+  ),
+  "components/card/card-swap": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/card/card-swap/index")
+  ),
+  "components/data-display/context-meter": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/data-display/context-meter/index")
+  ),
+  "components/navigation/create-menu": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/navigation/create-menu/index")
+  ),
+  "components/feedback/dynamic-island": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/feedback/dynamic-island/index")
+  ),
+  "components/button/emoji-reactions": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/button/emoji-reactions/index")
+  ),
+  "components/card/eye-tracker": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/card/eye-tracker/index")
+  ),
+  "components/button/generate": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/button/generate/index")
+  ),
+  "components/card/huddle": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/card/huddle/index")
+  ),
+  "components/data-display/image-compare": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/data-display/image-compare/index")
+  ),
+  "components/input/label-input": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/input/label-input/index")
+  ),
+  "components/button/like": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/button/like/index")
+  ),
+  "components/feedback/music-island": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/feedback/music-island/index")
+  ),
+  "components/input/one-time-code": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/input/one-time-code/index")
+  ),
+  "components/data-display/palette": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/data-display/palette/index")
+  ),
+  "components/card/particles": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/card/particles/index")
+  ),
+  "components/feedback/pull-to-refresh": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/feedback/pull-to-refresh/index")
+  ),
+  "components/data-display/rolling-counter": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/data-display/rolling-counter/index")
+  ),
+  "components/input/search": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/input/search/index")
+  ),
+  "components/input/signature-pad": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/input/signature-pad/index")
+  ),
+  "components/button/slide-to-confirm": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/button/slide-to-confirm/index")
+  ),
   "components/card/spotlight-card": dynamic(() =>
     import("@/app/components/ui-gallery/demos/components/card/spotlight-card/index")
+  ),
+  "components/data-display/stacked-bars": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/data-display/stacked-bars/index")
+  ),
+  "components/feedback/step-player": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/feedback/step-player/index")
+  ),
+  "components/input/time-scrubber": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/input/time-scrubber/index")
+  ),
+  "components/toast/toast-stack": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/toast/toast-stack/index")
+  ),
+  "components/input/upload-dropzone": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/input/upload-dropzone/index")
+  ),
+  "components/input/voice-note": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/input/voice-note/index")
   ),
 };

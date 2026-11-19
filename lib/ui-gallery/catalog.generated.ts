@@ -3,6 +3,36 @@ import type { GalleryItem } from "./types";
 
 export const galleryCatalog: GalleryItem[] = [
   {
+    "id": "components/card/action-node",
+    "kind": "components",
+    "category": "card",
+    "slug": "action-node",
+    "title": "Action Node",
+    "summary": "自动化步骤卡的操作藏进右上角，悬停或聚焦时四个按钮沿卡片轮廓的弧线弹性展开。",
+    "tags": [
+      "hover",
+      "spring",
+      "corner",
+      "automation"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 420,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/action-node",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [
+      "lucide-react"
+    ],
+    "files": [
+      "index.tsx",
+      "action-node-css.ts"
+    ]
+  },
+  {
     "id": "components/card/ascii-wake",
     "kind": "components",
     "category": "card",
@@ -33,6 +63,718 @@ export const galleryCatalog: GalleryItem[] = [
     ]
   },
   {
+    "id": "components/card/asset-swap",
+    "kind": "components",
+    "category": "card",
+    "slug": "asset-swap",
+    "title": "Asset Swap",
+    "summary": "双层资产卡片：按箭头反转支付方向，点选硬币把卡片展开成整块选择面板，两侧金额按 0.3% 价差即时重算。",
+    "tags": [
+      "press",
+      "swap",
+      "finance",
+      "motion",
+      "sound"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 360,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/asset-swap",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "data.ts",
+      "marks.tsx",
+      "sound.ts",
+      "styles.ts",
+      "use-reduced-motion.ts"
+    ]
+  },
+  {
+    "id": "components/input/assignees",
+    "kind": "components",
+    "category": "input",
+    "slug": "assignees",
+    "title": "Assignees",
+    "summary": "多人指派选择器：胶囊里的头像随选择逐格增宽，下拉卡按 48px 行距列出成员，支持搜索过滤、勾选状态、键盘操作与可移除的已选标签。",
+    "tags": [
+      "multi-select",
+      "combobox",
+      "avatars",
+      "search",
+      "keyboard"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 420,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/picker",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "assignee-avatar.tsx",
+      "people.ts"
+    ]
+  },
+  {
+    "id": "components/card/card-stack",
+    "kind": "components",
+    "category": "card",
+    "slug": "card-stack",
+    "title": "Card Stack",
+    "summary": "悬停时五张卡片沿同一圆心弹簧展开，点按一张翻到中央放大并跟随指针倾斜，点击外部回落后置于顶部。",
+    "tags": [
+      "hover",
+      "spring",
+      "flip",
+      "stack",
+      "pointer"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 420,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/card-stack",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "card-art.tsx",
+      "deck.ts",
+      "springs.ts"
+    ]
+  },
+  {
+    "id": "components/card/card-swap",
+    "kind": "components",
+    "category": "card",
+    "slug": "card-swap",
+    "title": "Card Swap",
+    "summary": "三维透视的卡片堆叠：点按或甩动顶卡即送到队尾，其余卡片沿固定槽位弹入前排。",
+    "tags": [
+      "drag",
+      "stack",
+      "perspective",
+      "motion"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 460,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/card-swap",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "card-art.tsx",
+      "deck.ts"
+    ]
+  },
+  {
+    "id": "components/data-display/context-meter",
+    "kind": "components",
+    "category": "data-display",
+    "slug": "context-meter",
+    "title": "Context Meter",
+    "summary": "上下文窗口的分段条形图：悬停点亮某一类并显示其用量，Compact 以缓动与合成音把 Chat 压缩，再原样还原。",
+    "tags": [
+      "hover",
+      "data-viz",
+      "sound",
+      "motion"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 340,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/context-meter",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "engine.ts",
+      "rolling-text.tsx",
+      "sound.ts",
+      "styles.ts",
+      "use-reduced-motion.ts"
+    ]
+  },
+  {
+    "id": "components/navigation/create-menu",
+    "kind": "components",
+    "category": "navigation",
+    "slug": "create-menu",
+    "title": "Create Menu",
+    "summary": "液体胶囊按下后整体收缩再弹性展开为创建菜单，行列以 22ms 级联浮现，并用 SVG goo 滤镜与 Web Audio 音效完成一次连续形变。",
+    "tags": [
+      "liquid",
+      "menu",
+      "spring",
+      "gooey",
+      "sound"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 320,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/liq-create",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "create-menu-css.ts",
+      "icons.tsx",
+      "sound.ts",
+      "springs.ts"
+    ]
+  },
+  {
+    "id": "components/feedback/dynamic-island",
+    "kind": "components",
+    "category": "feedback",
+    "slug": "dynamic-island",
+    "title": "Dynamic Island",
+    "summary": "黑色药丸按住缩小、按下展开：宽高与圆角共用一根弹簧整体生长，紧凑行与活动卡片以模糊缩放交叉换场，计时、通话、音乐与航班各自带实时状态。",
+    "tags": [
+      "spring",
+      "press",
+      "expand",
+      "media"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 380,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/dynamic-island",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "icons.tsx",
+      "island.tsx",
+      "springs.ts",
+      "styles.ts"
+    ]
+  },
+  {
+    "id": "components/button/emoji-reactions",
+    "kind": "components",
+    "category": "button",
+    "slug": "emoji-reactions",
+    "title": "Emoji Reactions",
+    "summary": "按下消息即可展开表情面板，选中的表情沿弧线飞入下方反应胶囊，计数以滚轮进位，并合成轻量 Web Audio 音效。",
+    "tags": [
+      "reactions",
+      "emoji",
+      "motion",
+      "sound"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 260,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/emoji-reactions",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "emoji-glyph.tsx",
+      "emoji.ts",
+      "reactions-css.ts",
+      "rolling-count.tsx",
+      "sound.ts"
+    ]
+  },
+  {
+    "id": "components/card/eye-tracker",
+    "kind": "components",
+    "category": "card",
+    "slug": "eye-tracker",
+    "title": "Eye Tracker",
+    "summary": "一颗长着两只眼睛的软立方体：眼睛沿球面投影跟随指针，定时眨眼，按下后逐字说出短句。",
+    "tags": [
+      "hover",
+      "pointer",
+      "eyes",
+      "svg",
+      "motion"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 320,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/eye-tracker",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "eyes.ts"
+    ]
+  },
+  {
+    "id": "components/button/generate",
+    "kind": "components",
+    "category": "button",
+    "slug": "generate",
+    "title": "Generate",
+    "summary": "点击 Generate 后由一条五秒时钟依次驱动印刷图的位移、模糊与对比度，最后以清晰版本显影，进度沿随机单调路径跳动。",
+    "tags": [
+      "ai",
+      "progress",
+      "svg-filter",
+      "halftone",
+      "loading"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 380,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/generate",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "flower.tsx",
+      "sound.ts"
+    ]
+  },
+  {
+    "id": "components/card/huddle",
+    "kind": "components",
+    "category": "card",
+    "slug": "huddle",
+    "title": "Huddle",
+    "summary": "四人语音房：加入时自己的头像球弹出、其他人弹开让位，发言者的呼吸圆环与波形标记轮换，并附 Web Audio 合成提示音。",
+    "tags": [
+      "voice",
+      "presence",
+      "spring",
+      "web-audio",
+      "a11y"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 300,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/huddle",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "cue.ts",
+      "huddle-css.ts",
+      "icons.tsx",
+      "person-orb.tsx"
+    ]
+  },
+  {
+    "id": "components/data-display/image-compare",
+    "kind": "components",
+    "category": "data-display",
+    "slug": "image-compare",
+    "title": "Image Compare",
+    "summary": "可拖拽的前后对比滑块：分割点平滑跟随指针，分割线两端由弹簧驱动而轻微滞后，甩动后自动滑向边缘。",
+    "tags": [
+      "drag",
+      "comparison",
+      "slider",
+      "spring"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 460,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/image-compare",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "scene.tsx",
+      "use-reduced-motion.ts"
+    ]
+  },
+  {
+    "id": "components/input/label-input",
+    "kind": "components",
+    "category": "input",
+    "slug": "label-input",
+    "title": "Label Input",
+    "summary": "标签上浮时逐字跳动，顶部描边从中间裂开；保留 Bencho 的 280×52 几何、420ms 曲线与圆角参数，并补充邮箱校验与字数统计。",
+    "tags": [
+      "floating-label",
+      "input",
+      "svg",
+      "validation",
+      "focus"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 320,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/label-input",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "label-input-css.ts",
+      "label-input.tsx"
+    ]
+  },
+  {
+    "id": "components/button/like",
+    "kind": "components",
+    "category": "button",
+    "slug": "like",
+    "title": "Like",
+    "summary": "点赞时计数以机械滚轮逐位进位，心脏先收后胀并炸开粒子，同时合成一声 Web Audio 轻响。",
+    "tags": [
+      "like",
+      "odometer",
+      "particles",
+      "sound",
+      "motion"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 260,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/like",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "burst.tsx",
+      "heart.tsx",
+      "like-css.ts",
+      "odometer.tsx",
+      "sound.ts"
+    ]
+  },
+  {
+    "id": "components/feedback/music-island",
+    "kind": "components",
+    "category": "feedback",
+    "slug": "music-island",
+    "title": "Music Island",
+    "summary": "动态岛风格的音乐卡：黑色药丸从专辑封面与跳动声浪，按同一根弹簧长成封面、曲目、可拖动进度条与控制键。",
+    "tags": [
+      "spring",
+      "expand",
+      "player",
+      "media"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 320,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/music-island",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "icons.tsx",
+      "island.tsx",
+      "springs.ts",
+      "styles.ts"
+    ]
+  },
+  {
+    "id": "components/input/one-time-code",
+    "kind": "components",
+    "category": "input",
+    "slug": "one-time-code",
+    "title": "One-time Code",
+    "summary": "单个隐形输入承载 4 或 6 位验证码，光标逐格弹性滑动；填满后正确则细胞融合成 Verified 胶囊，错误则整行抖动并自右向左坠落。",
+    "tags": [
+      "otp",
+      "verification",
+      "spring",
+      "paste",
+      "a11y"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 300,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/one-time-code",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "engine.ts",
+      "otp-css.ts",
+      "otp.tsx",
+      "sound.ts"
+    ]
+  },
+  {
+    "id": "components/data-display/palette",
+    "kind": "components",
+    "category": "data-display",
+    "slug": "palette",
+    "title": "Palette",
+    "summary": "在 OKLCH 空间按五种情绪生成四色配色，按下后色块先收成圆、在顶点换色再展开，缝隙由随动画渐隐的 goo 滤镜连成液体。",
+    "tags": [
+      "color",
+      "oklch",
+      "morph",
+      "gooey"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 220,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/palette",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "palette.ts"
+    ]
+  },
+  {
+    "id": "components/card/particles",
+    "kind": "components",
+    "category": "card",
+    "slug": "particles",
+    "title": "Particles",
+    "summary": "720 个点按形状采样落位，指针把它们推开、弹簧再拉回；按压先发出冲击波，再按中心角度重排成下一个形状。",
+    "tags": [
+      "canvas",
+      "hover",
+      "particles",
+      "spring",
+      "pointer"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 540,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/particles",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "engine.ts"
+    ]
+  },
+  {
+    "id": "components/feedback/pull-to-refresh",
+    "kind": "components",
+    "category": "feedback",
+    "slug": "pull-to-refresh",
+    "title": "Pull to Refresh",
+    "summary": "下拉时以饱和阻尼拉伸卡片，越过阈值后六颗水滴聚成旋转圆环，松手刷新数据并回弹。",
+    "tags": [
+      "pull",
+      "gesture",
+      "spring",
+      "chart",
+      "refresh"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 420,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/pull",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "balance-chart.tsx",
+      "engine.ts",
+      "motion.ts",
+      "refresh-ring.tsx",
+      "window-switch.tsx"
+    ]
+  },
+  {
+    "id": "components/data-display/rolling-counter",
+    "kind": "components",
+    "category": "data-display",
+    "slug": "rolling-counter",
+    "title": "Rolling Counter",
+    "summary": "可拖拽的里程表数字：每 12px 走一格，数位按进位错峰弹簧滚动，带速度模糊与甩动惯性。",
+    "tags": [
+      "drag",
+      "odometer",
+      "spring",
+      "motion",
+      "number"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 220,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/rolling-counter",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "engine.ts",
+      "sound.ts",
+      "styles.ts",
+      "use-rolling-counter.ts"
+    ]
+  },
+  {
+    "id": "components/input/search",
+    "kind": "components",
+    "category": "input",
+    "slug": "search",
+    "title": "Search",
+    "summary": "单个胶囊的宽度就是状态：镜头固定不动，输入框在它周围弹簧展开；按下先压缩 90ms，附带本地建议筛选、命中高亮、清空按钮与 combobox 键盘流。",
+    "tags": [
+      "search",
+      "combobox",
+      "spring",
+      "filter",
+      "keyboard"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 460,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/seek",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "motion.ts",
+      "search-css.ts",
+      "search-data.ts",
+      "sound.ts",
+      "suggestion-list.tsx"
+    ]
+  },
+  {
+    "id": "components/input/signature-pad",
+    "kind": "components",
+    "category": "input",
+    "slug": "signature-pad",
+    "title": "Signature Pad",
+    "summary": "笔画按速度变粗细、平滑跟随，Clear 自最后一点向前反向擦除墨迹，停笔后淡出并收缩成 Signed 胶囊。",
+    "tags": [
+      "signature",
+      "pointer",
+      "svg",
+      "ink",
+      "rewind"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 280,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/signature",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "signature-css.ts",
+      "signature-pad.tsx"
+    ]
+  },
+  {
+    "id": "components/button/slide-to-confirm",
+    "kind": "components",
+    "category": "button",
+    "slug": "slide-to-confirm",
+    "title": "Slide to Confirm",
+    "summary": "拖动滑块横穿轨道，填充随手柄生长、提示随之淡出；越过终点后手柄原地展开并自动复位。",
+    "tags": [
+      "drag",
+      "slider",
+      "confirmation",
+      "spring",
+      "a11y"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 240,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/slide-confirm",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "icons.tsx",
+      "motion.ts",
+      "slide-css.ts"
+    ]
+  },
+  {
     "id": "components/card/spotlight-card",
     "kind": "components",
     "category": "card",
@@ -56,6 +798,194 @@ export const galleryCatalog: GalleryItem[] = [
     "dependencies": [],
     "files": [
       "index.tsx"
+    ]
+  },
+  {
+    "id": "components/data-display/stacked-bars",
+    "kind": "components",
+    "category": "data-display",
+    "slug": "stacked-bars",
+    "title": "Stacked Bars",
+    "summary": "可横向扫过的堆叠柱状图：悬停环与提示卡以弹簧跟随，其余柱子向卡片底色退让，Day / Week 切换时按列错峰重绘。",
+    "tags": [
+      "hover",
+      "data-viz",
+      "spring",
+      "tooltip",
+      "chart"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 340,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/stacked-bars",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "data.ts",
+      "plot.tsx",
+      "spring.ts",
+      "use-reduced-motion.ts"
+    ]
+  },
+  {
+    "id": "components/feedback/step-player",
+    "kind": "components",
+    "category": "feedback",
+    "slug": "step-player",
+    "title": "Step Player",
+    "summary": "播放后进度沿圆点逐格填充，换步时两端边沿缓出，身后一串 scaleY 余波依次起伏。",
+    "tags": [
+      "progress",
+      "steps",
+      "easing",
+      "playback",
+      "motion"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 320,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/step-player",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "engine.ts",
+      "play-icon.tsx",
+      "sound.ts"
+    ]
+  },
+  {
+    "id": "components/input/time-scrubber",
+    "kind": "components",
+    "category": "input",
+    "slug": "time-scrubber",
+    "title": "Time Scrubber",
+    "summary": "可拖拽的分钟标尺：刻度随位置起伏淡出，松手后按甩动速度预测落点并弹到最近的 15 分钟，中央红线指示当前时间。",
+    "tags": [
+      "drag",
+      "slider",
+      "time",
+      "inertia",
+      "a11y"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 260,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/time-scrubber",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "styles.ts",
+      "time.ts",
+      "use-time-scrubber.ts"
+    ]
+  },
+  {
+    "id": "components/toast/toast-stack",
+    "kind": "components",
+    "category": "toast",
+    "slug": "toast-stack",
+    "title": "Toast Stack",
+    "summary": "三条通知叠成一摞，悬停或聚焦时以弹簧展开为列表；逐条关闭后新通知从上方弹入顶部，失败项可原地重试。",
+    "tags": [
+      "toast",
+      "spring",
+      "hover",
+      "notification"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 280,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/toast-stack",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "springs.ts",
+      "toast-data.ts",
+      "toast-icons.tsx",
+      "toast-row.tsx"
+    ]
+  },
+  {
+    "id": "components/input/upload-dropzone",
+    "kind": "components",
+    "category": "input",
+    "slug": "upload-dropzone",
+    "title": "Upload Dropzone",
+    "summary": "虚线拖拽区在文件悬停时点亮、缩放并让虚线行进；拖入后原地展开文件名、尺寸、滚动百分比与进度条，可取消、重试或移除，超过 5 MB 会被晃动着拒绝。",
+    "tags": [
+      "upload",
+      "drag",
+      "progress",
+      "file-input",
+      "a11y"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 360,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/upload-dropzone",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "icons.tsx",
+      "upload-css.ts",
+      "upload-data.ts",
+      "upload-parts.tsx"
+    ]
+  },
+  {
+    "id": "components/input/voice-note",
+    "kind": "components",
+    "category": "input",
+    "slug": "voice-note",
+    "title": "Voice Note",
+    "summary": "按住胶囊开始录音，计时与波形每 70ms 生长，松开保留、左滑丢弃；播放时同一段波形按一个 CSS 变量点亮进度。",
+    "tags": [
+      "voice",
+      "press",
+      "waveform",
+      "timer",
+      "sound"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 240,
+    "createdAt": "2026-11-19",
+    "source": {
+      "label": "Inspired by Bencho",
+      "url": "https://bencho.dev/blocks/voice-note",
+      "license": "See https://bencho.dev/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "icons.tsx",
+      "sound.ts",
+      "voice-note-css.ts"
     ]
   }
 ];
