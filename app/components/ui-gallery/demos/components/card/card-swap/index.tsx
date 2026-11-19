@@ -216,7 +216,7 @@ function CardSwap({ auto = false, every = 4 }: CardSwapProps) {
     <div
       role="group"
       aria-label="Card deck"
-      className="relative w-full max-w-[360px] select-none rounded-[28px] bg-[#f1f2f2] [-webkit-tap-highlight-color:transparent] [container-type:inline-size] dark:bg-[#171717]"
+      className="relative w-full max-w-[360px] select-none [-webkit-tap-highlight-color:transparent] [container-type:inline-size]"
       style={{ aspectRatio: `${DECK_WIDTH} / ${DECK_HEIGHT}` }}
       onPointerEnter={() => {
         interaction.current.hover = true;

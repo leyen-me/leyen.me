@@ -37,7 +37,7 @@ export default function Demo() {
     <div className="tms-demo w-full max-w-[340px]">
       <style>{TIME_SCRUBBER_CSS}</style>
 
-      <div className="grid w-full place-items-center rounded-2xl border border-black/[0.04] bg-[#f7f7f6] px-5 py-7 dark:border-white/[0.06] dark:bg-[#0a0a0a]">
+      <div className="grid w-full place-items-center px-5 py-7">
         <div
           className="tms"
           style={{ "--tms-r": `${CORNER}px` } as CSSProperties}
@@ -113,10 +113,7 @@ export default function Demo() {
         </div>
       </div>
 
-      <p
-        id={hintId}
-        className="mt-2 text-center text-xs text-zinc-500 dark:text-zinc-400"
-      >
+      <p id={hintId} className="sr-only">
         拖动标尺选择时间，甩动后停在最近的 15 分钟。方向键可微调。
       </p>
     </div>

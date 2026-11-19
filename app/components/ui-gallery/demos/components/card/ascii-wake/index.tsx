@@ -85,7 +85,7 @@ export default function Demo() {
   }
 
   return (
-    <div className="w-full max-w-[456px] rounded-[28px] bg-[#f1f2f2] p-6 dark:bg-[#171717]">
+    <div className="w-full max-w-[456px] p-6">
       <div
         ref={surfaceRef}
         className="asc relative aspect-[3/2] w-[360px] max-w-full cursor-crosshair touch-none select-none [-webkit-tap-highlight-color:transparent]"

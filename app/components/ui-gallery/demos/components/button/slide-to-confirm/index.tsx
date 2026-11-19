@@ -384,7 +384,7 @@ export default function Demo() {
     <div className="slide-demo w-full max-w-[340px]">
       <style>{SLIDE_CSS}</style>
 
-      <div className="grid h-[180px] w-full place-items-center rounded-2xl border border-black/[0.04] bg-[#f7f7f6] dark:border-white/[0.06] dark:bg-[#0a0a0a]">
+      <div className="grid h-[180px] w-full place-items-center">
         <div className="sld" style={{ width: WIDTH, height: HEIGHT }}>
           <div
             ref={trackRef}
@@ -451,10 +451,6 @@ export default function Demo() {
           </div>
         </div>
       </div>
-
-      <p className="mt-2 text-center text-xs text-zinc-500 dark:text-zinc-400">
-        拖动滑块，或聚焦后按 Enter / Space 确认。
-      </p>
 
       <p className="sr-only" aria-live="polite" aria-atomic="true">
         {live}

@@ -177,7 +177,7 @@ export default function Demo() {
 
   return (
     <div className="w-full max-w-[528px] select-none">
-      <div className="rounded-[28px] bg-[#f1f2f2] p-6 dark:bg-[#171717]">
+      <div className="p-6">
         <canvas
           ref={canvasRef}
           width={FIELD_WIDTH}

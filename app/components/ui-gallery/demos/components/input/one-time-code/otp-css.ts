@@ -26,11 +26,13 @@ export const OTP_CSS = `
   top: 0;
   left: 0;
   height: 100%;
-  background: #fff;
+  background: #f7f7f6;
+  box-shadow: inset 0 0 0 1px rgba(23, 24, 26, 0.12);
 }
 
 .dark .otp-demo .otp-cell {
   background: #262626;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .otp-demo .otp-slot {

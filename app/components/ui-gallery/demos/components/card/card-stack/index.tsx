@@ -253,7 +253,7 @@ export default function CardStack() {
         ref={boardRef}
         role="group"
         aria-label="Card stack"
-        className="pointer-events-none relative w-full touch-manipulation rounded-[28px] bg-[#f1f2f2] [-webkit-tap-highlight-color:transparent] [container-type:inline-size] dark:bg-[#171717]"
+        className="pointer-events-none relative w-full touch-manipulation [-webkit-tap-highlight-color:transparent] [container-type:inline-size]"
         style={{ aspectRatio: `${BOARD_WIDTH} / ${BOARD_HEIGHT}` }}
         onPointerOver={() => {
           if (!hovered) setHovered(true);

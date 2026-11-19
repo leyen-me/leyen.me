@@ -61,7 +61,7 @@ export default function Demo() {
   const length = Math.max(1, String(value).length);
 
   return (
-    <div className="roll-demo flex w-full max-w-[360px] items-center justify-center rounded-[28px] bg-[#f1f2f2] px-6 py-14 dark:bg-[#171717]">
+    <div className="roll-demo flex w-full max-w-[360px] items-center justify-center px-6 py-14">
       <style>{ROLLING_COUNTER_CSS}</style>
 
       <div

@@ -98,7 +98,4 @@ export const galleryLoaders: Record<string, ComponentType> = {
   "components/input/upload-dropzone": dynamic(() =>
     import("@/app/components/ui-gallery/demos/components/input/upload-dropzone/index")
   ),
-  "components/input/voice-note": dynamic(() =>
-    import("@/app/components/ui-gallery/demos/components/input/voice-note/index")
-  ),
 };

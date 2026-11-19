@@ -286,25 +286,9 @@ export default function Demo() {
     marginBottom: -grow,
   } as CSSProperties;
 
-  const caption =
-    phase === "work"
-      ? "Refreshing\u2026"
-      : phase === "hold"
-        ? armed
-          ? "Release to refresh"
-          : "Keep pulling"
-        : "Pull down, or press Enter to refresh";
-
   return (
     <div className="flex w-full flex-col items-center justify-center px-2 py-6">
       <style>{`@keyframes ptr-spin { to { rotate: 360deg } }`}</style>
-
-      <p
-        aria-hidden="true"
-        className="mb-3 text-xs text-zinc-500 dark:text-zinc-400"
-      >
-        {caption}
-      </p>
 
       <div className="relative w-[300px] max-w-full">
         <div

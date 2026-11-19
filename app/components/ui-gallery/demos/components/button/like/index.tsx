@@ -37,13 +37,13 @@ export default function Demo() {
     <div className="like-demo w-[240px] max-w-full">
       <style>{LIKE_CSS}</style>
 
-      <div className="grid h-[130px] w-full place-items-center rounded-2xl border border-black/[0.04] bg-[#f7f7f6] dark:border-white/[0.06] dark:bg-[#0a0a0a]">
+      <div className="grid h-[130px] w-full place-items-center">
         <button
           type="button"
           aria-pressed={liked}
           aria-label={`${liked ? "Unlike" : "Like"}. ${count.toLocaleString("en-US")} likes`}
           onClick={handleClick}
-          className="like-button flex h-11 items-center gap-2 rounded-[22px] bg-white pl-4 pr-5 text-base font-medium tracking-[-0.01em] text-[#17181a] transition duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] [-webkit-tap-highlight-color:transparent] hover:bg-[#fcfcfc] active:scale-[0.96] dark:bg-[#262626] dark:text-white dark:hover:bg-[#2d2d2d]"
+          className="like-button flex h-11 items-center gap-2 rounded-[22px] bg-white ring-1 ring-black/[0.08] pl-4 pr-5 dark:ring-white/[0.10] text-base font-medium tracking-[-0.01em] text-[#17181a] transition duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] [-webkit-tap-highlight-color:transparent] hover:bg-[#fcfcfc] active:scale-[0.96] dark:bg-[#262626] dark:text-white dark:hover:bg-[#2d2d2d]"
         >
           <span className="relative grid h-5 w-5 place-items-center">
             <span

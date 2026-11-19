@@ -180,7 +180,7 @@ export default function Huddle() {
     <div className="flex w-full justify-center">
       <style>{HUDDLE_CSS}</style>
 
-      <div className="w-full max-w-[340px] rounded-[28px] bg-[#f1f1f0] p-5 dark:bg-[#101010]">
+      <div className="w-full max-w-[340px] p-5">
         <section
           aria-label="Design huddle voice room"
           className="mx-auto w-full select-none rounded-[20px] bg-white p-4 text-zinc-900 ring-1 ring-zinc-200/80 dark:bg-[#17181a] dark:text-zinc-50 dark:ring-zinc-800"

@@ -198,7 +198,7 @@ export default function Demo() {
 
   return (
     <div className="w-full">
-      <div className="swp-stage flex w-full justify-center rounded-[28px] bg-[#f1f2f2] px-5 py-10 dark:bg-[#141414]">
+      <div className="swp-stage flex w-full justify-center px-5 py-10">
         <style>{ASSET_SWAP_CSS}</style>
 
         <div className="swp" data-reduced={reduced ? "true" : undefined}>

@@ -303,7 +303,7 @@ export default function Demo() {
     <div className="flex w-full max-w-[340px] justify-center">
       <style>{UPLOAD_CSS}</style>
 
-      <div className="w-full rounded-2xl bg-[#f7f7f6] p-5 dark:bg-[#0a0a0a]">
+      <div className="w-full p-5">
         <div className="upl-demo" style={shellStyle}>
           <div
             className="upl-zone"

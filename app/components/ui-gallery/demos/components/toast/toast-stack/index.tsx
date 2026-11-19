@@ -94,7 +94,7 @@ export default function ToastStack() {
 
   return (
     <div className="flex w-full justify-center">
-      <div className="w-full max-w-[340px] rounded-3xl bg-[#f7f7f6] p-5 dark:bg-[#0f0f0f]">
+      <div className="w-full max-w-[340px] p-5">
         <div
           role="region"
           aria-label="Notifications"

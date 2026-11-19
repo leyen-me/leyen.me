@@ -266,7 +266,7 @@ export default function Otp({
     <div className="otp-demo w-full max-w-[320px]">
       <style>{OTP_CSS}</style>
 
-      <div className="grid h-[132px] w-full place-items-center rounded-2xl border border-black/[0.04] bg-[#f7f7f6] dark:border-white/[0.06] dark:bg-[#0a0a0a]">
+      <div className="grid h-[132px] w-full place-items-center">
         <div className="otp" data-phase={phase}>
           <label htmlFor={fieldId} className="sr-only">
             {n}-digit verification code
@@ -464,9 +464,7 @@ export default function Otp({
             ? "That code did not match. Try again."
             : phase === "check"
               ? "Checking…"
-              : answer === "Reject"
-                ? "Reject mode: every full code is refused."
-                : `Any ${n} digits will be accepted.`}
+              : ""}
       </p>
     </div>
   );

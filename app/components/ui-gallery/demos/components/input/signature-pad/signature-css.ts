@@ -11,7 +11,7 @@ export const SIGNATURE_CSS = `
   --sig-ink: #17181a;
   --sig-blue: #2446d8;
   --sig-signal: #2231dd;
-  --sig-edge: rgba(23, 24, 26, 0.08);
+  --sig-edge: rgba(23, 24, 26, 0.14);
   --sig-green: #1f9d55;
 }
 .dark .sig-demo {

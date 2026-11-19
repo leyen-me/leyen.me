@@ -336,7 +336,7 @@ export default function Demo() {
     <div className="seek-demo flex w-full justify-center">
       <style dangerouslySetInnerHTML={{ __html: SEARCH_CSS }} />
 
-      <div className="flex min-h-[420px] w-full max-w-[340px] flex-col items-center rounded-2xl border border-zinc-200/80 bg-[#f7f7f6] px-4 pb-5 pt-10 dark:border-zinc-800 dark:bg-[#0a0a0a]">
+      <div className="flex min-h-[420px] w-full max-w-[340px] flex-col items-center px-4 pb-5 pt-10">
         <div
           ref={frameRef}
           className="sek"
@@ -468,22 +468,7 @@ export default function Demo() {
                     submittedMatches === 1 ? "" : "s"
                   } for “${submitted}”`}
             </p>
-          ) : (
-            <p className="text-[11px] text-[#85847e] dark:text-[#6b6b6b]">
-              Try{" "}
-              <kbd className="rounded border border-[#17181a]/10 px-1 py-0.5 font-sans text-[10px] dark:border-white/10">
-                mo
-              </kbd>
-              ,{" "}
-              <kbd className="rounded border border-[#17181a]/10 px-1 py-0.5 font-sans text-[10px] dark:border-white/10">
-                dark
-              </kbd>{" "}
-              or{" "}
-              <kbd className="rounded border border-[#17181a]/10 px-1 py-0.5 font-sans text-[10px] dark:border-white/10">
-                focus
-              </kbd>
-            </p>
-          )}
+          ) : null}
         </div>
 
         <p className="sr-only" aria-live="polite" aria-atomic="true">

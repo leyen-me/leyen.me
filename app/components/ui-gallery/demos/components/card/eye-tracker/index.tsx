@@ -230,7 +230,7 @@ export default function EyeTracker() {
   return (
     <div
       ref={cardRef}
-      className="relative w-full max-w-[380px] rounded-[28px] bg-[#f1f1f0] p-8 dark:bg-[#171717]"
+      className="relative w-full max-w-[380px] p-8"
     >
       <style>{`
 @keyframes eyet-caret { 50% { opacity: 0; } }
@@ -253,7 +253,7 @@ export default function EyeTracker() {
           <svg
             viewBox="0 0 100 100"
             aria-hidden="true"
-            className="block h-full w-full origin-center overflow-visible transition-transform duration-[420ms] ease-[cubic-bezier(.24,1.34,.38,1)] group-active:scale-[.96] group-active:duration-[160ms] group-active:ease-linear motion-reduce:transition-none"
+            className="block h-full w-full origin-center overflow-visible drop-shadow-[0_1px_3px_rgba(23,24,26,0.14)] transition-transform duration-[420ms] ease-[cubic-bezier(.24,1.34,.38,1)] group-active:scale-[.96] group-active:duration-[160ms] group-active:ease-linear motion-reduce:transition-none dark:drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
           >
             <defs>
               <clipPath id={clipId}>
