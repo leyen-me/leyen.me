@@ -6,6 +6,7 @@ const meta = {
   tags: ["gradient", "hover", "css-only", "cta"],
   status: "ready",
   featured: true,
+  hidden: true,
   createdAt: "2026-11-19",
   source: { label: "Original", license: "MIT" },
   requires: ["lucide-react"],

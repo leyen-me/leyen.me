@@ -28,6 +28,11 @@ export type GalleryMeta = {
   featured?: boolean;
   /** YYYY-MM-DD，缺省时使用目录创建时间 */
   createdAt?: string;
+  /**
+   * 仅作参考示例保留，不进入 gallery 列表、路由与打包产物。
+   * 适合给 agent 看的示例作品。
+   */
+  hidden?: boolean;
   source: GallerySource;
   /** 依赖声明，只能是 package.json 中已安装的包 */
   requires?: string[];

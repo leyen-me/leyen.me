@@ -79,7 +79,19 @@ export default function UiOverviewPage({
         resultCount={items.length}
       />
 
-      <GalleryGrid items={items} />
+      <GalleryGrid
+        items={items}
+        emptyTitle={
+          kindCounts.components + kindCounts.blocks === 0
+            ? "作品正在整理中"
+            : undefined
+        }
+        emptyMessage={
+          kindCounts.components + kindCounts.blocks === 0
+            ? "第一批组件与区块马上就来。"
+            : undefined
+        }
+      />
     </div>
   );
 }

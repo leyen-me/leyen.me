@@ -5,6 +5,7 @@ const meta = {
   summary: "指针跟随光斑卡片，基于 CSS 变量 + mousemove，零额外渲染。",
   tags: ["hover", "mouse", "css-vars", "card"],
   status: "ready",
+  hidden: true,
   createdAt: "2026-11-19",
   source: { label: "Original", license: "MIT" },
   requires: [],

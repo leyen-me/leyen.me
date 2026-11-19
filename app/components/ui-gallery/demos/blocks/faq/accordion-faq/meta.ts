@@ -5,6 +5,7 @@ const meta = {
   summary: "基于原生 details 的问答折叠区，零 JS、可键盘操作。",
   tags: ["faq", "accordion", "css-only", "a11y"],
   status: "ready",
+  hidden: true,
   createdAt: "2026-11-19",
   source: { label: "Original", license: "MIT" },
   requires: [],

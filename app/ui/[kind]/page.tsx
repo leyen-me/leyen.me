@@ -69,7 +69,13 @@ export default function UiKindPage({
         resultCount={items.length}
       />
 
-      <GalleryGrid items={items} />
+      <GalleryGrid
+        items={items}
+        emptyTitle={baseItems.length === 0 ? "作品正在整理中" : undefined}
+        emptyMessage={
+          baseItems.length === 0 ? "第一批组件与区块马上就来。" : undefined
+        }
+      />
     </div>
   );
 }

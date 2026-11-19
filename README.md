@@ -188,6 +188,7 @@ Rules enforced by the sync script:
 - `kind` / `category` must exist in `lib/ui-gallery/categories.ts`.
 - Demo code must be self-contained: no imports from `@/...` project aliases.
 - Every third-party package used must be installed and declared in `meta.requires`.
+- `meta.hidden: true` keeps an item in the repository for reference (still validated) but removes it from listings, routes, and the client bundle. The seeded examples are hidden this way.
 
 `components` render directly on the page; `blocks` render in an isolated iframe under `/ui/preview/...` so their styles and full-width layouts cannot leak into the site.
 

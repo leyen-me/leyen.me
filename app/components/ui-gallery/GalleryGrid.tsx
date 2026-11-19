@@ -4,18 +4,15 @@ import { GalleryCard } from "./GalleryCard";
 
 export function GalleryGrid({
   items,
+  emptyTitle = "没有找到作品",
   emptyMessage = "换一个关键词或分类试试。",
 }: {
   items: GalleryItem[];
+  emptyTitle?: string;
   emptyMessage?: string;
 }) {
   if (items.length === 0) {
-    return (
-      <EmptyState
-        title="没有找到作品"
-        message={emptyMessage}
-      />
-    );
+    return <EmptyState title={emptyTitle} message={emptyMessage} />;
   }
 
   return (

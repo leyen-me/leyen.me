@@ -5,6 +5,7 @@ const meta = {
   summary: "带成功、失败与重试状态的复制按钮，定时器安全清理。",
   tags: ["clipboard", "feedback", "state", "a11y"],
   status: "ready",
+  hidden: true,
   createdAt: "2026-11-19",
   source: { label: "Original", license: "MIT" },
   requires: ["lucide-react"],

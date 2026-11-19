@@ -5,6 +5,7 @@ const meta = {
   summary: "胶囊形悬浮导航，磨砂背景 + 主动项高亮，移动端折叠。",
   tags: ["navbar", "glass", "responsive", "navigation"],
   status: "ready",
+  hidden: true,
   createdAt: "2026-11-19",
   source: { label: "Original", license: "MIT" },
   requires: ["lucide-react"],

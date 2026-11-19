@@ -20,6 +20,8 @@ explaining them away.
 - [ ] `tags` are 2–5 lowercase kebab-case values.
 - [ ] `status` is `ready` only after full verification, otherwise `wip`.
 - [ ] `featured` is `false` unless the user explicitly asked.
+- [ ] `hidden` is not set on work the user asked to publish; it is only for
+      reference examples kept in the repository.
 - [ ] `createdAt` is today in `YYYY-MM-DD`.
 - [ ] `source.label` is present; adapted work includes `url` and `license`.
 - [ ] `requires` lists every external package actually imported and nothing

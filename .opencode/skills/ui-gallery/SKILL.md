@@ -153,6 +153,9 @@ export default meta;
 - `status`: `"wip"` while incomplete; promote to `"ready"` only after both
   themes and responsive layouts are verified.
 - `featured`: leave `false`; do not self-promote. Only the user marks featured.
+- `hidden`: set `true` only for reference-only examples. The sync script still
+  validates the item, but excludes it from the gallery listing, routes, and
+  client bundle. Never hide an item the user asked to ship.
 - `source.label` is required. Use `"Original"` for original work, or
   `"Inspired by <site>"` with `url` and `license` when adapting.
 - `requires`: exact package names only, e.g. `["lucide-react"]`.
