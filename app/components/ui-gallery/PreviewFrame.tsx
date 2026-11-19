@@ -56,6 +56,12 @@ export function PreviewFrame({ src, title, reloadKey }: PreviewFrameProps) {
     sendTheme();
   }, [sendTheme]);
 
+  /**
+   * 这里刻意不设置 sandbox：demo 都是本仓库第一方代码，且需要同源
+   * 的 postMessage、next-themes 与字体资源。`allow-scripts` 与
+   * `allow-same-origin` 同时存在时浏览器会告警「可逃逸沙箱」，
+   * 既然内容可信，直接省略沙箱以免留下无意义的虚假安全感。
+   */
   return (
     <iframe
       ref={iframeRef}
@@ -64,7 +70,6 @@ export function PreviewFrame({ src, title, reloadKey }: PreviewFrameProps) {
       title={title}
       loading="lazy"
       onLoad={sendTheme}
-      sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
       allow="clipboard-write"
       className="block w-full border-0 bg-transparent"
       style={{ height }}
