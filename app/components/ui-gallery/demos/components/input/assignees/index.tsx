@@ -73,7 +73,7 @@ export default function Demo() {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const listId = `pik-list-${uid}`;
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [selected, setSelected] = useState<string[]>([...INITIAL_IDS]);
   const [live, setLive] = useState("");
 
