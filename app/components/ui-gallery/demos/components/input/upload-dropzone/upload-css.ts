@@ -38,10 +38,6 @@ export const UPLOAD_CSS = `
   --upl-red: #ff6369;
 }
 
-.dark .upl-zone {
-  box-shadow: 0 20px 40px -28px rgba(0, 0, 0, 0.7);
-}
-
 .upl-input {
   position: absolute;
   width: 1px;
@@ -75,10 +71,8 @@ export const UPLOAD_CSS = `
   height: 176px;
   padding: 0 16px;
   border-radius: var(--upl-r);
+  border: 1px solid color-mix(in srgb, var(--upl-ink) 10%, transparent);
   background: var(--upl-slab);
-  box-shadow:
-    0 1px 2px rgba(23, 24, 26, 0.06),
-    0 20px 40px -28px rgba(23, 24, 26, 0.25);
   overflow: hidden;
   transition:
     scale 0.42s cubic-bezier(0.24, 1.34, 0.38, 1),

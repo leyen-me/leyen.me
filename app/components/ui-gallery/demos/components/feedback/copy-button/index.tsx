@@ -37,7 +37,7 @@ export default function Demo() {
           type="button"
           onClick={handleCopy}
           aria-live="polite"
-          className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-white px-3 text-xs font-medium text-zinc-700 shadow-sm ring-1 ring-zinc-200 transition hover:text-zinc-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:bg-zinc-800 dark:text-zinc-200 dark:ring-zinc-700 dark:hover:text-white"
+          className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-white px-3 text-xs font-medium text-zinc-700 ring-1 ring-zinc-200 transition hover:text-zinc-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:bg-zinc-800 dark:text-zinc-200 dark:ring-zinc-700 dark:hover:text-white"
         >
           {state === "copied" ? (
             <>

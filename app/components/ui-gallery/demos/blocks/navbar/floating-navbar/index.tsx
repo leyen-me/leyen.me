@@ -14,7 +14,7 @@ export default function Demo() {
       <header className="mx-auto max-w-3xl">
         <nav
           aria-label="Primary"
-          className="flex items-center justify-between gap-4 rounded-full border border-zinc-200 bg-white/80 p-2 pl-4 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/70"
+          className="flex items-center justify-between gap-4 rounded-full border border-zinc-200 bg-white/80 p-2 pl-4 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/70"
         >
           <a href="#" className="flex shrink-0 items-center gap-2">
             <span className="grid h-7 w-7 place-items-center rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900">
@@ -67,7 +67,7 @@ export default function Demo() {
         {open && (
           <ul
             id="floating-navbar-menu"
-            className="mt-3 space-y-1 rounded-2xl border border-zinc-200 bg-white p-2 shadow-lg md:hidden dark:border-zinc-800 dark:bg-zinc-900"
+            className="mt-3 space-y-1 rounded-2xl border border-zinc-200 bg-white p-2 md:hidden dark:border-zinc-800 dark:bg-zinc-900"
           >
             {links.map((link) => (
               <li key={link}>

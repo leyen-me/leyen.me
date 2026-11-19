@@ -216,7 +216,7 @@ export default function Demo() {
 
         {open ? (
           <div
-            className="pik-anim-card absolute left-0 right-0 z-[1] origin-top-left bg-white shadow-[0_14px_34px_-18px_rgba(23,24,26,0.4)] ring-1 ring-inset ring-black/[0.08] dark:bg-[#0e0f11] dark:shadow-[0_14px_34px_-18px_rgba(0,0,0,0.8)] dark:ring-white/[0.1]"
+            className="pik-anim-card absolute left-0 right-0 z-[1] origin-top-left bg-white ring-1 ring-inset ring-black/[0.08] dark:bg-[#0e0f11] dark:ring-white/[0.1]"
             style={{
               top: CARD_TOP,
               padding: CARD_PAD,

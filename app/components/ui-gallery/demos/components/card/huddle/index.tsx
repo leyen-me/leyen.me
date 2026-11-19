@@ -302,7 +302,7 @@ export default function Huddle() {
                 id={menuId}
                 role="group"
                 aria-label="Huddle options"
-                className="absolute bottom-full right-0 z-10 mb-2 w-44 rounded-xl border border-zinc-200 bg-white p-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-800"
+                className="absolute bottom-full right-0 z-10 mb-2 w-44 rounded-xl border border-zinc-200 bg-white p-1 dark:border-zinc-700 dark:bg-zinc-800"
               >
                 <button
                   type="button"

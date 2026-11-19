@@ -280,9 +280,6 @@ export default function Demo() {
               fill="none"
               stroke="#fff"
               strokeWidth={2}
-              style={{
-                filter: "drop-shadow(0 0 6px rgba(255, 255, 255, 0.5))",
-              }}
             />
           </svg>
 
@@ -292,7 +289,7 @@ export default function Demo() {
             style={{ left: split }}
           >
             <span
-              className={`absolute left-1/2 top-1/2 grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[#f7f7f6] text-[#17181a] shadow-[0_2px_12px_rgba(23,24,26,0.25)] transition-transform duration-[220ms] ease-[cubic-bezier(0.24,1.34,0.38,1)] motion-reduce:transition-none dark:bg-[#0a0a0a] dark:text-white ${
+              className={`absolute left-1/2 top-1/2 grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[#f7f7f6] text-[#17181a] transition-transform duration-[220ms] ease-[cubic-bezier(0.24,1.34,0.38,1)] motion-reduce:transition-none dark:bg-[#0a0a0a] dark:text-white ${
                 held ? "scale-90" : "group-hover:scale-[1.08]"
               }`}
             >

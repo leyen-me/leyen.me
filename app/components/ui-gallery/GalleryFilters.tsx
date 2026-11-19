@@ -109,7 +109,7 @@ export function GalleryFilters({
                   aria-selected={active}
                   className={`inline-flex h-8 items-center rounded-full px-4 text-sm transition-colors ${
                     active
-                      ? "bg-white font-medium text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-white"
+                      ? "bg-white font-medium text-zinc-900 dark:bg-zinc-800 dark:text-white"
                       : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
                   }`}
                 >

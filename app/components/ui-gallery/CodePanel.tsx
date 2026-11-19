@@ -65,7 +65,7 @@ export function CodePanel({ files }: { files: GalleryFile[] }) {
               onClick={() => setActivePath(file.path)}
               className={`rounded-lg px-2.5 py-1.5 font-mono text-xs transition-colors ${
                 file.path === active.path
-                  ? "bg-white text-zinc-900 shadow-sm ring-1 ring-black/5 dark:bg-zinc-800 dark:text-white dark:ring-white/10"
+                  ? "bg-white text-zinc-900 ring-1 ring-black/5 dark:bg-zinc-800 dark:text-white dark:ring-white/10"
                   : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
               }`}
             >

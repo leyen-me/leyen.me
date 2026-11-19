@@ -338,8 +338,8 @@ export default function CardStack() {
                 data-lift={lifted || undefined}
                 className={`absolute inset-0 block overflow-hidden bg-[#fbfaf7] [backface-visibility:hidden] dark:bg-[#1b1c1e] ${
                   lifted
-                    ? "shadow-[inset_0_1px_rgba(255,255,255,0.08),inset_0_0_0_1px_rgba(255,255,255,0.043),0_2px_5px_rgba(15,23,42,0.12),0_18px_32px_-10px_rgba(15,23,42,0.28)] transition-[translate,box-shadow] delay-[15ms] duration-[300ms] ease-[cubic-bezier(0.2,0.7,0.3,1)] dark:shadow-[inset_0_1px_rgba(255,255,255,0.1),inset_0_0_0_1px_rgba(255,255,255,0.07),0_2px_5px_rgba(0,0,0,0.45),0_18px_32px_-10px_rgba(0,0,0,0.7)]"
-                    : "shadow-[inset_0_1px_rgba(255,255,255,0.07),inset_0_0_0_1px_rgba(255,255,255,0.035),0_1px_2px_rgba(15,23,42,0.1),0_8px_18px_-6px_rgba(15,23,42,0.16)] transition-[translate,box-shadow] duration-[480ms] ease-[cubic-bezier(0.4,0,0.2,1)] dark:shadow-[inset_0_1px_rgba(255,255,255,0.08),inset_0_0_0_1px_rgba(255,255,255,0.05),0_1px_2px_rgba(0,0,0,0.4),0_8px_18px_-6px_rgba(0,0,0,0.55)]"
+                    ? "ring-1 ring-inset ring-zinc-900/10 transition-[translate] delay-[15ms] duration-[300ms] ease-[cubic-bezier(0.2,0.7,0.3,1)] dark:ring-white/15"
+                    : "ring-1 ring-inset ring-zinc-900/10 transition-[translate] duration-[480ms] ease-[cubic-bezier(0.4,0,0.2,1)] dark:ring-white/15"
                 }`}
                 style={{
                   borderRadius: cqw(CORNER),
@@ -377,13 +377,13 @@ export default function CardStack() {
               className="absolute inset-0 [transform-style:preserve-3d] transition-transform duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
             >
               <span
-                className="absolute inset-0 block overflow-hidden bg-[#fbfaf7] shadow-[inset_0_1px_rgba(255,255,255,0.08),inset_0_0_0_1px_rgba(255,255,255,0.043),0_4px_10px_rgba(15,23,42,0.12),0_28px_48px_-16px_rgba(15,23,42,0.32)] [backface-visibility:hidden] dark:bg-[#1b1c1e] dark:shadow-[inset_0_1px_rgba(255,255,255,0.1),inset_0_0_0_1px_rgba(255,255,255,0.06),0_4px_10px_rgba(0,0,0,0.45),0_28px_48px_-16px_rgba(0,0,0,0.75)]"
+                className="absolute inset-0 block overflow-hidden bg-[#fbfaf7] ring-1 ring-inset ring-zinc-900/10 [backface-visibility:hidden] dark:bg-[#1b1c1e] dark:ring-white/15"
                 style={{ borderRadius: cqw(VIEW_RADIUS) }}
               >
                 <CardArt index={viewing.id} />
               </span>
               <span
-                className="absolute inset-0 block overflow-hidden bg-[#fbfaf7] shadow-[inset_0_1px_rgba(255,255,255,0.08),inset_0_0_0_1px_rgba(255,255,255,0.043),0_4px_10px_rgba(15,23,42,0.12),0_28px_48px_-16px_rgba(15,23,42,0.32)] [backface-visibility:hidden] [transform:rotateY(180deg)] dark:bg-[#1b1c1e] dark:shadow-[inset_0_1px_rgba(255,255,255,0.1),inset_0_0_0_1px_rgba(255,255,255,0.06),0_4px_10px_rgba(0,0,0,0.45),0_28px_48px_-16px_rgba(0,0,0,0.75)]"
+                className="absolute inset-0 block overflow-hidden bg-[#fbfaf7] ring-1 ring-inset ring-zinc-900/10 [backface-visibility:hidden] [transform:rotateY(180deg)] dark:bg-[#1b1c1e] dark:ring-white/15"
                 style={{ borderRadius: cqw(VIEW_RADIUS) }}
               >
                 <CardArt index={viewing.id} />
