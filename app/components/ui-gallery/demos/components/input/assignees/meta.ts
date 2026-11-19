@@ -3,8 +3,8 @@ import type { GalleryMeta } from "@/lib/ui-gallery/types";
 const meta = {
   title: "Assignees",
   summary:
-    "多人指派选择器：胶囊里的头像随选择逐格增宽，下拉卡按 48px 行距列出成员，支持搜索过滤、勾选状态、键盘操作与可移除的已选标签。",
-  tags: ["multi-select", "combobox", "avatars", "search", "keyboard"],
+    "多人指派选择器：胶囊里的渐变头像随选择逐格增宽，下拉卡按 48px 行距列出成员并显示勾选状态。",
+  tags: ["multi-select", "listbox", "avatars", "keyboard"],
   status: "ready",
   featured: false,
   previewHeight: 420,

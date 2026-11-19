@@ -38,6 +38,10 @@ export const UPLOAD_CSS = `
   --upl-red: #ff6369;
 }
 
+.dark .upl-zone {
+  box-shadow: 0 20px 40px -28px rgba(0, 0, 0, 0.7);
+}
+
 .upl-input {
   position: absolute;
   width: 1px;
@@ -50,8 +54,18 @@ export const UPLOAD_CSS = `
   border: 0;
 }
 
+.upl-zone-wrap {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  height: 176px;
+}
+
 .upl-zone {
   position: relative;
+  flex: none;
+  align-self: center;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -62,9 +76,14 @@ export const UPLOAD_CSS = `
   padding: 0 16px;
   border-radius: var(--upl-r);
   background: var(--upl-slab);
+  box-shadow:
+    0 1px 2px rgba(23, 24, 26, 0.06),
+    0 20px 40px -28px rgba(23, 24, 26, 0.25);
   overflow: hidden;
   transition:
     scale 0.42s cubic-bezier(0.24, 1.34, 0.38, 1),
+    width 0.42s cubic-bezier(0.24, 1.34, 0.38, 1),
+    height 0.42s cubic-bezier(0.24, 1.34, 0.38, 1),
     background-color 0.22s ease;
 }
 .upl-zone[data-over] {
@@ -79,28 +98,6 @@ export const UPLOAD_CSS = `
 }
 .upl-zone[data-shake] {
   animation: upl-shake 0.42s ease;
-}
-
-.upl-dash {
-  position: absolute;
-  inset: 0.5px;
-  width: calc(100% - 1px);
-  height: calc(100% - 1px);
-  pointer-events: none;
-}
-.upl-dash rect {
-  fill: none;
-  stroke: color-mix(in srgb, var(--upl-ink) 26%, transparent);
-  stroke-width: 1;
-  stroke-dasharray: 5 6;
-  transition: stroke 0.22s ease;
-}
-.upl-zone[data-over] .upl-dash rect {
-  stroke: var(--upl-signal);
-  animation: upl-march 700ms linear infinite;
-}
-.upl-zone[data-refuse] .upl-dash rect {
-  stroke: var(--upl-red);
 }
 
 .upl-pick {
@@ -172,6 +169,7 @@ export const UPLOAD_CSS = `
   gap: 12px;
   width: max-content;
   max-width: 100%;
+  min-height: 49.5px;
   flex: none;
   animation: upl-land 0.42s var(--upl-spring) both;
 }
@@ -219,10 +217,6 @@ export const UPLOAD_CSS = `
   background: var(--upl-signal);
   transform-origin: 0 50%;
 }
-.upl-zone[data-phase="cancelled"] .upl-bar {
-  background: color-mix(in srgb, var(--upl-ink) 28%, var(--upl-slab));
-}
-
 .upl-roll {
   display: inline-flex;
   height: 1em;
@@ -255,6 +249,7 @@ export const UPLOAD_CSS = `
   flex: none;
   align-items: center;
   gap: 4px;
+  min-width: 22px;
   min-height: 32px;
 }
 .upl-tick {

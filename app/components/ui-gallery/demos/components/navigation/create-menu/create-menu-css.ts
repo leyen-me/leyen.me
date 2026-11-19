@@ -8,7 +8,7 @@ export const CREATE_MENU_CSS = `
   --crt-slab: #ffffff;
   --crt-on-slab: #17181a;
   --crt-on-slab-rgb: 23 24 26;
-  --crt-edge: rgba(23, 24, 26, 0.1);
+  --crt-edge: rgba(23, 24, 26, 0.14);
   --pill-w: 120px;
   --pill-h: 38px;
   --panel-w: 212px;
@@ -24,7 +24,7 @@ export const CREATE_MENU_CSS = `
   --crt-slab: #262626;
   --crt-on-slab: #ffffff;
   --crt-on-slab-rgb: 255 255 255;
-  --crt-edge: rgba(255, 255, 255, 0.12);
+  --crt-edge: rgba(255, 255, 255, 0.16);
 }
 
 .crt-demo .crt-defs {
@@ -55,7 +55,6 @@ export const CREATE_MENU_CSS = `
   inset: 0;
   margin: auto;
   background: var(--crt-slab);
-  box-shadow: 0 0 0 1px var(--crt-edge);
   transition: scale 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 

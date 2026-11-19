@@ -101,12 +101,11 @@ export const galleryCatalog: GalleryItem[] = [
     "category": "input",
     "slug": "assignees",
     "title": "Assignees",
-    "summary": "多人指派选择器：胶囊里的头像随选择逐格增宽，下拉卡按 48px 行距列出成员，支持搜索过滤、勾选状态、键盘操作与可移除的已选标签。",
+    "summary": "多人指派选择器：胶囊里的渐变头像随选择逐格增宽，下拉卡按 48px 行距列出成员并显示勾选状态。",
     "tags": [
       "multi-select",
-      "combobox",
+      "listbox",
       "avatars",
-      "search",
       "keyboard"
     ],
     "status": "ready",
@@ -898,7 +897,7 @@ export const galleryCatalog: GalleryItem[] = [
     "category": "input",
     "slug": "upload-dropzone",
     "title": "Upload Dropzone",
-    "summary": "虚线拖拽区在文件悬停时点亮、缩放并让虚线行进；拖入后原地展开文件名、尺寸、滚动百分比与进度条，可取消、重试或移除，超过 5 MB 会被晃动着拒绝。",
+    "summary": "拖入文件后白卡收缩成文件行，滚动百分比推进，完成后显示勾选并在 1.5 秒后回到拖拽状态；超过 5 MB 会被晃动着拒绝。",
     "tags": [
       "upload",
       "drag",

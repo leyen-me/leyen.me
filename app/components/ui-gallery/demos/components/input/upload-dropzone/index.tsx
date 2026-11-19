@@ -6,10 +6,11 @@ import {
   type DragEvent as ReactDragEvent,
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
-import { CheckIcon, CloseIcon, PageIcon, RetryIcon, UploadIcon } from "./icons";
+import { CheckIcon, PageIcon, UploadIcon } from "./icons";
 import { UPLOAD_CSS } from "./upload-css";
 import {
   BOUNCE,
@@ -39,7 +40,7 @@ const GULP_MS = 460;
 const REFUSAL_MS = 1800;
 const FORGET_MS = 8000;
 
-type Phase = "idle" | "uploading" | "done" | "cancelled";
+type Phase = "idle" | "uploading" | "done";
 
 /**
  * A port of Bencho's "Upload dropzone" (Drag, `upload-dropzone`).
@@ -50,10 +51,10 @@ type Phase = "idle" | "uploading" | "done" | "cancelled";
  * sheet icon, name, size, rolling percent and a 4 px bar. Anything larger is
  * refused in place, with the block's exact retort cycle.
  *
- * Gallery additions: the zone is a real button opening a hidden file input,
- * the tray sheets can also be clicked or dropped (native drag), and a cancelled
- * upload keeps its row so it can be retried or removed. Uploads are simulated
- * with requestAnimationFrame; no network, no real progress event.
+ * The card animates down around the file row while busy and returns to the
+ * 300 × 176 drop target 1.5 s after the tick appears, exactly like the source.
+ * Gallery additions: the zone opens a hidden file input and the tray sheets
+ * are keyboard-operable. Uploads are simulated with requestAnimationFrame.
  */
 export default function Demo() {
   const reduced = usePrefersReducedMotion();
@@ -72,14 +73,13 @@ export default function Demo() {
   const gulpTimer = useRef<number | undefined>(undefined);
   const refusalTimer = useRef<number | undefined>(undefined);
   const forgetTimer = useRef<number | undefined>(undefined);
+  const resetTimer = useRef<number | undefined>(undefined);
   const dragDepth = useRef(0);
   const refusals = useRef(0);
   const fileId = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  const pickRef = useRef<HTMLButtonElement>(null);
-  const retryRef = useRef<HTMLButtonElement>(null);
-  const cancelRef = useRef<HTMLButtonElement>(null);
-  const removeRef = useRef<HTMLButtonElement>(null);
+  const zoneRef = useRef<HTMLDivElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
 
   const busy = phase === "uploading";
 
@@ -102,19 +102,24 @@ export default function Demo() {
       window.clearTimeout(gulpTimer.current);
       window.clearTimeout(refusalTimer.current);
       window.clearTimeout(forgetTimer.current);
+      window.clearTimeout(resetTimer.current);
     },
     [],
   );
 
-  // Cancelling replaces the cancel button with Retry; hand keyboard focus to it
-  // rather than dropping it on the document.
-  useEffect(() => {
-    if (phase === "cancelled") {
-      retryRef.current?.focus({ preventScroll: true });
-    } else if (phase === "done") {
-      removeRef.current?.focus({ preventScroll: true });
+  // The zone shrinks around the file row while busy, then grows back on idle.
+  useLayoutEffect(() => {
+    const zone = zoneRef.current;
+    const row = rowRef.current;
+    if (!zone) return;
+    if (phase === "idle" || !row) {
+      zone.style.width = "";
+      zone.style.height = "";
+      return;
     }
-  }, [phase]);
+    zone.style.width = `${row.offsetWidth + 32}px`;
+    zone.style.height = `${row.offsetHeight + 28}px`;
+  }, [phase, file]);
 
   function stopClock() {
     cancelAnimationFrame(frame.current);
@@ -190,6 +195,12 @@ export default function Demo() {
         setProgress(1);
         setPhase("done");
         setAnnouncement(`${next.name} uploaded.`);
+        window.clearTimeout(resetTimer.current);
+        resetTimer.current = window.setTimeout(() => {
+          setFile(null);
+          setProgress(0);
+          setPhase("idle");
+        }, 1500);
         return;
       }
 
@@ -210,11 +221,6 @@ export default function Demo() {
       ),
     );
 
-    // The picker button is replaced by the file row; keep keyboard focus in the
-    // widget by handing it to the cancel action once the row is mounted.
-    requestAnimationFrame(() =>
-      cancelRef.current?.focus({ preventScroll: true }),
-    );
   }
 
   function openPicker() {
@@ -226,35 +232,6 @@ export default function Demo() {
     // Reset first so re-picking the same file still fires a change event.
     event.target.value = "";
     if (candidate) acceptFile(candidate);
-  }
-
-  function cancelUpload() {
-    stopClock();
-    setPhase("cancelled");
-    setAnnouncement(
-      `Upload cancelled for ${file?.name ?? "file"}. Retry or remove it.`,
-    );
-  }
-
-  function retryUpload() {
-    if (!file) return;
-    startUpload(file);
-    requestAnimationFrame(() =>
-      cancelRef.current?.focus({ preventScroll: true }),
-    );
-  }
-
-  function removeFile() {
-    stopClock();
-    setFile(null);
-    setProgress(0);
-    setPhase("idle");
-    setRefusal(null);
-    setShaking(false);
-    setAnnouncement("File removed.");
-    requestAnimationFrame(() =>
-      pickRef.current?.focus({ preventScroll: true }),
-    );
   }
 
   function handleDragEnter(event: ReactDragEvent<HTMLDivElement>) {
@@ -305,7 +282,9 @@ export default function Demo() {
 
       <div className="w-full p-5">
         <div className="upl-demo" style={shellStyle}>
-          <div
+          <div className="upl-zone-wrap">
+            <div
+              ref={zoneRef}
             className="upl-zone"
             data-phase={phase}
             data-over={over || undefined}
@@ -320,12 +299,8 @@ export default function Demo() {
               if (event.animationName === "upl-shake") setShaking(false);
             }}
           >
-            <svg className="upl-dash" aria-hidden="true">
-              <rect width="100%" height="100%" rx={CORNER - 0.5} />
-            </svg>
-
             {file ? (
-              <div className="upl-now">
+              <div className="upl-now" ref={rowRef}>
                 <PageIcon ext={file.ext} tint={file.tint} size={36} />
 
                 <span className="upl-text">
@@ -337,7 +312,7 @@ export default function Demo() {
                     {phase === "uploading" ? (
                       <RollingPercent value={percent} />
                     ) : (
-                      <span>{phase === "done" ? "Uploaded" : "Cancelled"}</span>
+                      <span>Uploaded</span>
                     )}
                   </span>
                   <span
@@ -357,60 +332,14 @@ export default function Demo() {
 
                 <span className="upl-end">
                   {phase === "done" ? (
-                    <>
-                      <span className="upl-tick">
-                        <CheckIcon />
-                      </span>
-                      <button
-                        ref={removeRef}
-                        type="button"
-                        className="upl-act"
-                        aria-label={`Remove ${file.name}`}
-                        onClick={removeFile}
-                      >
-                        <CloseIcon />
-                      </button>
-                    </>
-                  ) : null}
-
-                  {phase === "uploading" ? (
-                    <button
-                      ref={cancelRef}
-                      type="button"
-                      className="upl-act"
-                      aria-label={`Cancel upload of ${file.name}`}
-                      onClick={cancelUpload}
-                    >
-                      <CloseIcon />
-                    </button>
-                  ) : null}
-
-                  {phase === "cancelled" ? (
-                    <>
-                      <button
-                        ref={retryRef}
-                        type="button"
-                        className="upl-act"
-                        aria-label={`Retry upload of ${file.name}`}
-                        onClick={retryUpload}
-                      >
-                        <RetryIcon />
-                      </button>
-                      <button
-                        type="button"
-                        className="upl-act"
-                        aria-label={`Remove ${file.name}`}
-                        onClick={removeFile}
-                      >
-                        <CloseIcon />
-                      </button>
-                    </>
+                    <span className="upl-tick">
+                      <CheckIcon />
+                    </span>
                   ) : null}
                 </span>
               </div>
             ) : (
               <button
-                ref={pickRef}
                 type="button"
                 className="upl-pick"
                 aria-label={`Choose a file to upload, up to ${MAX_MB} MB`}
@@ -425,6 +354,7 @@ export default function Demo() {
                 </span>
               </button>
             )}
+            </div>
           </div>
 
           {refusal && file ? <p className="upl-error">{refusal}</p> : null}
@@ -436,16 +366,16 @@ export default function Demo() {
                 key={sample.id}
                 data-empty={file?.id === sample.id || undefined}
               >
-                <button
-                  type="button"
+                <div
                   className="upl-file"
                   draggable
-                  aria-label={`${sample.name}, ${formatSize(sample.size)}. Drag into the box to upload, or press Enter.`}
-                  onClick={() => {
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${sample.name}, ${formatSize(sample.size)}. Drag into the box, or press Enter to upload.`}
+                  onKeyDown={(event) => {
+                    if (event.key !== "Enter" && event.key !== " ") return;
+                    event.preventDefault();
                     startUpload(sample);
-                    requestAnimationFrame(() =>
-                      cancelRef.current?.focus({ preventScroll: true }),
-                    );
                   }}
                   onDragStart={(event) => {
                     event.dataTransfer.setData(SAMPLE_MIME, sample.id);
@@ -458,7 +388,7 @@ export default function Demo() {
                 >
                   <PageIcon ext={sample.ext} tint={sample.tint} />
                   <span className="upl-label">{sample.name}</span>
-                </button>
+                </div>
               </div>
             ))}
           </div>

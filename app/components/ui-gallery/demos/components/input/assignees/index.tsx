@@ -45,19 +45,13 @@ const KEYFRAMES = `
   70% { transform: scale(1.08); }
   100% { opacity: 1; transform: scale(1); }
 }
-@keyframes pik-chip-in {
-  0% { opacity: 0; transform: translateY(-4px) scale(0.9); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
 .pik-anim-face { animation: pik-face-in 320ms cubic-bezier(0.24, 1.34, 0.38, 1) both; }
 .pik-anim-card { animation: pik-card-in 300ms cubic-bezier(0.24, 1.34, 0.38, 1) both; }
 .pik-anim-tick { animation: pik-tick-in 220ms cubic-bezier(0.24, 1.34, 0.38, 1) both; }
-.pik-anim-chip { animation: pik-chip-in 240ms cubic-bezier(0.24, 1.34, 0.38, 1) both; }
 @media (prefers-reduced-motion: reduce) {
   .pik-anim-face,
   .pik-anim-card,
-  .pik-anim-tick,
-  .pik-anim-chip { animation: none; }
+  .pik-anim-tick { animation: none; }
   .pik-move { transition: none; }
 }
 `;
@@ -71,31 +65,20 @@ const rowClass =
 /**
  * A 1:1 port of Bencho's "Assignees" picker (slug `picker`): a 44 px pill whose
  * avatar rail widens by one face-step per person, and a card that unfolds below
- * it with 48 px people rows, 18 px check boxes and the block's spring cues.
- *
- * The source only toggles the four faces. The gallery adds the search field,
- * removable chips and a real combobox / listbox keyboard flow around that
- * geometry, because a standalone picker has to be filterable and reversible.
- * Faces are initial-and-gradient discs in place of the block's photos.
+ * it with 48 px people rows and 18 px check boxes. The source has no search
+ * field or removable chips; the four gradient faces are self-contained
+ * replacements for the block's photographs.
  */
 export default function Demo() {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const listId = `pik-list-${uid}`;
-  const inputId = `pik-search-${uid}`;
-  const optionId = useCallback(
-    (id: string) => `pik-opt-${uid}-${id}`,
-    [uid],
-  );
 
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [active, setActive] = useState(0);
   const [selected, setSelected] = useState<string[]>([...INITIAL_IDS]);
   const [live, setLive] = useState("");
 
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const selectedPeople = useMemo(
     () =>
@@ -105,32 +88,9 @@ export default function Demo() {
     [selected],
   );
 
-  const filtered = useMemo(() => {
-    const term = query.trim().toLowerCase();
-    if (!term) return PEOPLE;
-    return PEOPLE.filter((person) =>
-      `${person.name} ${person.role}`.toLowerCase().includes(term),
-    );
-  }, [query]);
-
   const railWidth = selectedPeople.length
     ? FACE + (selectedPeople.length - 1) * FACE_STEP
     : 0;
-
-  useEffect(() => {
-    setActive((index) =>
-      Math.min(index, Math.max(0, filtered.length - 1)),
-    );
-  }, [filtered.length]);
-
-  // Opening focuses the filter; the card's 300 ms scale-up stays untouched.
-  useEffect(() => {
-    if (!open) return;
-    const frame = window.requestAnimationFrame(() =>
-      inputRef.current?.focus({ preventScroll: true }),
-    );
-    return () => window.cancelAnimationFrame(frame);
-  }, [open]);
 
   // Outside pointer closes without stealing focus back.
   useEffect(() => {
@@ -139,8 +99,6 @@ export default function Demo() {
     const handlePointerDown = (event: PointerEvent) => {
       if (rootRef.current?.contains(event.target as Node)) return;
       setOpen(false);
-      setQuery("");
-      setActive(0);
     };
 
     document.addEventListener("pointerdown", handlePointerDown);
@@ -150,15 +108,8 @@ export default function Demo() {
 
   const closeAndReturnFocus = useCallback(() => {
     setOpen(false);
-    setQuery("");
-    setActive(0);
     triggerRef.current?.focus({ preventScroll: true });
   }, []);
-
-  function openMenu() {
-    setOpen(true);
-    setActive(0);
-  }
 
   function toggle(id: string) {
     const person = PEOPLE_BY_ID.get(id);
@@ -180,11 +131,7 @@ export default function Demo() {
   ) {
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      if (open) {
-        inputRef.current?.focus({ preventScroll: true });
-      } else {
-        openMenu();
-      }
+      if (!open) setOpen(true);
       return;
     }
 
@@ -193,40 +140,6 @@ export default function Demo() {
       closeAndReturnFocus();
     }
   }
-
-  function handleSearchKeyDown(
-    event: ReactKeyboardEvent<HTMLInputElement>,
-  ) {
-    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      event.preventDefault();
-      if (!filtered.length) return;
-      const step = event.key === "ArrowDown" ? 1 : -1;
-      setActive(
-        (index) => (index + step + filtered.length) % filtered.length,
-      );
-      return;
-    }
-
-    if ((event.key === "Home" || event.key === "End") && filtered.length) {
-      event.preventDefault();
-      setActive(event.key === "Home" ? 0 : filtered.length - 1);
-      return;
-    }
-
-    if (event.key === "Enter") {
-      event.preventDefault();
-      const person = filtered[Math.min(active, filtered.length - 1)];
-      if (person) toggle(person.id);
-      return;
-    }
-
-    if (event.key === "Escape") {
-      event.preventDefault();
-      closeAndReturnFocus();
-    }
-  }
-
-  const activePerson = filtered[Math.min(active, filtered.length - 1)];
 
   return (
     <div className="flex w-full justify-center">
@@ -246,15 +159,7 @@ export default function Demo() {
               ? `Assignees, ${selectedPeople.length} selected`
               : "Assignees, unassigned"
           }
-          onClick={() => {
-            if (open) {
-              setOpen(false);
-              setQuery("");
-              setActive(0);
-            } else {
-              openMenu();
-            }
-          }}
+          onClick={() => setOpen((value) => !value)}
           onKeyDown={handleTriggerKeyDown}
         >
           <span
@@ -309,124 +214,29 @@ export default function Demo() {
           </svg>
         </button>
 
-        {selectedPeople.length > 0 ? (
-          <ul
-            aria-label="Selected assignees"
-            className="mt-3 flex flex-wrap gap-1.5"
-          >
-            {selectedPeople.map((person) => (
-              <li
-                key={person.id}
-                className="pik-anim-chip inline-flex h-7 items-center gap-1.5 rounded-full bg-white pl-1 pr-1 text-[#17181a] ring-1 ring-inset ring-black/[0.08] dark:bg-[#0e0f11] dark:text-[#f4f3f1] dark:ring-white/[0.1]"
-              >
-                <AssigneeAvatar person={person} size={20} />
-                <span className="text-[12px] font-medium leading-none">
-                  {person.name.split(" ")[0]}
-                </span>
-                <button
-                  type="button"
-                  aria-label={`Remove ${person.name}`}
-                  onClick={() => toggle(person.id)}
-                  className="relative grid h-5 w-5 place-items-center rounded-full text-[#85847e] transition-colors after:absolute after:-inset-1.5 after:rounded-full after:content-[''] hover:bg-black/[0.06] hover:text-[#17181a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:text-[#828282] dark:hover:bg-white/[0.08] dark:hover:text-white"
-                >
-                  <svg
-                    aria-hidden="true"
-                    width="10"
-                    height="10"
-                    viewBox="0 0 10 10"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  >
-                    <path d="M2 2l6 6M8 2 2 8" />
-                  </svg>
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="mt-3 text-[11px] leading-4 text-[#85847e] dark:text-[#828282]">
-            No one assigned yet.
-          </p>
-        )}
-
         {open ? (
           <div
-            className="pik-anim-card absolute left-0 right-0 z-[1] origin-top-left bg-white ring-1 ring-inset ring-black/[0.08] dark:bg-[#0e0f11] dark:ring-white/[0.1]"
+            className="pik-anim-card absolute left-0 right-0 z-[1] origin-top-left bg-white shadow-[0_14px_34px_-18px_rgba(23,24,26,0.4)] ring-1 ring-inset ring-black/[0.08] dark:bg-[#0e0f11] dark:shadow-[0_14px_34px_-18px_rgba(0,0,0,0.8)] dark:ring-white/[0.1]"
             style={{
               top: CARD_TOP,
               padding: CARD_PAD,
               borderRadius: CORNER,
             }}
           >
-            <label htmlFor={inputId} className="sr-only">
-              Search assignees
-            </label>
-            <div className="relative mb-1 flex h-9 items-center rounded-[10px] bg-black/[0.045] focus-within:ring-2 focus-within:ring-emerald-400/60 dark:bg-white/[0.06]">
-              <svg
-                aria-hidden="true"
-                width="14"
-                height="14"
-                viewBox="0 0 16 16"
-                fill="none"
-                className="pointer-events-none absolute left-2.5 text-[#85847e] dark:text-[#828282]"
-              >
-                <circle
-                  cx="7"
-                  cy="7"
-                  r="4.5"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                />
-                <path
-                  d="M10.4 10.4 13.6 13.6"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <input
-                ref={inputRef}
-                id={inputId}
-                type="text"
-                role="combobox"
-                aria-autocomplete="list"
-                aria-expanded={open}
-                aria-controls={listId}
-                aria-activedescendant={
-                  activePerson ? optionId(activePerson.id) : undefined
-                }
-                autoComplete="off"
-                spellCheck={false}
-                placeholder="Search people"
-                value={query}
-                onChange={(event) => {
-                  setQuery(event.target.value);
-                  setActive(0);
-                }}
-                onKeyDown={handleSearchKeyDown}
-                className="h-full w-full min-w-0 rounded-[10px] bg-transparent pl-7 pr-2 text-[13px] text-[#17181a] outline-none placeholder:text-[#85847e] dark:text-[#f4f3f1] dark:placeholder:text-[#828282]"
-              />
-            </div>
-
             <div
               id={listId}
               role="listbox"
               aria-label="Assignees"
               aria-multiselectable="true"
             >
-              {filtered.map((person) => {
+              {PEOPLE.map((person) => {
                 const isSelected = selected.includes(person.id);
                 return (
                   <button
                     key={person.id}
-                    id={optionId(person.id)}
                     type="button"
                     role="option"
                     aria-selected={isSelected}
-                    tabIndex={-1}
-                    onMouseDown={(event) => event.preventDefault()}
                     onClick={() => toggle(person.id)}
                     className={rowClass}
                     style={{ height: ROW_HEIGHT, borderRadius: ROW_RADIUS }}
@@ -473,15 +283,6 @@ export default function Demo() {
                 );
               })}
             </div>
-
-            {filtered.length === 0 ? (
-              <p
-                role="status"
-                className="px-2 pb-2 pt-4 text-center text-[12px] text-[#85847e] dark:text-[#828282]"
-              >
-                No one matches “{query.trim()}”.
-              </p>
-            ) : null}
           </div>
         ) : null}
 
