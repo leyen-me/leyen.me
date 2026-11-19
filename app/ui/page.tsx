@@ -15,11 +15,11 @@ import {
 export const metadata: Metadata = {
   title: "UI | Leyen",
   description:
-    "前端组件与区块作品集：按钮、卡片、Hero、定价页等，全部可实时预览并复制源码。",
+    "A collection of front-end components and blocks, written one at a time. Every piece is real, runnable, and ready to preview, read, and copy.",
   openGraph: {
     title: "UI | Leyen",
     description:
-      "前端组件与区块作品集：按钮、卡片、Hero、定价页等，全部可实时预览并复制源码。",
+      "A collection of front-end components and blocks, written one at a time. Every piece is real, runnable, and ready to preview, read, and copy.",
     type: "website",
     locale: "zh_CN",
     url: "https://leyen.me/ui",
@@ -64,12 +64,8 @@ export default function UiOverviewPage({
     <div className="mx-auto max-w-7xl px-6 pb-16 md:px-16">
       <PageHeading
         title="UI"
-        description="自己每天写一点的前端组件与区块。全部真实可运行，可以预览、读源码、直接复制。"
-      >
-        <p className="mt-5 font-mono text-xs text-zinc-500 dark:text-zinc-400">
-          {kindCounts.components} components · {kindCounts.blocks} blocks
-        </p>
-      </PageHeading>
+        description="A collection of front-end components and blocks, written one at a time. Every piece is real, runnable, and ready to preview, read, and copy."
+      />
 
       <GalleryFilters
         basePath="/ui"

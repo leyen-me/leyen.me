@@ -58,8 +58,5 @@ export type GalleryItem = {
   files: string[];
 };
 
-/** sources.generated.json 的结构 */
-export type GallerySourceBundle = {
-  files: GalleryFile[];
-  note: string | null;
-};
+/** sources.generated.json 的结构：作品 id → 源码文件列表 */
+export type GallerySourceFiles = GalleryFile[];

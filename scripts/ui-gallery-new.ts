@@ -78,8 +78,7 @@ export default function Demo() {
     <div className="flex w-full items-center justify-center p-8">
       <p className="text-sm text-zinc-500 dark:text-zinc-400">
         ${title} — TODO
-      </p>
-    </div>
+      </p>    </div>
   );
 }
 `;
@@ -99,19 +98,6 @@ const meta = {
 } satisfies GalleryMeta;
 
 export default meta;
-`;
-}
-
-function renderNotes(options: Required<Options>): string {
-  return `# ${options.title}
-
-## 关键点
-
-- TODO
-
-## 可复用之处
-
-- TODO
 `;
 }
 
@@ -186,7 +172,6 @@ async function main(): Promise<number> {
   await Promise.all([
     writeFile(path.join(itemDir, "index.tsx"), renderEntry(options.title)),
     writeFile(path.join(itemDir, "meta.ts"), renderMeta(options)),
-    writeFile(path.join(itemDir, "notes.md"), renderNotes(options)),
   ]);
 
   console.log(`\n✓ 已创建 ${path.relative(ROOT, itemDir)}`);

@@ -2,7 +2,7 @@
  * 扫描 UI Gallery 作品目录，生成：
  *   - lib/ui-gallery/catalog.generated.ts   列表数据（不含源码）
  *   - lib/ui-gallery/loaders.generated.ts   dynamic import 映射（客户端）
- *   - lib/ui-gallery/sources.generated.json 源码快照与笔记
+ *   - lib/ui-gallery/sources.generated.json 源码快照
  *
  * 用法：
  *   npm run ui:sync          扫描并写入生成文件
@@ -12,17 +12,17 @@
  *   app/components/ui-gallery/demos/<kind>/<category>/<slug>/
  *     index.tsx   默认导出预览组件
  *     meta.ts     导出 GalleryMeta
- *     notes.md    可选学习笔记
  *     其它 .ts/.tsx/.css 可选，自动进入代码面板
+ *   实现说明请直接写在代码注释里。
  */
 import { readdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { galleryCategories, galleryKinds } from "../lib/ui-gallery/categories";
 import type {
+  GalleryFile,
   GalleryItem,
   GalleryMeta,
-  GallerySourceBundle,
 } from "../lib/ui-gallery/types";
 
 const ROOT = process.cwd();
@@ -46,7 +46,7 @@ type InstalledDeps = Record<string, string>;
 
 type BuildResult = {
   catalog: GalleryItem[];
-  sources: Record<string, GallerySourceBundle>;
+  sources: Record<string, GalleryFile[]>;
   errors: string[];
   warnings: string[];
 };
@@ -163,7 +163,7 @@ async function buildGallery(): Promise<BuildResult> {
   const errors: string[] = [];
   const warnings: string[] = [];
   const catalog: GalleryItem[] = [];
-  const sources: Record<string, GallerySourceBundle> = {};
+  const sources: Record<string, GalleryFile[]> = {};
 
   const pkg = await readJson(path.join(ROOT, "package.json"));
   const installed: InstalledDeps = {
@@ -275,14 +275,6 @@ async function buildGallery(): Promise<BuildResult> {
           }
         }
 
-        let note: string | null = null;
-        try {
-          const raw = await readFile(path.join(itemDir, "notes.md"), "utf8");
-          note = raw.trim() ? raw : null;
-        } catch {
-          note = null;
-        }
-
         let createdAt = meta.createdAt;
         if (!createdAt) {
           const info = await stat(path.join(itemDir, "index.tsx"));
@@ -308,7 +300,7 @@ async function buildGallery(): Promise<BuildResult> {
           dependencies: [...detected].sort(),
           files: filePaths,
         });
-        sources[id] = { files, note };
+        sources[id] = files;
       }
     }
   }
@@ -352,7 +344,7 @@ ${entries}
 `;
 }
 
-function renderSources(sources: Record<string, GallerySourceBundle>): string {
+function renderSources(sources: Record<string, GalleryFile[]>): string {
   return `${JSON.stringify(sources, null, 2)}\n`;
 }
 

@@ -27,7 +27,7 @@ A modern personal website featuring:
 - **Password Vault** — Encrypted, slide-captcha-protected credential manager
 - **Photos** — Image showcase page
 - **3D Hero** — Interactive WebGL (Three.js / React Three Fiber) hero section
-- **UI Gallery** — A growing collection of hand-written components and page blocks, each with a live preview, copyable source, and implementation notes
+- **UI Gallery** — A growing collection of hand-written components and page blocks, each with a live preview and copyable source
 - **Admin Panel** — Full CRUD admin dashboard for managing all content types, plus AI-powered writing assistance (slug generation, content drafting, markdown preview)
 
 <br/>
@@ -116,7 +116,7 @@ app/                  — Next.js App Router pages and API routes
 ├── projects/         — Project listing and detail pages
 ├── quotes/           — Quote collection page
 ├── resume/           — Résumé page and print template
-├── ui/               — UI Gallery: components & blocks, previews, source and notes
+├── ui/               — UI Gallery: components & blocks, previews and source
 └── styles/           — Global CSS and Prism theme
 
 lib/                  — Business logic, Sanity queries, utilities
@@ -172,9 +172,8 @@ A personal collection of components (`/ui/components`) and page blocks (`/ui/blo
 
 ```
 app/components/ui-gallery/demos/<kind>/<category>/<slug>/
-├── index.tsx   # default export = live preview
-├── meta.ts     # title, summary, tags, source, requires
-└── notes.md    # optional implementation notes
+├── index.tsx   # default export = live preview (implementation notes live in code comments)
+└── meta.ts     # title, summary, tags, source, requires
 ```
 
 | Command | Purpose |

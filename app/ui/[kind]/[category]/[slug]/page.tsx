@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, ChevronRight } from "lucide-react";
-import { MarkdownBody } from "@/app/components/shared/MarkdownBody";
 import { CodePanel } from "@/app/components/ui-gallery/CodePanel";
 import { GalleryMetaPanel } from "@/app/components/ui-gallery/GalleryMetaPanel";
 import { PreviewStage } from "@/app/components/ui-gallery/PreviewStage";
@@ -17,9 +16,9 @@ import {
   getGalleryPreviewMode,
 } from "@/lib/ui-gallery/queries";
 import sourcesJson from "@/lib/ui-gallery/sources.generated.json";
-import type { GallerySourceBundle } from "@/lib/ui-gallery/types";
+import type { GalleryFile } from "@/lib/ui-gallery/types";
 
-const sources = sourcesJson as Record<string, GallerySourceBundle>;
+const sources = sourcesJson as Record<string, GalleryFile[]>;
 
 type Params = { kind: string; category: string; slug: string };
 
@@ -62,9 +61,7 @@ export default function UiDetailPage({ params }: { params: Params }) {
   const previous = index > 0 ? siblings[index - 1] : undefined;
   const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : undefined;
 
-  const source = sources[item.id];
-  const files = source?.files ?? [];
-  const note = source?.note ?? null;
+  const files = sources[item.id] ?? [];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -144,25 +141,11 @@ export default function UiDetailPage({ params }: { params: Params }) {
           />
 
           <section aria-labelledby="code-heading">
-            <div className="mb-3 flex items-baseline justify-between gap-4">
-              <h2 id="code-heading" className="text-lg font-semibold tracking-tight">
-                Code
-              </h2>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                入口为 index.tsx，可直接复制到项目中。
-              </p>
-            </div>
+            <h2 id="code-heading" className="mb-3 text-lg font-semibold tracking-tight">
+              Code
+            </h2>
             <CodePanel files={files} />
           </section>
-
-          {note && (
-            <section aria-labelledby="notes-heading">
-              <h2 id="notes-heading" className="mb-3 text-lg font-semibold tracking-tight">
-                Notes
-              </h2>
-              <MarkdownBody markdown={note} />
-            </section>
-          )}
         </div>
 
         <div className="h-fit lg:sticky lg:top-8">
