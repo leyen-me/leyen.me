@@ -9,8 +9,8 @@ import DynamicIsland from "./island";
  */
 export default function Demo() {
   return (
-    <div className="dyn-stage w-full">
-      <div className="mx-auto w-full max-w-[340px] p-3 sm:p-4">
+    <div className="dyn-stage flex w-full justify-center">
+      <div className="mx-auto w-full max-w-[340px] py-3 sm:py-4">
         <DynamicIsland activity="Timer" bounce={40} tone="Black" />
       </div>
     </div>

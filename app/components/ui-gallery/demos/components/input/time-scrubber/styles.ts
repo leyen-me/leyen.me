@@ -29,6 +29,7 @@ export const TIME_SCRUBBER_CSS = `
   box-sizing: border-box;
   width: 300px;
   max-width: 100%;
+  min-width: 0;
   padding: 20px 20px 16px;
   border-radius: var(--tms-r);
   background: var(--tms-slab);

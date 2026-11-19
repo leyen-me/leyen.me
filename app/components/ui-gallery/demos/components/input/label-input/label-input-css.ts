@@ -141,12 +141,6 @@ export const LABEL_INPUT_CSS = `
   outline: none;
 }
 
-/* keyboard focus is visible even though the outline is removed above */
-.lbi-demo .lbi-field:focus-visible {
-  outline: 2px solid rgba(52, 211, 153, 0.7);
-  outline-offset: 3px;
-}
-
 /* the reveal blurs between dots and letters; two names restart it */
 .lbi-demo .lbi-field[data-flip="1"] {
   animation: lbi-flip-a 260ms ease-out;

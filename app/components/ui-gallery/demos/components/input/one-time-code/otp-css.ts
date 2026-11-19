@@ -151,19 +151,6 @@ export const OTP_CSS = `
   cursor: pointer;
 }
 
-/* The real input is invisible, so the focus ring wraps the whole row. */
-.otp-demo .otp-row:has(.otp-field:focus-visible) {
-  box-shadow:
-    0 0 0 2px #f7f7f6,
-    0 0 0 4px #2231dd;
-}
-
-.dark .otp-demo .otp-row:has(.otp-field:focus-visible) {
-  box-shadow:
-    0 0 0 2px #0a0a0a,
-    0 0 0 4px #8b96ff;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .otp-demo .otp-digit,
   .otp-demo .otp-caret[data-on="true"] {

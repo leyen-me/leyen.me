@@ -34,10 +34,10 @@ export default function Demo() {
   const ticks = buildTicks(position);
 
   return (
-    <div className="tms-demo w-full max-w-[340px]">
+    <div className="tms-demo mx-auto w-full max-w-[340px]">
       <style>{TIME_SCRUBBER_CSS}</style>
 
-      <div className="grid w-full place-items-center px-5 py-7">
+      <div className="grid w-full grid-cols-1 place-items-center py-7">
         <div
           className="tms"
           style={{ "--tms-r": `${CORNER}px` } as CSSProperties}

@@ -253,7 +253,7 @@ export default function EyeTracker() {
           <svg
             viewBox="0 0 100 100"
             aria-hidden="true"
-            className="block h-full w-full origin-center overflow-visible drop-shadow-[0_1px_3px_rgba(23,24,26,0.14)] transition-transform duration-[420ms] ease-[cubic-bezier(.24,1.34,.38,1)] group-active:scale-[.96] group-active:duration-[160ms] group-active:ease-linear motion-reduce:transition-none dark:drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+            className="block h-full w-full origin-center overflow-visible transition-transform duration-[420ms] ease-[cubic-bezier(.24,1.34,.38,1)] group-active:scale-[.96] group-active:duration-[160ms] group-active:ease-linear motion-reduce:transition-none"
           >
             <defs>
               <clipPath id={clipId}>

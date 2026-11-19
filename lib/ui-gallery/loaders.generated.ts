@@ -71,9 +71,6 @@ export const galleryLoaders: Record<string, ComponentType> = {
   "components/data-display/rolling-counter": dynamic(() =>
     import("@/app/components/ui-gallery/demos/components/data-display/rolling-counter/index")
   ),
-  "components/input/search": dynamic(() =>
-    import("@/app/components/ui-gallery/demos/components/input/search/index")
-  ),
   "components/input/signature-pad": dynamic(() =>
     import("@/app/components/ui-gallery/demos/components/input/signature-pad/index")
   ),

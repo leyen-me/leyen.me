@@ -19,6 +19,7 @@ export const DYNAMIC_ISLAND_CSS = `
 .dyn-stage .dyn {
   box-sizing: border-box;
   width: 300px;
+  max-width: 100%;
   height: 182px;
   display: flex;
   flex-direction: column;
@@ -31,6 +32,7 @@ export const DYNAMIC_ISLAND_CSS = `
 }
 
 .dyn-stage .dyn-top {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;

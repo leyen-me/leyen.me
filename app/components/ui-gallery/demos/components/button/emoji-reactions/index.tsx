@@ -506,9 +506,10 @@ export default function Demo() {
 
               {hoveredIndex !== null ? (
                 <span
-                  className="rxn-tip absolute z-[7] whitespace-nowrap rounded-md bg-[#17181a] px-2 py-1 text-[11px] font-normal tracking-normal text-white dark:bg-[#1a1a1a]"
+                  className="rxn-tip pointer-events-none absolute z-[7] whitespace-nowrap rounded-md bg-[#17181a] px-2 py-1 text-[11px] font-normal tracking-normal text-white dark:bg-[#1a1a1a]"
                   style={{
                     left: 6 + hoveredIndex * EMOJI_WIDTH + EMOJI_WIDTH / 2,
+                    top: -28,
                   }}
                   aria-hidden="true"
                 >
