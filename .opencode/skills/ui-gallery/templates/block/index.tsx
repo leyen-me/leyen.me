@@ -1,5 +1,6 @@
 // Template: block entry (full-width section rendered in an iframe).
 // Do not use min-h-screen: the iframe height is measured from the content.
+// Page-level backgrounds stay literal; inner surfaces use bg-surface-*.
 "use client";
 
 export default function Demo() {

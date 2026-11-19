@@ -14,7 +14,7 @@ import { ArrowRight } from "lucide-react";
 export default function Demo() {
   return (
     <section className="bg-white px-6 py-16 dark:bg-zinc-950 sm:px-10">
-      <div className="mx-auto grid max-w-4xl items-center gap-8 rounded-3xl border border-zinc-200 bg-zinc-50 p-8 md:grid-cols-[1.2fr_1fr] md:p-10 dark:border-zinc-800 dark:bg-zinc-900/60">
+      <div className="mx-auto grid max-w-4xl items-center gap-8 rounded-panel border border-zinc-200 bg-surface-1 p-8 md:grid-cols-[1.2fr_1fr] md:p-10 dark:border-zinc-800">
         <div>
           <p className="text-[11px] uppercase tracking-[0.28em] text-emerald-500">
             Ship faster
@@ -29,14 +29,14 @@ export default function Demo() {
         <div className="flex flex-col gap-3 sm:flex-row md:justify-end">
           <a
             href="#"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="inline-flex items-center justify-center gap-2 rounded-item bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             Browse blocks
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </a>
           <a
             href="#"
-            className="inline-flex items-center justify-center rounded-xl border border-zinc-300 px-5 py-2.5 text-sm font-medium text-zinc-700 transition hover:border-zinc-400 hover:text-zinc-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-white"
+            className="inline-flex items-center justify-center rounded-item border border-zinc-300 px-5 py-2.5 text-sm font-medium text-zinc-700 transition hover:border-zinc-400 hover:text-zinc-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-white"
           >
             Read docs
           </a>
@@ -69,8 +69,11 @@ export default meta;
 Why this is gallery-worthy:
 
 - Owns its section background and vertical rhythm (`py-16`), which is what makes
-  it a block rather than a component.
+  it a block rather than a component. Page-level backgrounds stay literal
+  (`bg-white dark:bg-zinc-950`); inner surfaces use `bg-surface-*`.
 - `md:grid-cols-[1.2fr_1fr]` keeps the copy wider than the actions; below `md`
   the layout stacks into a single column.
 - Height comes from content, so the iframe measures naturally.
 - Both actions have visible focus rings and stay keyboard reachable.
+- The inner card is the one place a block keeps a border: it is a page-level
+  card sitting on the section background.

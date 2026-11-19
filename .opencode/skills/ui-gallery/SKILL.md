@@ -13,6 +13,7 @@ gallery items.
 Read this file fully, then read the references you need:
 
 - `references/categories.md` — when to use which kind/category
+- `references/styling-tokens.md` — surfaces, outlines, radii, motion rules
 - `references/example-component.md` — complete component example
 - `references/example-block.md` — complete block example
 - `references/review-checklist.md` — final acceptance checks
@@ -36,6 +37,9 @@ Read this file fully, then read the references you need:
    - No imports from project aliases (`@/...`). Relative imports inside the
      item folder are allowed.
    - No reading site config, Sanity, env vars, or other demos.
+   - The shared theme tokens (`bg-surface-*`, `rounded-*` tokens) are part of
+     the gallery shell, not an import; using them is required. Snippets are
+     therefore not fully portable on their own.
 5. Only use packages already in `package.json`, and declare every third-party
    package in `meta.requires` (`react`, `react-dom`, `next` are implicit).
    Adding a dependency requires explicit user approval.
@@ -73,15 +77,24 @@ scale. Choose `components` when it is a reusable unit embedded inside a layout.
 
    ```bash
    npm run ui:sync
+   npm run ui:sync -- --check
    npx tsc --noEmit
    npx next lint
    curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/ui/<kind>/<category>/<slug>
    ```
 
    A dev server is usually already running. Do not start a second one on port
-   3000. Run `npm run build` only when the user asks or when dev is stopped;
-   build and dev share `.next` and will corrupt each other.
-6. Report: files created/changed, commands run, route URL, and anything you
+   3000. On Windows PowerShell, `npm.ps1` may be blocked by the execution
+   policy — start it with `cmd /c npm run dev`.
+
+   `npm run build` and `next dev` share `.next`; running a build while dev is
+   up corrupts the dev server (routes start returning 500). Only build when the
+   user asks, with dev stopped, and restart dev afterwards.
+
+6. Verify the served output, not just the exit code. Fetch the detail route and
+   confirm the new class/token actually appears in the HTML/CSS (HMR can lag
+   behind a finished edit).
+7. Report: files created/changed, commands run, route URL, and anything you
    could not verify. Do not claim visual verification you did not perform.
 
 ## Implementation standards
@@ -98,19 +111,28 @@ scale. Choose `components` when it is a reusable unit embedded inside a layout.
 
 ### Styling
 
+Demos share one theme-token layer instead of hard-coding light/dark pairs. Read
+`references/styling-tokens.md` before styling anything new.
+
+- Surfaces: `bg-surface-0` (the item), `bg-surface-1` (raised row), `bg-surface-2`
+  (chip / hover). Never write `bg-white dark:bg-zinc-950` for a new demo.
+- Ink must contrast with its slab. Never bind an ink variable to a surface
+  token; on `surface-0` use `text-[#17181a] dark:text-white` (or the item's own
+  ink pair).
+- No decorative 1px outlines by default. Surface contrast carries the shape.
+  Keep focus rings, form-control edges, stacked-layer hairlines
+  (`ring-surface-line`), block-level card borders, and illustration strokes.
+- Radii use `rounded-shell` / `rounded-panel` / `rounded-item` /
+  `rounded-control`; inner = outer − padding. Pills use `rounded-full`.
+- Motion: 150–300ms, transform/opacity only. Under
+  `prefers-reduced-motion: reduce` disable movement but keep colour/opacity
+  fades, otherwise hover feedback looks broken.
+- Theme-awareness goes beyond backgrounds: SVG `fill`/`stroke`, ring offsets
+  and borders must also follow the tokens.
+- To enlarge a demo, scale its geometry constants; do not wrap it in
+  `transform: scale`.
 - Tailwind classes only. No new global CSS and no `@apply` in demo files.
-  Inline `<style>` is acceptable only for keyframes that Tailwind cannot
-  express, and must respect `prefers-reduced-motion`.
-- Follow the site palette: zinc neutrals plus emerald accents
-  (`emerald-500`, `emerald-400/60` rings). Avoid site-specific tokens such as
-  `primary-bg` so snippets stay portable.
-- Every item must look intentional in both light and dark mode. Use
-  `dark:` variants for backgrounds, borders, and text; never rely on
-  `color-scheme` alone.
-- Typical tokens: `rounded-xl` / `rounded-2xl`, `border-zinc-200
-  dark:border-zinc-800`, `text-sm` UI copy, `bg-white dark:bg-zinc-950`.
-- Motion: 150–300ms, transform/opacity only, and disable when
-  `prefers-reduced-motion: reduce` is set.
+  Inline `<style>` is acceptable for keyframes that Tailwind cannot express.
 - No external images, fonts, or network requests. Use inline SVG, CSS
   gradients, or `lucide-react` icons.
 
@@ -124,6 +146,8 @@ scale. Choose `components` when it is a reusable unit embedded inside a layout.
 - Support keyboard: Enter/Space for buttons, arrow keys for tab-like controls.
 - Clean up timers, `requestAnimationFrame`, `IntersectionObserver`, and event
   listeners in the effect cleanup.
+- Showcase state that opens by default belongs to the gallery: outside-click
+  dismissal must only arm after the visitor interacts with the trigger.
 - Avoid hydration hazards: do not render `Date.now()`, `Math.random()`, or
   `window`-derived values during render.
 
@@ -176,17 +200,30 @@ the use. When in doubt, ask the user before adding the item.
 | Creating `notes.md` | Abandoned convention; put notes in code comments |
 | `min-h-screen` inside a block | iframe grows to viewport height for no reason |
 | Theme only designed for dark mode | Item looks broken in light mode |
+| Binding ink to a surface token | Dark-mode text becomes the same colour as its slab |
+| Hard-coding `bg-white dark:bg-zinc-950` | Items drift by one shade from every neighbour |
+| Adding a decorative 1px ring "for definition" | Reintroduces the outline noise the gallery removed |
+| Disabling all transitions under reduced motion | Hover feedback jumps instantly and reads as a bug |
 | Editing `*.generated.*` files | Changes are overwritten on next sync |
 | Running `npm run build` while dev is running | `.next` conflict, dev returns 500 |
 | Leaving timers/listeners uncleaned | Leaks in the long-lived gallery session |
+| Bulk-editing files with PowerShell `Set-Content` | PS 5.1 rewrites UTF-8 as ANSI and corrupts copy |
+| Regex-replacing `--*-slab` without anchoring | Also rewrites `--*-on-slab` ink tokens |
+| Changing geometry without updating its comment | Comments describe values that no longer exist |
 
 ## Done criteria
 
 A task is done when all of these hold:
 
-- `npm run ui:sync` reports the new item with no errors.
+- `npm run ui:sync` reports the new item with no errors and
+  `npm run ui:sync -- --check` is clean.
 - `npx tsc --noEmit` and `npx next lint` pass.
-- The detail route returns 200 and the code panel shows the intended files.
-- Light and dark mode both look correct at desktop, tablet, and mobile widths.
-- Keyboard-only interaction works; no console warnings or hydration errors.
+- The detail route returns 200, the served HTML/CSS contains the new
+  classes/tokens, and the code panel shows the intended files.
+- Light and dark mode both look correct at desktop, tablet, and mobile widths:
+  no ink that matches its surface, no stray outlines, token-based radii.
+- Keyboard-only interaction works; hover/focus feedback survives
+  `prefers-reduced-motion: reduce`; no console warnings or hydration errors.
+- Showcase states that open by default are not dismissed by unrelated page
+  clicks.
 - Generated files were produced by the sync script, not edited manually.
