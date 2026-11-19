@@ -52,7 +52,7 @@ export function PersonOrb({ hue, talking }: PersonOrbProps) {
         {[0, 1, 2, 3].map((bar) => (
           <i
             key={bar}
-            className="huddle-bar block w-[2.5px] rounded-full bg-white"
+            className="huddle-bar block w-[2.5px] rounded-full bg-surface-0"
             style={{ height: bar === 1 || bar === 2 ? 12 : 7 }}
           />
         ))}

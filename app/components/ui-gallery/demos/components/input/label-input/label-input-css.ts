@@ -13,7 +13,7 @@
 export const LABEL_INPUT_CSS = `
 .lbi-demo {
   --lbi-fill-on: #17181a;
-  --lbi-fill-slab: #f7f7f6;
+  --lbi-fill-slab: var(--surface-1);
   --lbi-ink: #17181a;
   --lbi-ink-3: #5c5b56;
   --lbi-ink-4: #6f6e68;
@@ -22,7 +22,6 @@ export const LABEL_INPUT_CSS = `
 }
 .dark .lbi-demo {
   --lbi-fill-on: #ffffff;
-  --lbi-fill-slab: #0a0a0a;
   --lbi-ink: #ffffff;
   --lbi-ink-3: #9a9a9a;
   --lbi-ink-4: #828282;

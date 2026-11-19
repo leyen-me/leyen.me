@@ -305,7 +305,7 @@ export default function EyeTracker() {
           <span>{line}</span>
           <span
             aria-hidden="true"
-            className="eyet-caret h-[13px] w-[1.5px] rounded-[1px] bg-white dark:bg-[#262626]"
+            className="eyet-caret h-[13px] w-[1.5px] rounded-[1px] bg-surface-0 dark:bg-[#262626]"
           />
         </span>
       </div>

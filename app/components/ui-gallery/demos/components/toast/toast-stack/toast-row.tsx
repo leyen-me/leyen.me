@@ -90,8 +90,8 @@ export function ToastRow({
       <div
         className={`h-full w-full transition-[opacity,transform,background-color,box-shadow] duration-[220ms] motion-reduce:transition-none ${
           tucked
-            ? "bg-[#f1f1f1] shadow-[0_0_0_1px_rgba(23,24,26,0.06)] dark:bg-[#343434] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.06)]"
-            : "bg-white shadow-[0_0_0_1px_rgba(255,255,255,0.4)] dark:bg-[#262626] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.2)]"
+            ? "bg-surface-1 shadow-[0_0_0_1px_rgba(23,24,26,0.06)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.06)]"
+            : "bg-surface-0 shadow-[0_0_0_1px_rgba(255,255,255,0.4)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.2)]"
         }`}
         style={{
           borderRadius: CORNER,
@@ -121,7 +121,7 @@ export function ToastRow({
               type="button"
               onClick={() => onResolve(toast.id)}
               tabIndex={reachable && !exiting ? 0 : -1}
-              className={`h-7 shrink-0 rounded-full bg-[#f1f1f1] px-3 text-[13px] font-medium text-zinc-900 transition-transform duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-[0.96] motion-reduce:transition-none dark:bg-[#343434] dark:text-white ${FOCUS_RING} ${content}`}
+              className={`h-7 shrink-0 rounded-full bg-surface-1 px-3 text-[13px] font-medium text-zinc-900 transition-transform duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-[0.96] motion-reduce:transition-none dark:text-white ${FOCUS_RING} ${content}`}
             >
               {toast.action}
             </button>
@@ -132,7 +132,7 @@ export function ToastRow({
             aria-label={`Dismiss ${toast.title}`}
             onClick={() => onDismiss(toast.id)}
             tabIndex={reachable && !exiting ? 0 : -1}
-            className={`relative grid h-7 w-7 shrink-0 place-items-center rounded-full text-[#8a8a8a] transition-colors duration-150 after:absolute after:-inset-1 after:content-[''] hover:bg-[#f1f1f1] hover:text-zinc-900 motion-reduce:transition-none dark:text-[#969696] dark:hover:bg-[#343434] dark:hover:text-white ${FOCUS_RING} ${content}`}
+            className={`relative grid h-7 w-7 shrink-0 place-items-center rounded-full text-[#8a8a8a] transition-colors duration-150 after:absolute after:-inset-1 after:content-[''] hover:bg-surface-2 hover:text-zinc-900 motion-reduce:transition-none dark:text-[#969696] dark:hover:text-white ${FOCUS_RING} ${content}`}
           >
             <CloseIcon />
           </button>

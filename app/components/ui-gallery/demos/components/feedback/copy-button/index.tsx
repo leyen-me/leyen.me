@@ -29,7 +29,7 @@ export default function Demo() {
 
   return (
     <div className="w-full max-w-sm">
-      <div className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 p-1.5 pl-4 dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-surface-1 p-1.5 pl-4 dark:border-zinc-800">
         <code className="min-w-0 flex-1 truncate font-mono text-[13px] text-zinc-700 dark:text-zinc-200">
           {CODE}
         </code>
@@ -37,7 +37,7 @@ export default function Demo() {
           type="button"
           onClick={handleCopy}
           aria-live="polite"
-          className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-white px-3 text-xs font-medium text-zinc-700 ring-1 ring-zinc-200 transition hover:text-zinc-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:bg-zinc-800 dark:text-zinc-200 dark:ring-zinc-700 dark:hover:text-white"
+          className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-surface-0 px-3 text-xs font-medium text-zinc-700 ring-1 ring-zinc-200 transition hover:text-zinc-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:bg-zinc-800 dark:text-zinc-200 dark:ring-zinc-700 dark:hover:text-white"
         >
           {state === "copied" ? (
             <>

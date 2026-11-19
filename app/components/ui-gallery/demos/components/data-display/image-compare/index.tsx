@@ -14,7 +14,7 @@ import useReducedMotion from "./use-reduced-motion";
 
 /* Bencho's stage and motion constants, unchanged. Its theme variables are
    resolved inline: --fill-on / --ink is #17181a (light) and #fff (dark),
-   --fill-slab / --card is #f7f7f6 / #0a0a0a, and --signal is #2231dd. */
+   --fill-slab / --card is #f7f7f6 / #18181b, and --signal is #2231dd. */
 const WIDTH = 270;
 const HEIGHT = 360;
 const CORNER = 20;
@@ -289,7 +289,7 @@ export default function Demo() {
             style={{ left: split }}
           >
             <span
-              className={`absolute left-1/2 top-1/2 grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[#f7f7f6] text-[#17181a] transition-transform duration-[220ms] ease-[cubic-bezier(0.24,1.34,0.38,1)] motion-reduce:transition-none dark:bg-[#0a0a0a] dark:text-white ${
+              className={`absolute left-1/2 top-1/2 grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-surface-1 text-[#17181a] transition-transform duration-[220ms] ease-[cubic-bezier(0.24,1.34,0.38,1)] motion-reduce:transition-none dark:text-white ${
                 held ? "scale-90" : "group-hover:scale-[1.08]"
               }`}
             >

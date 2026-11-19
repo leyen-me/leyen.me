@@ -16,7 +16,7 @@ export default function Demo() {
       >
         <span
           aria-hidden="true"
-          className="absolute inset-y-1 rounded-full bg-white ring-1 ring-black/5 transition-transform duration-300 ease-out dark:bg-zinc-700 dark:ring-white/10"
+          className="absolute inset-y-1 rounded-full bg-surface-0 ring-1 ring-black/5 transition-transform duration-300 ease-out dark:bg-zinc-700 dark:ring-white/10"
           style={{
             width: "calc((100% - 0.5rem) / 3)",
             left: "0.25rem",

@@ -448,7 +448,7 @@ export default function Demo() {
 
       <div className="flex flex-col items-start gap-2">
         <div
-          className="rxn-morph relative flex h-12 items-center justify-center bg-white shadow-[0_0_0_1px_rgba(23,24,26,0.08)] transition-[width,border-radius] duration-[220ms] ease-[cubic-bezier(0.24,1.34,0.38,1)] dark:bg-[#262626] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
+          className="rxn-morph relative flex h-12 items-center justify-center bg-surface-0 shadow-[0_0_0_1px_rgba(23,24,26,0.08)] transition-[width,border-radius] duration-[220ms] ease-[cubic-bezier(0.24,1.34,0.38,1)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
           data-open={open ? "true" : "false"}
           style={{
             width: open ? pillWidth : (textWidth ?? undefined),
@@ -506,7 +506,7 @@ export default function Demo() {
 
               {hoveredIndex !== null ? (
                 <span
-                  className="rxn-tip pointer-events-none absolute z-[7] whitespace-nowrap rounded-md bg-[#17181a] px-2 py-1 text-[11px] font-normal tracking-normal text-white dark:bg-[#1a1a1a]"
+                  className="rxn-tip pointer-events-none absolute z-[7] whitespace-nowrap rounded-md bg-[#17181a] px-2 py-1 text-[11px] font-normal tracking-normal text-white"
                   style={{
                     left: 6 + hoveredIndex * EMOJI_WIDTH + EMOJI_WIDTH / 2,
                     top: -28,
@@ -536,8 +536,8 @@ export default function Demo() {
               onClick={() => toggleReaction(reaction.e)}
               className={`rxn-chip-in flex h-9 items-center gap-2 rounded-full px-4 pl-3 text-sm font-medium tracking-[-0.01em] transition-[background-color,box-shadow,transform] duration-150 active:scale-[0.92] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 ${
                 reaction.mine
-                  ? "bg-white text-[#2231dd] shadow-[inset_0_0_0_1px_rgba(34,49,221,0.35)] dark:bg-[#262626] dark:text-[#8c9bff] dark:shadow-[inset_0_0_0_1px_rgba(140,155,255,0.4)]"
-                  : "bg-white text-[#17181a] shadow-[inset_0_0_0_1px_rgba(23,24,26,0.06)] dark:bg-[#262626] dark:text-white dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]"
+                  ? "bg-surface-0 text-[#2231dd] shadow-[inset_0_0_0_1px_rgba(34,49,221,0.35)] dark:text-[#8c9bff] dark:shadow-[inset_0_0_0_1px_rgba(140,155,255,0.4)]"
+                  : "bg-surface-0 text-[#17181a] shadow-[inset_0_0_0_1px_rgba(23,24,26,0.06)] dark:text-white dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]"
               }`}
             >
               <span
@@ -572,7 +572,7 @@ export default function Demo() {
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
           onContextMenu={(event) => event.preventDefault()}
-          className="rxn-add grid h-9 w-9 place-items-center rounded-full bg-white text-[#8a8a8c] shadow-[inset_0_0_0_1px_rgba(23,24,26,0.06)] transition-[color,transform,box-shadow] duration-150 hover:scale-[1.06] hover:text-[#17181a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:bg-[#262626] dark:text-[#8c8c8f] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)] dark:hover:text-white"
+          className="rxn-add grid h-9 w-9 place-items-center rounded-full bg-surface-0 text-[#8a8a8c] shadow-[inset_0_0_0_1px_rgba(23,24,26,0.06)] transition-[color,transform,box-shadow] duration-150 hover:scale-[1.06] hover:text-[#17181a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:text-[#8c8c8f] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)] dark:hover:text-white"
         >
           <svg
             aria-hidden="true"

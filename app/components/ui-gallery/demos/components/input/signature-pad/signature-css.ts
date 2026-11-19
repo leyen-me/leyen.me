@@ -7,7 +7,7 @@
  */
 export const SIGNATURE_CSS = `
 .sig-demo {
-  --sig-slab: #ffffff;
+  --sig-slab: var(--surface-0);
   --sig-ink: #17181a;
   --sig-blue: #2446d8;
   --sig-signal: #2231dd;
@@ -15,7 +15,6 @@ export const SIGNATURE_CSS = `
   --sig-green: #1f9d55;
 }
 .dark .sig-demo {
-  --sig-slab: #202020;
   --sig-ink: #ffffff;
   --sig-blue: #7d95ff;
   --sig-signal: #8b96ff;

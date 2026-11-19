@@ -3,7 +3,7 @@
  * design tokens to concrete light/dark values.
  *
  * Light:  card #ffffff, ink #17181a, wash .06, edge rgba(23,24,26,.08)
- * Dark:   card #262626, ink #ffffff, wash .053, edge rgba(255,255,255,.08)
+ * Dark:   card #18181b, ink #ffffff, wash .053, edge rgba(255,255,255,.08)
  *
  * `.an-act`'s `--pop` is written every animation frame by the spring, so it is
  * deliberately not transitioned; only `--zoom` (hover) is eased. `--zoom` needs
@@ -18,7 +18,7 @@ export const ACTION_NODE_CSS = `
 }
 
 .action-node-demo {
-  --an-card: #ffffff;
+  --an-card: var(--surface-0);
   --an-ink: #17181a;
   --an-ink-rgb: 23, 24, 26;
   --an-ink-3: #5c5b56;
@@ -30,7 +30,6 @@ export const ACTION_NODE_CSS = `
 }
 
 .dark .action-node-demo {
-  --an-card: #262626;
   --an-ink: #ffffff;
   --an-ink-rgb: 255, 255, 255;
   --an-ink-3: #9a9a9a;

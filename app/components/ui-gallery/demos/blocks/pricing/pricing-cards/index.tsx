@@ -52,7 +52,7 @@ export default function Demo() {
           <div
             role="group"
             aria-label="Billing period"
-            className="mt-6 inline-flex rounded-full border border-zinc-200 bg-zinc-50 p-1 dark:border-zinc-800 dark:bg-zinc-900"
+            className="mt-6 inline-flex rounded-full border border-zinc-200 bg-surface-1 p-1 dark:border-zinc-800 dark:bg-zinc-900"
           >
             {[
               { label: "Monthly", value: false },
@@ -65,7 +65,7 @@ export default function Demo() {
                 onClick={() => setYearly(option.value)}
                 className={`rounded-full px-4 py-1.5 text-sm transition-colors ${
                   yearly === option.value
-                    ? "bg-white font-medium text-zinc-900 dark:bg-zinc-700 dark:text-white"
+                    ? "bg-surface-0 font-medium text-zinc-900 dark:bg-zinc-700 dark:text-white"
                     : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                 }`}
               >
@@ -84,7 +84,7 @@ export default function Demo() {
                 className={`relative flex flex-col rounded-2xl border p-6 ${
                   plan.highlighted
                     ? "border-emerald-400/70 bg-emerald-50/40 dark:border-emerald-500/40 dark:bg-emerald-500/5"
-                    : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/40"
+                    : "border-zinc-200 bg-surface-0 dark:border-zinc-800 dark:bg-zinc-900/40"
                 }`}
               >
                 {plan.highlighted && (

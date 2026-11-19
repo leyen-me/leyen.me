@@ -19,7 +19,7 @@ export default function Demo() {
           onChange={(event) => setValue(event.target.value)}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          className="peer w-full rounded-xl border border-zinc-300 bg-white px-4 pb-2.5 pt-6 text-sm text-zinc-900 outline-none transition-colors duration-200 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:focus:border-emerald-500"
+          className="peer w-full rounded-xl border border-zinc-300 bg-surface-0 px-4 pb-2.5 pt-6 text-sm text-zinc-900 outline-none transition-colors duration-200 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 dark:border-zinc-700 dark:text-white dark:focus:border-emerald-500"
         />
         <label
           htmlFor={inputId}

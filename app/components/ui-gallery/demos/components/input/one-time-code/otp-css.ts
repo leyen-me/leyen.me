@@ -1,9 +1,8 @@
 /**
  * Bencho's `.otp-*` layer, scoped under `.otp-demo`. Only the pieces Tailwind
  * cannot express live here: the goo filter hooks, the digit entrance, the
- * breathing caret and the focus ring on the invisible field. Colours are the
- * resolved `--fill-slab` / `--fill-on` values from `index-0e0OZHzj.css`:
- * light #fff on #f7f7f6, dark #262626 on #0a0a0a.
+ * breathing caret and the focus ring on the invisible field. The cell fill
+ * comes from the shared `--surface-0` token, so light and dark stay paired.
  */
 export const OTP_CSS = `
 .otp-demo .otp {
@@ -26,11 +25,7 @@ export const OTP_CSS = `
   top: 0;
   left: 0;
   height: 100%;
-  background: #ffffff;
-}
-
-.dark .otp-demo .otp-cell {
-  background: #262626;
+  background: var(--surface-0);
 }
 
 .otp-demo .otp-slot {

@@ -48,6 +48,14 @@ export const MUSIC_ISLAND_CSS = `
   will-change: width, height, border-radius, transform;
 }
 
+/*
+ * Same rule as the dynamic island: keep the black body in light mode, lift it
+ * to the shared panel tone in dark so it does not read as a hole.
+ */
+.dark .mi-stage .mi-pill:not([data-tone="white"]) {
+  background: var(--surface-0);
+}
+
 .mi-stage .mi-pill[data-tone="white"] {
   background: #fff;
   color: #17181a;

@@ -235,7 +235,7 @@ export const LIKE_CSS = `
 .dark .like-demo .like-button:focus-visible {
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 0 0 2px #0a0a0a,
+    0 0 0 2px #18181b,
     0 0 0 4px #8b96ff;
 }
 

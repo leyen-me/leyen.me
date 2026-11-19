@@ -53,6 +53,15 @@ export const DYNAMIC_ISLAND_CSS = `
   will-change: width, height, border-radius, transform;
 }
 
+/*
+ * The island keeps its black body in light mode, but a pure black slab reads
+ * as a hole once the gallery switches to dark; lift it to the shared panel
+ * tone there. The "white" tone is a different surface and stays untouched.
+ */
+.dark .dyn-stage .dyn-pill:not([data-tone="white"]) {
+  background: var(--surface-0);
+}
+
 .dyn-stage .dyn-pill[data-tone="white"] {
   background: #fff;
   color: #17181a;

@@ -1,20 +1,19 @@
 /**
  * Bencho's `.sld-*` layer, scoped under `.slide-demo` and resolved for the
  * gallery. The source reads `--fill-on` / `--fill-slab` / `--pane-edge` from
- * its stage; those become fixed light and dark values here (white slab on ink
- * for light, #262626 slab on white for dark) so the block is self-contained.
+ * its stage; here the slab comes from the shared `--surface-0` token and the
+ * remaining values are fixed light/dark pairs.
  * Only the press pulse and the done-label fade live in CSS; the rest of the
  * motion is driven frame by frame by the springs in `motion.ts`.
  */
 export const SLIDE_CSS = `
 .slide-demo {
-  --sld-slab: #ffffff;
+  --sld-slab: var(--surface-0);
   --sld-on: #17181a;
   --sld-edge: rgba(23, 24, 26, 0.08);
   --sld-signal: #2231dd;
 }
 .dark .slide-demo {
-  --sld-slab: #262626;
   --sld-on: #ffffff;
   --sld-edge: rgba(255, 255, 255, 0.08);
   --sld-signal: #8b96ff;

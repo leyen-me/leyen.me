@@ -295,7 +295,7 @@ export default function Demo() {
           data-phase={phase}
           data-armed={armed || undefined}
           style={shellStyle}
-          className="relative overflow-hidden rounded-[28px] bg-white ring-1 ring-black/[0.06] dark:bg-[#262626] dark:ring-white/[0.08]"
+          className="relative overflow-hidden rounded-[28px] bg-surface-0 ring-1 ring-black/[0.06] dark:ring-white/[0.08]"
         >
           <RefreshRing phase={phase} progress={progress} reduced={reduced} />
 
@@ -314,7 +314,7 @@ export default function Demo() {
               transform: `translateY(${held.toFixed(2)}px)`,
               touchAction: "pan-x",
             }}
-            className="relative z-[2] select-none bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-400/60 dark:bg-[#262626]"
+            className="relative z-[2] select-none bg-surface-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-400/60"
           >
             <div className="px-4 pb-2 pt-4">
               <p className="m-0 text-[30px] font-medium leading-none tracking-[-0.03em] text-[#17181a] [font-variant-numeric:tabular-nums] dark:text-white">

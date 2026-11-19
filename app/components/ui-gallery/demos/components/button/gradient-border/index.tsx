@@ -12,7 +12,7 @@ export default function Demo() {
         aria-hidden="true"
         className="absolute inset-0 rounded-full bg-[conic-gradient(from_180deg,#33E092,#22d3ee,#a855f7,#33E092)] opacity-70 blur-[1px] transition-opacity duration-300 group-hover:opacity-100"
       />
-      <span className="relative inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-medium text-zinc-900 transition-colors duration-300 dark:bg-zinc-950 dark:text-white">
+      <span className="relative inline-flex items-center gap-2 rounded-full bg-surface-0 px-6 py-2.5 text-sm font-medium text-zinc-900 transition-colors duration-300 dark:text-white">
         Get started
         <ArrowUpRight
           className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"

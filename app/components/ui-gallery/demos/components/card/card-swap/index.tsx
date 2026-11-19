@@ -249,14 +249,14 @@ function CardSwap({ auto = false, every = 4 }: CardSwapProps) {
               data-front={isFront || undefined}
               aria-hidden={!isFront}
               style={{ ...cardStyle(index), borderRadius: cqw(20), padding: cqw(3) }}
-              className={`absolute inset-0 bg-white shadow-[0_0_0_1px_rgba(23,24,26,0.12)] [backface-visibility:hidden] [transform:var(--t)] transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none dark:bg-[#0e0f11] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.12)] ${
+              className={`absolute inset-0 bg-surface-0 shadow-[0_0_0_1px_rgba(23,24,26,0.12)] [backface-visibility:hidden] [transform:var(--t)] transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none dark:shadow-[0_0_0_1px_rgba(255,255,255,0.12)] ${
                 isFront ? "pointer-events-auto" : "pointer-events-none"
               }`}
             >
               <CardArt id={card.id} />
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute rounded-full bg-white text-[13px] font-medium leading-normal text-[#17181a] dark:bg-[#0e0f11] dark:text-white"
+                className="pointer-events-none absolute rounded-full bg-surface-0 text-[13px] font-medium leading-normal text-[#17181a] dark:text-white"
                 style={{
                   bottom: cqw(14),
                   left: cqw(14),

@@ -8,7 +8,7 @@
  */
 export const TIME_SCRUBBER_CSS = `
 .tms-demo {
-  --tms-slab: #ffffff;
+  --tms-slab: var(--surface-0);
   --tms-ink: #17181a;
   /* color-mix(in srgb, #17181a 52%, #ffffff) */
   --tms-muted: #868788;
@@ -17,9 +17,8 @@ export const TIME_SCRUBBER_CSS = `
 }
 
 .dark .tms-demo {
-  --tms-slab: #262626;
   --tms-ink: #ffffff;
-  /* color-mix(in srgb, #ffffff 52%, #262626) */
+  /* color-mix(in srgb, #ffffff 52%, #18181b) */
   --tms-muted: #979797;
   --tms-edge: rgba(255, 255, 255, 0.08);
   --tms-signal: #8b96ff;

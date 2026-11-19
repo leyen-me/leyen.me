@@ -17,7 +17,7 @@ export default function Demo() {
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      className="group relative w-full max-w-sm overflow-hidden rounded-2xl border border-zinc-200 bg-white p-7 text-left transition-colors duration-300 hover:border-emerald-300/70 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-emerald-500/40"
+      className="group relative w-full max-w-sm overflow-hidden rounded-2xl border border-zinc-200 bg-surface-0 p-7 text-left transition-colors duration-300 hover:border-emerald-300/70 dark:border-zinc-800 dark:hover:border-emerald-500/40"
     >
       <div
         aria-hidden="true"

@@ -50,7 +50,7 @@ export function BalanceChart({ path, shown, scrub, up, onScrub, onLeave }: Props
         style={{ left: `${shown.x}%` }}
       />
       <i
-        className={`pointer-events-none absolute -ml-[4.5px] -mt-[4.5px] h-[9px] w-[9px] rounded-full bg-white shadow-[0_0_0_2px_currentColor] transition-[scale] duration-[160ms] ease-[cubic-bezier(.24,1.34,.38,1)] motion-reduce:transition-none dark:bg-[#262626] ${
+        className={`pointer-events-none absolute -ml-[4.5px] -mt-[4.5px] h-[9px] w-[9px] rounded-full bg-surface-0 shadow-[0_0_0_2px_currentColor] transition-[scale] duration-[160ms] ease-[cubic-bezier(.24,1.34,.38,1)] motion-reduce:transition-none ${
           scrub !== null ? "scale-[1.18]" : "scale-100"
         }`}
         style={{

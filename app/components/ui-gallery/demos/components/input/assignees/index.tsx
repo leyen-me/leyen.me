@@ -57,7 +57,7 @@ const KEYFRAMES = `
 `;
 
 const pillClass =
-  "group z-[2] inline-flex h-11 items-center gap-3 bg-white pl-2 pr-3 text-[14px] font-medium tracking-[-0.01em] text-[#17181a] ring-1 ring-inset ring-black/[0.08] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17181a]/45 dark:bg-[#0e0f11] dark:text-[#f4f3f1] dark:ring-white/[0.1] dark:focus-visible:ring-white/45";
+  "group z-[2] inline-flex h-11 items-center gap-3 bg-surface-0 pl-2 pr-3 text-[14px] font-medium tracking-[-0.01em] text-[#17181a] ring-1 ring-inset ring-black/[0.08] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17181a]/45 dark:text-[#f4f3f1] dark:ring-white/[0.1] dark:focus-visible:ring-white/45";
 
 const rowClass =
   "flex h-12 w-full items-center gap-3 rounded-[14px] px-2 text-left text-[#17181a] transition-colors hover:bg-black/[0.06] focus-visible:bg-black/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-400/60 dark:text-[#f4f3f1] dark:hover:bg-white/[0.06] dark:focus-visible:bg-white/[0.06]";
@@ -183,7 +183,7 @@ export default function Demo() {
                   <AssigneeAvatar
                     person={person}
                     size={FACE}
-                    className="ring-2 ring-white dark:ring-[#0e0f11]"
+                    className="ring-2 ring-white dark:ring-[#18181b]"
                   />
                 </span>
               </span>
@@ -216,7 +216,7 @@ export default function Demo() {
 
         {open ? (
           <div
-            className="pik-anim-card absolute left-0 right-0 z-[1] origin-top-left bg-white ring-1 ring-inset ring-black/[0.08] dark:bg-[#0e0f11] dark:ring-white/[0.1]"
+            className="pik-anim-card absolute left-0 right-0 z-[1] origin-top-left bg-surface-0 ring-1 ring-inset ring-black/[0.08] dark:ring-white/[0.1]"
             style={{
               top: CARD_TOP,
               padding: CARD_PAD,
@@ -260,7 +260,7 @@ export default function Demo() {
                       style={{ width: MARK, height: MARK }}
                     >
                       {isSelected ? (
-                        <span className="pik-anim-tick block text-white dark:text-[#0e0f11]">
+                        <span className="pik-anim-tick block text-white dark:text-[#18181b]">
                           <svg
                             aria-hidden="true"
                             width="14"

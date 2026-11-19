@@ -18,6 +18,11 @@ module.exports = {
         "tertiary-color": "#16a34a",
         "primary-bg": "rgba(39, 39, 43, 0.4)",
         "secondary-bg": "rgba(250, 250, 250, 0.4)",
+        surface: {
+          0: "var(--surface-0)",
+          1: "var(--surface-1)",
+          2: "var(--surface-2)",
+        },
       },
       boxShadow: {
         "line-light": "rgba(17, 17, 26, 0.1) 0px 1px 0px",

@@ -10,7 +10,7 @@
  */
 export const UPLOAD_CSS = `
 .upl-demo {
-  --upl-slab: #ffffff;
+  --upl-slab: var(--surface-0);
   --upl-ink: #17181a;
   --upl-ink-3: #5c5b56;
   --upl-signal: #2231dd;
@@ -30,7 +30,6 @@ export const UPLOAD_CSS = `
   user-select: none;
 }
 .dark .upl-demo {
-  --upl-slab: #202020;
   --upl-ink: #f4f3f1;
   --upl-ink-3: #9a9a9a;
   --upl-signal: #8b96ff;

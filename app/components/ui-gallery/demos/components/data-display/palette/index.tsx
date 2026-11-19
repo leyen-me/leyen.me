@@ -158,7 +158,7 @@ export default function Palette() {
         style={{ width: PALETTE_WIDTH, gap: SLAB_GAP }}
       >
         <div
-          className="flex flex-1 items-center justify-center bg-white ring-1 ring-zinc-900/[0.08] dark:bg-[#262626] dark:ring-white/[0.08]"
+          className="flex flex-1 items-center justify-center bg-surface-0 ring-1 ring-zinc-900/[0.08] dark:ring-white/[0.08]"
           style={{
             padding: SLAB_PADDING,
             borderRadius: corner.slab,
@@ -205,7 +205,7 @@ export default function Palette() {
 
         <div className="group flex-none">
           <div
-            className="h-full bg-white ring-1 ring-zinc-900/[0.08] transition-transform duration-[160ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-active:scale-[0.96] motion-reduce:transition-none dark:bg-[#262626] dark:ring-white/[0.08]"
+            className="h-full bg-surface-0 ring-1 ring-zinc-900/[0.08] transition-transform duration-[160ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-active:scale-[0.96] motion-reduce:transition-none dark:ring-white/[0.08]"
             style={{
               padding: SLAB_PADDING,
               borderRadius: corner.slab,
@@ -215,7 +215,7 @@ export default function Palette() {
               type="button"
               onClick={regenerate}
               aria-label="Generate a new palette"
-              className="relative grid h-[58px] w-[30px] flex-none cursor-pointer place-items-center rounded-[14px] bg-transparent text-[#3c3b37] transition-colors duration-[160ms] after:absolute after:inset-y-0 after:-left-px after:-right-px after:content-[''] hover:text-[#7f8081] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17181a]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none dark:text-white dark:hover:text-[#9d9d9d] dark:focus-visible:ring-white/45 dark:focus-visible:ring-offset-[#262626]"
+              className="relative grid h-[58px] w-[30px] flex-none cursor-pointer place-items-center rounded-[14px] bg-transparent text-[#3c3b37] transition-colors duration-[160ms] after:absolute after:inset-y-0 after:-left-px after:-right-px after:content-[''] hover:text-[#7f8081] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17181a]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none dark:text-white dark:hover:text-[#9d9d9d] dark:focus-visible:ring-white/45 dark:focus-visible:ring-offset-[#18181b]"
             >
               <RefreshIcon
                 style={{

@@ -174,7 +174,7 @@ export default function Demo() {
       <div
         role="group"
         aria-label="AI image generator"
-        className="group relative h-[330px] w-full overflow-hidden rounded-[20px] bg-white shadow-[0_0_0_1px_rgba(23,24,26,0.08)] dark:bg-[#0e0f11] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
+        className="group relative h-[330px] w-full overflow-hidden rounded-[20px] bg-surface-0 shadow-[0_0_0_1px_rgba(23,24,26,0.08)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
       >
         <FlowerDefs
           filterId={filterId}
@@ -229,10 +229,10 @@ export default function Demo() {
           tabIndex={loading ? -1 : 0}
           aria-label={made ? "Generate again" : "Generate"}
           style={{ scale: loading ? 0.9 : undefined }}
-          className={`absolute left-1/2 top-1/2 z-[2] flex h-[42px] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center gap-2 rounded-[20px] px-5 text-sm font-medium tracking-[-0.01em] transition-[opacity,scale] duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:[scale:0.97] active:[scale:0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17181a]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none dark:focus-visible:ring-white/45 dark:focus-visible:ring-offset-[#0e0f11] ${
+          className={`absolute left-1/2 top-1/2 z-[2] flex h-[42px] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center gap-2 rounded-[20px] px-5 text-sm font-medium tracking-[-0.01em] transition-[opacity,scale] duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:[scale:0.97] active:[scale:0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17181a]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none dark:focus-visible:ring-white/45 dark:focus-visible:ring-offset-[#18181b] ${
             made
-              ? "bg-white text-[#17181a] dark:bg-[#0e0f11] dark:text-[#f4f3f1]"
-              : "bg-[#f1f1f0] text-[#17181a] dark:bg-[#1b1c1e] dark:text-[#f4f3f1]"
+              ? "bg-surface-0 text-[#17181a] dark:text-[#f4f3f1]"
+              : "bg-surface-1 text-[#17181a] dark:text-[#f4f3f1]"
           } ${
             loading
               ? "pointer-events-none opacity-0"
@@ -247,7 +247,7 @@ export default function Demo() {
         <span
           role="status"
           aria-live="off"
-          className="absolute bottom-[10px] left-[10px] z-[2] grid h-[22px] place-items-center rounded-full bg-white/80 px-2 text-[11px] font-medium leading-none tracking-normal text-[#17181a] tabular-nums backdrop-blur-[8px] transition-[opacity,translate] duration-[160ms] motion-reduce:transition-none dark:bg-[#0e0f11]/80 dark:text-[#f4f3f1]"
+          className="absolute bottom-[10px] left-[10px] z-[2] grid h-[22px] place-items-center rounded-full bg-white/80 px-2 text-[11px] font-medium leading-none tracking-normal text-[#17181a] tabular-nums backdrop-blur-[8px] transition-[opacity,translate] duration-[160ms] motion-reduce:transition-none dark:bg-[#18181b]/80 dark:text-[#f4f3f1]"
           style={{
             opacity: loading ? 1 : 0,
             translate: loading ? "0 0" : "0 4px",

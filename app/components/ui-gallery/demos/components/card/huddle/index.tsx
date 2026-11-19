@@ -183,7 +183,7 @@ export default function Huddle() {
       <div className="w-full max-w-[340px] p-5">
         <section
           aria-label="Design huddle voice room"
-          className="mx-auto w-full select-none rounded-[20px] bg-white p-4 text-zinc-900 ring-1 ring-zinc-200/80 dark:bg-[#17181a] dark:text-zinc-50 dark:ring-zinc-800"
+          className="mx-auto w-full select-none rounded-[20px] bg-surface-0 p-4 text-zinc-900 ring-1 ring-zinc-200/80 dark:text-zinc-50 dark:ring-zinc-800"
           style={{ maxWidth: CARD_WIDTH }}
         >
           <p className="text-base font-medium leading-[22px] tracking-[-0.01em]">
@@ -214,7 +214,7 @@ export default function Huddle() {
                       <span
                         aria-hidden="true"
                         title="Hand raised"
-                        className="absolute -right-1 -top-1 grid h-[18px] w-[18px] place-items-center rounded-full bg-white text-zinc-900 ring-1 ring-zinc-900/10 dark:bg-zinc-800 dark:text-zinc-50 dark:ring-white/15"
+                        className="absolute -right-1 -top-1 grid h-[18px] w-[18px] place-items-center rounded-full bg-surface-0 text-zinc-900 ring-1 ring-zinc-900/10 dark:bg-zinc-800 dark:text-zinc-50 dark:ring-white/15"
                       >
                         <HandIcon className="h-2.5 w-2.5" />
                       </span>
@@ -302,7 +302,7 @@ export default function Huddle() {
                 id={menuId}
                 role="group"
                 aria-label="Huddle options"
-                className="absolute bottom-full right-0 z-10 mb-2 w-44 rounded-xl border border-zinc-200 bg-white p-1 dark:border-zinc-700 dark:bg-zinc-800"
+                className="absolute bottom-full right-0 z-10 mb-2 w-44 rounded-xl border border-zinc-200 bg-surface-0 p-1 dark:border-zinc-700 dark:bg-zinc-800"
               >
                 <button
                   type="button"

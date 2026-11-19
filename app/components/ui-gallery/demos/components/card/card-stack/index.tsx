@@ -336,7 +336,7 @@ export default function CardStack() {
                   faceRefs.current[slot] = node;
                 }}
                 data-lift={lifted || undefined}
-                className={`absolute inset-0 block overflow-hidden bg-[#fbfaf7] [backface-visibility:hidden] dark:bg-[#1b1c1e] ${
+                className={`absolute inset-0 block overflow-hidden bg-surface-0 [backface-visibility:hidden] ${
                   lifted
                     ? "ring-1 ring-inset ring-zinc-900/10 transition-[translate] delay-[15ms] duration-[300ms] ease-[cubic-bezier(0.2,0.7,0.3,1)] dark:ring-white/15"
                     : "ring-1 ring-inset ring-zinc-900/10 transition-[translate] duration-[480ms] ease-[cubic-bezier(0.4,0,0.2,1)] dark:ring-white/15"
@@ -377,13 +377,13 @@ export default function CardStack() {
               className="absolute inset-0 [transform-style:preserve-3d] transition-transform duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
             >
               <span
-                className="absolute inset-0 block overflow-hidden bg-[#fbfaf7] ring-1 ring-inset ring-zinc-900/10 [backface-visibility:hidden] dark:bg-[#1b1c1e] dark:ring-white/15"
+                className="absolute inset-0 block overflow-hidden bg-surface-0 ring-1 ring-inset ring-zinc-900/10 [backface-visibility:hidden] dark:ring-white/15"
                 style={{ borderRadius: cqw(VIEW_RADIUS) }}
               >
                 <CardArt index={viewing.id} />
               </span>
               <span
-                className="absolute inset-0 block overflow-hidden bg-[#fbfaf7] ring-1 ring-inset ring-zinc-900/10 [backface-visibility:hidden] [transform:rotateY(180deg)] dark:bg-[#1b1c1e] dark:ring-white/15"
+                className="absolute inset-0 block overflow-hidden bg-surface-0 ring-1 ring-inset ring-zinc-900/10 [backface-visibility:hidden] [transform:rotateY(180deg)] dark:ring-white/15"
                 style={{ borderRadius: cqw(VIEW_RADIUS) }}
               >
                 <CardArt index={viewing.id} />

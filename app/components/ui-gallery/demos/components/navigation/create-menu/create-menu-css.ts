@@ -5,7 +5,7 @@
  */
 export const CREATE_MENU_CSS = `
 .crt-demo {
-  --crt-slab: #ffffff;
+  --crt-slab: var(--surface-0);
   --crt-on-slab: #17181a;
   --crt-on-slab-rgb: 23 24 26;
   --crt-edge: rgba(23, 24, 26, 0.14);
@@ -21,8 +21,7 @@ export const CREATE_MENU_CSS = `
 }
 
 .dark .crt-demo {
-  --crt-slab: #262626;
-  --crt-on-slab: #ffffff;
+  --crt-on-slab: var(--surface-0);
   --crt-on-slab-rgb: 255 255 255;
   --crt-edge: rgba(255, 255, 255, 0.16);
 }

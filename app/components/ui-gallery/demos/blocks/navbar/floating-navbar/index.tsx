@@ -67,7 +67,7 @@ export default function Demo() {
         {open && (
           <ul
             id="floating-navbar-menu"
-            className="mt-3 space-y-1 rounded-2xl border border-zinc-200 bg-white p-2 md:hidden dark:border-zinc-800 dark:bg-zinc-900"
+            className="mt-3 space-y-1 rounded-2xl border border-zinc-200 bg-surface-0 p-2 md:hidden dark:border-zinc-800 dark:bg-zinc-900"
           >
             {links.map((link) => (
               <li key={link}>

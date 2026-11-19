@@ -84,7 +84,7 @@ export default function Demo() {
     <div className="flex w-full justify-center py-6">
       <div
         ref={cardRef}
-        className="relative flex select-none flex-col gap-4 rounded-[20px] bg-white p-4 text-[13px] text-[#17181a] ring-1 ring-black/[0.08] [--stb-slab:#ffffff] [--stb-mute:#8b8b8c] dark:bg-[#262626] dark:text-white dark:ring-white/[0.08] dark:[--stb-slab:#262626] dark:[--stb-mute:#979797]"
+        className="relative flex select-none flex-col gap-4 rounded-[20px] bg-surface-0 p-4 text-[13px] text-[#17181a] ring-1 ring-black/[0.08] [--stb-slab:var(--surface-0)] [--stb-mute:#8b8b8c] dark:text-white dark:ring-white/[0.08] dark:[--stb-mute:#979797]"
         style={cardWidth}
       >
         <div className="flex items-center gap-3">

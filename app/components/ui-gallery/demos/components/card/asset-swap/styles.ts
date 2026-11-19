@@ -8,7 +8,7 @@
  */
 export const ASSET_SWAP_CSS = `
 .swp-stage {
-  --swp-slab: #ffffff;
+  --swp-slab: var(--surface-0);
   --swp-on: #17181a;
   --swp-edge: rgba(23, 24, 26, 0.08);
   --swp-pick: #0d99ff;
@@ -20,7 +20,6 @@ export const ASSET_SWAP_CSS = `
 }
 
 .dark .swp-stage {
-  --swp-slab: #1c1c1e;
   --swp-on: #ffffff;
   --swp-edge: rgba(255, 255, 255, 0.08);
   --swp-pick: #3aa9ff;
