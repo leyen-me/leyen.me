@@ -17,6 +17,7 @@ export const galleryCatalog: GalleryItem[] = [
     ],
     "status": "ready",
     "featured": true,
+    "previewHeight": 320,
     "createdAt": "2026-11-19",
     "source": {
       "label": "Original",
@@ -45,6 +46,7 @@ export const galleryCatalog: GalleryItem[] = [
     ],
     "status": "ready",
     "featured": false,
+    "previewHeight": 470,
     "createdAt": "2026-11-19",
     "source": {
       "label": "Inspired by Bencho",
@@ -73,6 +75,7 @@ export const galleryCatalog: GalleryItem[] = [
     ],
     "status": "ready",
     "featured": false,
+    "previewHeight": 400,
     "createdAt": "2026-11-19",
     "source": {
       "label": "Original",

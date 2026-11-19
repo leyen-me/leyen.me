@@ -47,10 +47,10 @@ function Chip({
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition-colors ${
+      className={`inline-flex h-8 items-center gap-1.5 rounded-full px-3.5 text-xs transition-colors ${
         active
-          ? "border-zinc-900 bg-zinc-900 font-medium text-white dark:border-white dark:bg-white dark:text-zinc-900"
-          : "border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:text-zinc-900 dark:border-zinc-800 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:text-white"
+          ? "bg-zinc-900 font-medium text-white dark:bg-white dark:text-zinc-900"
+          : "text-zinc-600 hover:bg-zinc-900/[0.055] hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/[0.07] dark:hover:text-white"
       }`}
     >
       {children}
@@ -71,57 +71,72 @@ export function GalleryFilters({
 }: GalleryFiltersProps) {
   const kinds: GalleryKindType[] = ["components", "blocks"];
   const hasFilters = Boolean(q || tag || activeCategory);
+  const visibleCategories =
+    categories?.filter(
+      (category) => category.count > 0 || category.id === activeCategory
+    ) ?? [];
+  const hasFacets = visibleCategories.length > 0 || (tags && tags.length > 0);
 
   return (
     <div className="mb-8 space-y-4">
-      {kindCounts && (
-        <div
-          role="tablist"
-          aria-label="作品类型"
-          className="inline-flex rounded-full border border-zinc-200 bg-zinc-100 p-1 dark:border-zinc-800 dark:bg-zinc-900"
-        >
-          {[
-            {
-              id: "all" as const,
-              label: "All",
-              count: kindCounts.components + kindCounts.blocks,
-              href: buildHref("/ui", { q, tag }),
-            },
-            ...kinds.map((item) => ({
-              id: item,
-              label: galleryKindMeta[item].label,
-              count: kindCounts[item],
-              href: buildHref("/ui", { kind: item, q, tag }),
-            })),
-          ].map((tab) => {
-            const active = tab.id === "all" ? !kind : kind === tab.id;
-            return (
-              <Link
-                key={tab.id}
-                href={tab.href}
-                role="tab"
-                aria-selected={active}
-                className={`rounded-full px-4 py-1.5 text-sm transition-colors ${
-                  active
-                    ? "bg-zinc-900 font-medium text-white shadow-sm dark:bg-white dark:text-zinc-900"
-                    : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
-                }`}
-              >
-                {tab.label}
-                <span className="ml-1.5 font-mono text-[11px] text-zinc-400 dark:text-zinc-500">
-                  {tab.count}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-      )}
-
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <form action={basePath} method="get" className="relative w-full sm:max-w-xs">
+        {kindCounts && (
+          <div
+            role="tablist"
+            aria-label="作品类型"
+            className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-zinc-900/[0.045] p-1 dark:bg-white/[0.055]"
+          >
+            {[
+              {
+                id: "all" as const,
+                label: "All",
+                count: kindCounts.components + kindCounts.blocks,
+                href: buildHref("/ui", { q, tag }),
+              },
+              ...kinds.map((item) => ({
+                id: item,
+                label: galleryKindMeta[item].label,
+                count: kindCounts[item],
+                href: buildHref("/ui", { kind: item, q, tag }),
+              })),
+            ].map((tab) => {
+              const active = tab.id === "all" ? !kind : kind === tab.id;
+              return (
+                <Link
+                  key={tab.id}
+                  href={tab.href}
+                  role="tab"
+                  aria-selected={active}
+                  className={`inline-flex h-8 items-center rounded-full px-4 text-sm transition-colors ${
+                    active
+                      ? "bg-white font-medium text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-white"
+                      : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+                  }`}
+                >
+                  {tab.label}
+                  <span
+                    className={`ml-1.5 font-mono text-[11px] ${
+                      active
+                        ? "text-zinc-400 dark:text-zinc-500"
+                        : "text-zinc-400/80 dark:text-zinc-500"
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+
+        <form
+          action={basePath}
+          method="get"
+          className="relative w-full sm:ml-auto sm:max-w-[260px]"
+        >
           {tag && <input type="hidden" name="tag" value={tag} />}
           <Search
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
+            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
             aria-hidden="true"
           />
           <input
@@ -130,79 +145,91 @@ export function GalleryFilters({
             defaultValue={q}
             placeholder="搜索作品、标签…"
             aria-label="搜索作品"
-            className="w-full rounded-xl border border-zinc-200 bg-white py-2 pl-9 pr-3 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white"
+            className="h-10 w-full rounded-full bg-zinc-900/[0.045] pl-10 pr-4 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 hover:bg-zinc-900/[0.06] focus:bg-white focus:ring-2 focus:ring-zinc-900/10 dark:bg-white/[0.055] dark:text-white dark:placeholder:text-zinc-500 dark:hover:bg-white/[0.07] dark:focus:bg-zinc-900 dark:focus:ring-white/15"
           />
         </form>
-
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">
-          共 <span className="font-mono text-zinc-900 dark:text-white">{resultCount}</span>{" "}
-          个作品
-          {hasFilters && (
-            <Link
-              href={basePath}
-              className="ml-3 inline-flex items-center gap-1 text-emerald-500 hover:text-emerald-400"
-            >
-              <X className="h-3 w-3" aria-hidden="true" />
-              清除筛选
-            </Link>
-          )}
-        </p>
       </div>
 
-      {categories && categories.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          <Chip
-            href={
-              kind
-                ? buildHref(`/ui/${kind}`, { q, tag })
-                : buildHref(basePath, { q, tag })
-            }
-            active={!activeCategory}
-          >
-            All
-          </Chip>
-          {categories.map((category) => (
-            <Chip
-              key={category.id}
-              href={
-                kind
-                  ? buildHref(`/ui/${kind}/${category.id}`, { q, tag })
-                  : buildHref(basePath, { cat: category.id, q, tag })
-              }
-              active={activeCategory === category.id}
-            >
-              {category.label}
-              <span className="font-mono text-[10px] opacity-60">
-                {category.count}
-              </span>
-            </Chip>
-          ))}
+      {hasFacets && (
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
+          {visibleCategories.length > 0 && (
+            <>
+              <Chip
+                href={
+                  kind
+                    ? buildHref(`/ui/${kind}`, { q, tag })
+                    : buildHref(basePath, { q, tag })
+                }
+                active={!activeCategory}
+              >
+                All
+              </Chip>
+              {visibleCategories.map((category) => (
+                <Chip
+                  key={category.id}
+                  href={
+                    kind
+                      ? buildHref(`/ui/${kind}/${category.id}`, { q, tag })
+                      : buildHref(basePath, { cat: category.id, q, tag })
+                  }
+                  active={activeCategory === category.id}
+                >
+                  {category.label}
+                  <span className="font-mono text-[10px] opacity-50">
+                    {category.count}
+                  </span>
+                </Chip>
+              ))}
+            </>
+          )}
+
+          {tags && tags.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1">
+              {visibleCategories.length > 0 && (
+                <span
+                  aria-hidden="true"
+                  className="mx-1 h-3.5 w-px bg-zinc-900/10 dark:bg-white/10"
+                />
+              )}
+              {tags.slice(0, 12).map((item) => (
+                <Link
+                  key={item}
+                  href={buildHref(basePath, {
+                    q,
+                    tag: tag === item ? undefined : item,
+                  })}
+                  className={`rounded-full px-2 py-0.5 font-mono text-[11px] transition-colors ${
+                    tag === item
+                      ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                      : "text-zinc-400 hover:bg-zinc-900/[0.055] hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-white/[0.07] dark:hover:text-zinc-200"
+                  }`}
+                >
+                  #{item}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
-      {tags && tags.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[11px] uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-            Tags
-          </span>
-          {tags.slice(0, 12).map((item) => (
-            <Link
-              key={item}
-              href={buildHref(basePath, {
-                q,
-                tag: tag === item ? undefined : item,
-              })}
-              className={`rounded-md px-2 py-0.5 font-mono text-[11px] transition-colors ${
-                tag === item
-                  ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
-                  : "bg-zinc-100 text-zinc-500 hover:text-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-              }`}
-            >
-              #{item}
-            </Link>
-          ))}
-        </div>
-      )}
+      <div className="flex items-center justify-between gap-4 pt-1">
+        <p className="text-xs text-zinc-400 dark:text-zinc-500">
+          共{" "}
+          <span className="font-mono tabular-nums text-zinc-700 dark:text-zinc-300">
+            {resultCount}
+          </span>{" "}
+          个作品
+        </p>
+        {hasFilters && (
+          <Link
+            href={basePath}
+            className="inline-flex items-center gap-1 text-xs text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+          >
+            <X className="h-3 w-3" aria-hidden="true" />
+            清除筛选
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

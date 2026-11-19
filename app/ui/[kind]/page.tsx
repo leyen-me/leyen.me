@@ -12,6 +12,7 @@ import {
   filterGalleryItems,
   getGalleryCategoryCounts,
   getGalleryItemsByKind,
+  getGalleryKindCounts,
   getGalleryTags,
 } from "@/lib/ui-gallery/queries";
 
@@ -64,6 +65,7 @@ export default function UiKindPage({
         kind={kind}
         q={searchParams.q}
         tag={searchParams.tag}
+        kindCounts={getGalleryKindCounts()}
         categories={getGalleryCategoryCounts(kind)}
         tags={getGalleryTags(baseItems)}
         resultCount={items.length}

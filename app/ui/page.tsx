@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import PageHeading from "@/app/components/shared/PageHeading";
 import { GalleryFilters } from "@/app/components/ui-gallery/GalleryFilters";
 import { GalleryGrid } from "@/app/components/ui-gallery/GalleryGrid";
 import { isGalleryKind } from "@/lib/ui-gallery/categories";
@@ -62,10 +61,27 @@ export default function UiOverviewPage({
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-16 md:px-16">
-      <PageHeading
-        title="UI"
-        description="A collection of front-end components and blocks, written one at a time. Every piece is real, runnable, and ready to preview, read, and copy."
-      />
+      <header className="mb-10 pt-4 sm:pt-8">
+        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-emerald-500">
+          Collection
+        </p>
+        <div className="mt-3 flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+          <h1 className="font-incognito text-5xl font-semibold leading-none tracking-[-0.035em] text-zinc-900 dark:text-white sm:text-7xl">
+            UI
+          </h1>
+          <p className="hidden pb-1 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400 dark:text-zinc-500 sm:block">
+            {String(kindCounts.components + kindCounts.blocks).padStart(2, "0")} works
+            <span aria-hidden="true" className="mx-2 text-zinc-300 dark:text-zinc-700">
+              /
+            </span>
+            components &amp; blocks
+          </p>
+        </div>
+        <p className="mt-5 max-w-xl text-base leading-7 text-zinc-600 dark:text-zinc-400">
+          A collection of front-end components and blocks, written one at a time.
+          Every piece is real, runnable, and ready to preview, read, and copy.
+        </p>
+      </header>
 
       <GalleryFilters
         basePath="/ui"

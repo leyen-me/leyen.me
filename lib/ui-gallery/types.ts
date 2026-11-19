@@ -26,6 +26,11 @@ export type GalleryMeta = {
   tags?: string[];
   status?: GalleryStatus;
   featured?: boolean;
+  /**
+   * 列表大卡片中展示区的建议高度（px）。
+   * 让不同作品的卡片形成错落的节奏；缺省为 360。
+   */
+  previewHeight?: number;
   /** YYYY-MM-DD，缺省时使用目录创建时间 */
   createdAt?: string;
   /**
@@ -55,6 +60,7 @@ export type GalleryItem = {
   tags: string[];
   status: GalleryStatus;
   featured: boolean;
+  previewHeight: number;
   createdAt: string;
   source: GallerySource;
   /** 去重后的外部依赖（不含 react / next） */

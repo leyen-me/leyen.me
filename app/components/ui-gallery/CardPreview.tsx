@@ -1,30 +1,21 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { DemoRenderer } from "./DemoRenderer";
 import { LazyMount } from "./LazyMount";
 
 /**
- * 列表卡片里的微型预览：进入视口才挂载，且完全不可交互
- * （`inert` 同时移出 tab 顺序与读屏树）。
+ * 列表大卡片里的实时预览：进入视口才挂载，并且完全可交互。
+ * 卡片本身不再是链接，指针事件留给作品；详情入口在卡片底部的标题链接。
  */
 export function CardPreview({ id }: { id: string }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    containerRef.current?.setAttribute("inert", "");
-  }, []);
-
   return (
     <LazyMount
-      className="h-full"
-      fallback={<div className="h-full w-full animate-pulse bg-zinc-100/60 dark:bg-zinc-900/60" />}
+      className="flex w-full justify-center"
+      fallback={
+        <div className="h-32 w-full max-w-sm animate-pulse rounded-2xl bg-zinc-200/60 dark:bg-white/[0.06]" />
+      }
     >
-      <div
-        ref={containerRef}
-        aria-hidden="true"
-        className="pointer-events-none flex h-full w-full items-center justify-center overflow-hidden p-4"
-      >
+      <div className="flex w-full justify-center">
         <DemoRenderer id={id} />
       </div>
     </LazyMount>

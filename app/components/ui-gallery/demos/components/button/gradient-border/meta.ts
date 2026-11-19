@@ -6,6 +6,7 @@ const meta = {
   tags: ["gradient", "hover", "css-only", "cta"],
   status: "ready",
   featured: true,
+  previewHeight: 320,
   hidden: false,
   createdAt: "2026-11-19",
   source: { label: "Original", license: "MIT" },

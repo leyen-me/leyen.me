@@ -15,6 +15,7 @@ import {
   filterGalleryItems,
   getGalleryCategoryCounts,
   getGalleryItemsByCategory,
+  getGalleryKindCounts,
   getGalleryTags,
 } from "@/lib/ui-gallery/queries";
 
@@ -96,6 +97,7 @@ export default function UiCategoryPage({
         activeCategory={category.id}
         q={searchParams.q}
         tag={searchParams.tag}
+        kindCounts={getGalleryKindCounts()}
         categories={getGalleryCategoryCounts(kind)}
         tags={getGalleryTags(baseItems)}
         resultCount={items.length}

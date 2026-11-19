@@ -41,6 +41,8 @@ const LANGUAGE_BY_EXTENSION: Record<string, string> = {
 };
 /** 这些包随项目始终可用，无需写进 requires */
 const IMPLICIT_PACKAGES = new Set(["react", "react-dom", "next"]);
+/** 列表大卡片展示区缺省高度 */
+const DEFAULT_PREVIEW_HEIGHT = 360;
 
 type InstalledDeps = Record<string, string>;
 
@@ -137,6 +139,17 @@ function validateMeta(
   }
   if (meta.createdAt !== undefined && !/^\d{4}-\d{2}-\d{2}$/.test(meta.createdAt)) {
     errors.push(`${where}: meta.createdAt 必须是 YYYY-MM-DD`);
+  }
+  if (meta.previewHeight !== undefined) {
+    const height = meta.previewHeight;
+    if (
+      typeof height !== "number" ||
+      !Number.isInteger(height) ||
+      height < 200 ||
+      height > 900
+    ) {
+      errors.push(`${where}: meta.previewHeight 必须是 200–900 之间的整数`);
+    }
   }
   if (!isRecord(meta.source) || !isNonEmptyString(meta.source.label)) {
     errors.push(`${where}: meta.source.label 必填（写清原创或灵感出处）`);
@@ -302,6 +315,7 @@ async function buildGallery(): Promise<BuildResult> {
           tags: meta.tags ?? [],
           status: meta.status ?? "ready",
           featured: meta.featured ?? false,
+          previewHeight: meta.previewHeight ?? DEFAULT_PREVIEW_HEIGHT,
           createdAt,
           source: meta.source,
           dependencies: [...detected].sort(),

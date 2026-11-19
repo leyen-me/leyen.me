@@ -16,7 +16,7 @@ export function GalleryGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="columns-1 gap-5 sm:columns-2 lg:columns-3">
       {items.map((item) => (
         <GalleryCard key={item.id} item={item} />
       ))}

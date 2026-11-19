@@ -6,6 +6,7 @@ const meta = {
   tags: ["ascii", "canvas", "hover", "mouse", "typography"],
   status: "ready",
   featured: false,
+  previewHeight: 470,
   createdAt: "2026-11-19",
   source: {
     label: "Inspired by Bencho",
