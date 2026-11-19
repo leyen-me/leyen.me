@@ -191,6 +191,10 @@ Rules enforced by the sync script:
 
 `components` render directly on the page; `blocks` render in an isolated iframe under `/ui/preview/...` so their styles and full-width layouts cannot leak into the site.
 
+### Agent workflow
+
+A project-level skill lives at `.opencode/skills/ui-gallery/SKILL.md`. Load it before creating or changing gallery items — it encodes the folder and metadata contract, implementation standards, copyable templates, and the review checklist.
+
 <br/>
 
 ## License
