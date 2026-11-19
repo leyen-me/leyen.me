@@ -2,10 +2,11 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { GalleryItem } from "@/lib/ui-gallery/types";
 import { CardPreview } from "./CardPreview";
+import { GalleryNameCopy } from "./GalleryNameCopy";
 
 /**
- * 列表大卡片：作品居中、可交互，卡片高度由 meta.previewHeight 决定，
- * 让不同作品在瀑布流里形成错落节奏。
+ * 列表大卡片：只展示作品本身，卡片高度由 meta.previewHeight 决定，
+ * 让不同作品在瀑布流里形成错落节奏。标题与描述只在详情页出现。
  */
 export function GalleryCard({ item }: { item: GalleryItem }) {
   const href = `/ui/${item.id}`;
@@ -17,39 +18,30 @@ export function GalleryCard({ item }: { item: GalleryItem }) {
           className="relative flex items-center justify-center px-5 py-8 sm:px-7"
           style={{ minHeight: item.previewHeight }}
         >
+          {item.status === "wip" && (
+            <span className="absolute right-4 top-4 rounded-full bg-amber-500/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white">
+              WIP
+            </span>
+          )}
+
           <CardPreview id={item.id} />
-        </div>
 
-        <div className="px-5 pb-6 sm:px-7">
-          <div className="relative flex items-end justify-between gap-4 border-t border-zinc-900/[0.06] pt-5 dark:border-white/[0.07]">
-            <div className="min-w-0">
-              {item.status === "wip" && (
-                <span className="mb-2 inline-flex rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-amber-600 dark:bg-amber-400/10 dark:text-amber-400">
-                  WIP
-                </span>
-              )}
-              <h3 className="truncate text-lg font-semibold leading-7 tracking-tight text-zinc-900 dark:text-white">
-                {/*
-                  预览区承载可交互 demo（拖拽、输入、按钮），整卡包裹 Link 会吞掉这些交互。
-                  因此把链接拉伸到整个 meta 区：标题、描述、箭头都可点。
-                */}
-                <Link
-                  href={href}
-                  className="rounded-sm outline-none transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-emerald-600 focus-visible:underline focus-visible:decoration-emerald-500 focus-visible:underline-offset-4 dark:group-hover:text-emerald-400"
-                >
-                  {item.title}
-                </Link>
-              </h3>
-              <p className="mt-2 line-clamp-2 text-sm leading-6 text-zinc-500 dark:text-zinc-400">
-                {item.summary}
-              </p>
-            </div>
+          <GalleryNameCopy name={item.title} />
 
+          {/*
+            预览区承载可交互 demo（拖拽、输入、按钮），整卡包链接会吞掉这些交互，
+            所以详情入口只在悬停/聚焦时于右下角出现；触屏没有悬停，始终显示。
+          */}
+          <Link
+            href={href}
+            className="absolute bottom-3 right-3 p-2 text-zinc-400 transition-[opacity,transform,color] duration-300 hover:text-emerald-600 focus-visible:rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100 pointer-events-none translate-y-1 opacity-0 [@media(hover:none)]:pointer-events-auto [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100 dark:text-zinc-500 dark:hover:text-emerald-400"
+          >
+            <span className="sr-only">{item.title}</span>
             <ArrowUpRight
               aria-hidden="true"
-              className="pointer-events-none mb-0.5 h-5 w-5 shrink-0 text-zinc-400 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-emerald-500 dark:text-zinc-500"
+              className="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
             />
-          </div>
+          </Link>
         </div>
       </div>
     </article>
