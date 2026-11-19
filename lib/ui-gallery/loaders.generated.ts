@@ -5,9 +5,6 @@ import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
 
 export const galleryLoaders: Record<string, ComponentType> = {
-  "components/button/gradient-border": dynamic(() =>
-    import("@/app/components/ui-gallery/demos/components/button/gradient-border/index")
-  ),
   "components/card/ascii-wake": dynamic(() =>
     import("@/app/components/ui-gallery/demos/components/card/ascii-wake/index")
   ),

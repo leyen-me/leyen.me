@@ -7,7 +7,7 @@ const meta = {
   status: "ready",
   featured: true,
   previewHeight: 320,
-  hidden: false,
+  hidden: true,
   createdAt: "2026-11-19",
   source: { label: "Original", license: "MIT" },
   requires: ["lucide-react"],

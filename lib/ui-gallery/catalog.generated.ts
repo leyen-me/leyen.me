@@ -3,34 +3,6 @@ import type { GalleryItem } from "./types";
 
 export const galleryCatalog: GalleryItem[] = [
   {
-    "id": "components/button/gradient-border",
-    "kind": "components",
-    "category": "button",
-    "slug": "gradient-border",
-    "title": "Gradient Border Button",
-    "summary": "用一层动态渐变描边包裹按钮，hover 时提升亮度与位移。",
-    "tags": [
-      "gradient",
-      "hover",
-      "css-only",
-      "cta"
-    ],
-    "status": "ready",
-    "featured": true,
-    "previewHeight": 320,
-    "createdAt": "2026-11-19",
-    "source": {
-      "label": "Original",
-      "license": "MIT"
-    },
-    "dependencies": [
-      "lucide-react"
-    ],
-    "files": [
-      "index.tsx"
-    ]
-  },
-  {
     "id": "components/card/ascii-wake",
     "kind": "components",
     "category": "card",

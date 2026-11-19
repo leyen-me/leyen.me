@@ -1,11 +1,4 @@
 {
-  "components/button/gradient-border": [
-    {
-      "path": "index.tsx",
-      "language": "tsx",
-      "code": "\"use client\";\n\nimport { ArrowUpRight } from \"lucide-react\";\n\nexport default function Demo() {\n  return (\n    <button\n      type=\"button\"\n      className=\"group relative inline-flex rounded-full p-[1.5px] transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-950\"\n    >\n      <span\n        aria-hidden=\"true\"\n        className=\"absolute inset-0 rounded-full bg-[conic-gradient(from_180deg,#33E092,#22d3ee,#a855f7,#33E092)] opacity-70 blur-[1px] transition-opacity duration-300 group-hover:opacity-100\"\n      />\n      <span className=\"relative inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-medium text-zinc-900 transition-colors duration-300 dark:bg-zinc-950 dark:text-white\">\n        Get started\n        <ArrowUpRight\n          className=\"h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5\"\n          aria-hidden=\"true\"\n        />\n      </span>\n    </button>\n  );\n}\n"
-    }
-  ],
   "components/card/ascii-wake": [
     {
       "path": "index.tsx",
