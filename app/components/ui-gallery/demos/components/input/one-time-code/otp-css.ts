@@ -40,7 +40,7 @@ export const OTP_CSS = `
 
 .otp-demo .otp-digit {
   color: #17181a;
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -77,8 +77,8 @@ export const OTP_CSS = `
   top: 50%;
   left: 0;
   width: 2px;
-  height: 18px;
-  margin-top: -9px;
+  height: 23px;
+  margin-top: -11.5px;
   border-radius: 2px;
   background: #17181a;
   opacity: 0;
@@ -112,7 +112,7 @@ export const OTP_CSS = `
   justify-content: center;
   gap: 8px;
   color: #17181a;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 400;
   letter-spacing: -0.01em;
   pointer-events: none;

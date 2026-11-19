@@ -90,7 +90,7 @@ export function ToastRow({
       <div
         className={`h-full w-full transition-[opacity,transform,background-color,box-shadow] duration-[220ms] motion-reduce:transition-none ${
           tucked
-            ? "bg-surface-1"
+            ? "bg-surface-1 ring-1 ring-inset ring-surface-line"
             : "bg-surface-0"
         }`}
         style={{

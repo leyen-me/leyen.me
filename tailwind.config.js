@@ -22,6 +22,7 @@ module.exports = {
           0: "var(--surface-0)",
           1: "var(--surface-1)",
           2: "var(--surface-2)",
+          line: "var(--surface-line)",
         },
       },
       borderRadius: {

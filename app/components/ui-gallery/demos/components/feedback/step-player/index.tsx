@@ -236,7 +236,7 @@ export default function Demo() {
         aria-label={`Step ${step + 1} of ${STEPS}`}
       >
         <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center rounded-panel bg-surface-0 p-[14px]">
+          <div className="flex items-center justify-center rounded-panel bg-surface-0 p-[16px]">
             <div
               className="relative shrink-0"
               style={{ width: TRACK_WIDTH, height: DOT }}
@@ -276,14 +276,14 @@ export default function Demo() {
             </div>
           </div>
 
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-0 transition-transform duration-[160ms] ease-[cubic-bezier(.22,1,.36,1)] [&:has(button:active)]:scale-[.96] motion-reduce:transition-none">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-0 transition-transform duration-[160ms] ease-[cubic-bezier(.22,1,.36,1)] [&:has(button:active)]:scale-[.96] motion-reduce:transition-none">
             <button
               type="button"
               onClick={toggle}
               aria-label={playing ? "Pause" : "Play"}
               className="grid h-full w-full cursor-pointer place-items-center rounded-full text-[#17181a] transition-colors duration-[160ms] hover:text-[#7f8081] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17181a]/[0.45] focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 motion-reduce:transition-none dark:text-white dark:hover:text-[#939394] dark:focus-visible:ring-white/[0.45]"
             >
-              <PlayIcon playing={playing} size={14} still={reduced} />
+              <PlayIcon playing={playing} size={16} still={reduced} />
             </button>
           </div>
         </div>

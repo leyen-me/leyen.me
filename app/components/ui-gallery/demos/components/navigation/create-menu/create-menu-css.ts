@@ -8,7 +8,6 @@ export const CREATE_MENU_CSS = `
   --crt-slab: var(--surface-0);
   --crt-on-slab: #17181a;
   --crt-on-slab-rgb: 23 24 26;
-  --crt-edge: rgba(23, 24, 26, 0.14);
   --pill-w: 120px;
   --pill-h: 38px;
   --panel-w: 212px;
@@ -21,9 +20,8 @@ export const CREATE_MENU_CSS = `
 }
 
 .dark .crt-demo {
-  --crt-on-slab: var(--surface-0);
+  --crt-on-slab: #ffffff;
   --crt-on-slab-rgb: 255 255 255;
-  --crt-edge: rgba(255, 255, 255, 0.16);
 }
 
 .crt-demo .crt-defs {
@@ -191,16 +189,16 @@ export const CREATE_MENU_CSS = `
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background: rgba(var(--crt-on-slab-rgb), 0.08);
+  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.22s;
+  transition: opacity 0.2s ease;
 }
 
 .crt-demo .crt-item button:hover::before,
 .crt-demo .crt-item button:focus-visible::before {
   opacity: 1;
-  transition-duration: 0.16s;
+  transition-duration: 0.18s;
 }
 
 .crt-demo .crt-item button:focus-visible {
@@ -213,9 +211,7 @@ export const CREATE_MENU_CSS = `
   .crt-demo .crt-body,
   .crt-demo .crt-pill,
   .crt-demo .crt-say,
-  .crt-demo .crt-item,
-  .crt-demo .crt-item button,
-  .crt-demo .crt-item button::before {
+  .crt-demo .crt-item {
     transition-duration: 0.01ms !important;
     transition-delay: 0ms !important;
   }

@@ -10,7 +10,7 @@ import Otp from "./otp";
 export default function Demo() {
   return (
     <div className="flex w-full flex-col items-center">
-      <Otp length={4} answer="Accept" corner={12} />
+      <Otp length={4} answer="Accept" corner={14} />
     </div>
   );
 }

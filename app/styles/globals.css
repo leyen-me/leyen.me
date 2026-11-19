@@ -23,12 +23,17 @@ html {
   --radius-panel: 20px;
   --radius-item: 14px;
   --radius-control: 10px;
+
+  /* Hairline used only where a surface needs to read against its neighbour,
+     e.g. the tucked rows of the toast stack. */
+  --surface-line: rgba(24, 24, 27, 0.08);
 }
 
 html.dark {
   --surface-0: #18181b;
   --surface-1: #27272a;
   --surface-2: #3f3f46;
+  --surface-line: rgba(255, 255, 255, 0.1);
 }
 
 /* Shiki 双主题：浅色/深色模式使用对应 CSS 变量 */

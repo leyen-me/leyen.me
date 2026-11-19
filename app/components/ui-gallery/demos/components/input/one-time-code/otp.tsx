@@ -393,8 +393,8 @@ export default function Otp({
               style={{ opacity: done, scale: mix(0.92, 1, done) }}
             >
               <svg
-                width="14"
-                height="14"
+                width="18"
+                height="18"
                 viewBox="0 0 16 16"
                 fill="none"
                 stroke="currentColor"

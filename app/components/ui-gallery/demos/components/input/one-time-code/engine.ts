@@ -2,19 +2,20 @@
  * Geometry and motion shared by the OTP port, lifted from Bencho's
  * `Otp-BDyim0GA.js`:
  *
- *   p = 36   cell width     m = 44   row height
- *   ee = 7   gap            h = 128  capsule width
+ *   p = 46   cell width     m = 56   row height
+ *   ee = 9   gap            h = 164  capsule width
  *   l = 260  digit entrance  _ = 620  rejection shake
  *
- * The cells sit on a 43 px pitch (36 + 7). Everything is expressed in plain
- * numbers so the render pass stays deterministic and SSR-safe.
+ * The source ships 36 / 44 / 7 / 128; every value is scaled ~1.28x so the
+ * four cells read at gallery size. Everything is expressed in plain numbers so
+ * the render pass stays deterministic and SSR-safe.
  */
 
-export const CELL = 36;
-export const ROW_HEIGHT = 44;
-export const GAP = 7;
+export const CELL = 46;
+export const ROW_HEIGHT = 56;
+export const GAP = 9;
 export const PITCH = CELL + GAP;
-export const CAPSULE = 128;
+export const CAPSULE = 164;
 export const ENTER_MS = 260;
 export const DENY_MS = 620;
 export const DENY_SETTLE_MS = 820;

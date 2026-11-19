@@ -7,11 +7,15 @@
  * chunk (DOT 8, ACTIVE 36, GAP 8, PAD 14, TOOL 36).
  */
 
-export const DOT = 8;
-export const ACTIVE = 36;
-export const GAP = 8;
-export const PAD = 14;
-export const TOOL = 36;
+/*
+ * Gallery scaling: the port keeps Bencho's proportions (dot 8 / active 36 /
+ * gap 8 at 1x) but renders them ~1.4x larger so the widget reads on the card.
+ */
+export const DOT = 12;
+export const ACTIVE = 52;
+export const GAP = 12;
+export const PAD = 16;
+export const TOOL = 48;
 
 /** Edge ease-out duration, in milliseconds. */
 export const EASE = 520;
