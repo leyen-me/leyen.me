@@ -74,6 +74,9 @@ export default function Demo() {
   const listId = `pik-list-${uid}`;
 
   const [open, setOpen] = useState(true);
+  // The card opens by default for the gallery; outside clicks only dismiss a
+  // panel the visitor opened themselves, so browsing the page does not fold it.
+  const [dismissible, setDismissible] = useState(false);
   const [selected, setSelected] = useState<string[]>([...INITIAL_IDS]);
   const [live, setLive] = useState("");
 
@@ -94,7 +97,7 @@ export default function Demo() {
 
   // Outside pointer closes without stealing focus back.
   useEffect(() => {
-    if (!open) return;
+    if (!open || !dismissible) return;
 
     const handlePointerDown = (event: PointerEvent) => {
       if (rootRef.current?.contains(event.target as Node)) return;
@@ -104,7 +107,7 @@ export default function Demo() {
     document.addEventListener("pointerdown", handlePointerDown);
     return () =>
       document.removeEventListener("pointerdown", handlePointerDown);
-  }, [open]);
+  }, [open, dismissible]);
 
   const closeAndReturnFocus = useCallback(() => {
     setOpen(false);
@@ -131,7 +134,10 @@ export default function Demo() {
   ) {
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      if (!open) setOpen(true);
+      if (!open) {
+        setDismissible(true);
+        setOpen(true);
+      }
       return;
     }
 
@@ -159,7 +165,10 @@ export default function Demo() {
               ? `Assignees, ${selectedPeople.length} selected`
               : "Assignees, unassigned"
           }
-          onClick={() => setOpen((value) => !value)}
+          onClick={() => {
+            setDismissible(true);
+            setOpen((value) => !value);
+          }}
           onKeyDown={handleTriggerKeyDown}
         >
           <span
