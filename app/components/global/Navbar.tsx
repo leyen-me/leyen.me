@@ -16,6 +16,10 @@ export default function Navbar() {
       href: "/projects",
     },
     {
+      title: "UI",
+      href: "/ui",
+    },
+    {
       title: "Blog",
       href: "/blog",
     },

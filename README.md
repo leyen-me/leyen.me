@@ -27,6 +27,7 @@ A modern personal website featuring:
 - **Password Vault** — Encrypted, slide-captcha-protected credential manager
 - **Photos** — Image showcase page
 - **3D Hero** — Interactive WebGL (Three.js / React Three Fiber) hero section
+- **UI Gallery** — A growing collection of hand-written components and page blocks, each with a live preview, copyable source, and implementation notes
 - **Admin Panel** — Full CRUD admin dashboard for managing all content types, plus AI-powered writing assistance (slug generation, content drafting, markdown preview)
 
 <br/>
@@ -115,9 +116,11 @@ app/                  — Next.js App Router pages and API routes
 ├── projects/         — Project listing and detail pages
 ├── quotes/           — Quote collection page
 ├── resume/           — Résumé page and print template
+├── ui/               — UI Gallery: components & blocks, previews, source and notes
 └── styles/           — Global CSS and Prism theme
 
 lib/                  — Business logic, Sanity queries, utilities
+lib/ui-gallery/       — Gallery types, categories, generated catalog/loaders/sources
 schemas/              — Sanity content type schemas
 components/ui/        — Reusable UI primitives (shadcn-style)
 public/               — Static assets (images, 3D models)
@@ -130,9 +133,11 @@ types/                — TypeScript type definitions
 
 | Command             | Description                               |
 | ------------------- | ----------------------------------------- |
-| `npm run dev`       | Start Next.js development server          |
-| `npm run build`     | Lint then build for production            |
+| `npm run dev`       | Start Next.js development server (runs `ui:sync` first) |
+| `npm run build`     | Lint then build for production (verifies gallery sync) |
 | `npm run start`     | Start production server                   |
+| `npm run ui:sync`   | Scan `ui-gallery/demos` and regenerate catalog, loaders and source snapshots |
+| `npm run ui:new`    | Scaffold a new gallery item (see below)   |
 | `npm run migrate:pt-to-md` | Migrate Portable Text to Markdown  |
 
 <br/>
@@ -158,6 +163,34 @@ An interactive 3D scene on the homepage using React Three Fiber and a Tesla Cybe
 ### Blog
 
 Articles written in Markdown with GFM support, syntax highlighting via Refractor, reading time estimation, and a sticky table of contents.
+
+<br/>
+
+## UI Gallery
+
+A personal collection of components (`/ui/components`) and page blocks (`/ui/blocks`). Source code lives in the repository — it is the single source of truth. Metadata, previews and code panels are generated from the folder structure.
+
+```
+app/components/ui-gallery/demos/<kind>/<category>/<slug>/
+├── index.tsx   # default export = live preview
+├── meta.ts     # title, summary, tags, source, requires
+└── notes.md    # optional implementation notes
+```
+
+| Command | Purpose |
+| ------- | ------- |
+| `npm run ui:sync` | Scan demos → `catalog.generated.ts`, `loaders.generated.ts`, `sources.generated.json` |
+| `npm run ui:sync -- --check` | Fail if generated files are stale (used by `prebuild`) |
+| `npm run ui:new -- --kind components --category button --slug gradient-border --title "Gradient Border"` | Scaffold a new item |
+
+Rules enforced by the sync script:
+
+- `index.tsx` and `meta.ts` are required; folder names must be lowercase kebab-case.
+- `kind` / `category` must exist in `lib/ui-gallery/categories.ts`.
+- Demo code must be self-contained: no imports from `@/...` project aliases.
+- Every third-party package used must be installed and declared in `meta.requires`.
+
+`components` render directly on the page; `blocks` render in an isolated iframe under `/ui/preview/...` so their styles and full-width layouts cannot leak into the site.
 
 <br/>
 

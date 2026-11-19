@@ -9,6 +9,7 @@ import UnmountStudio from "./Unmount";
 export default function Footer() {
   const navigation = [
     { title: "Projects", href: "/projects" },
+    { title: "UI", href: "/ui" },
     { title: "Blog", href: "/blog" },
     { title: "Quotes", href: "/quotes" },
     { title: "Movies", href: "/movies" },
