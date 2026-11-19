@@ -55,7 +55,7 @@ export default function Demo() {
           {features.map(({ title, description, icon: Icon, className }) => (
             <article
               key={title}
-              className={`group relative overflow-hidden rounded-2xl border border-zinc-200 bg-surface-0 p-6 transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900/50 dark:hover:border-zinc-700 ${className}`}
+              className={`group relative overflow-hidden rounded-panel border border-zinc-200 bg-surface-0 p-6 transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900/50 dark:hover:border-zinc-700 ${className}`}
             >
               <div
                 aria-hidden="true"

@@ -65,7 +65,7 @@ export const DYNAMIC_ISLAND_CSS = `
 .dyn-stage .dyn-pill[data-tone="white"] {
   background: #fff;
   color: #17181a;
-  box-shadow: inset 0 0 0 1px rgba(23, 24, 26, 0.06);
+
 }
 
 .dyn-stage .dyn-toggle {
@@ -327,7 +327,7 @@ export const DYNAMIC_ISLAND_CSS = `
   flex: none;
   width: 46px;
   height: 46px;
-  border-radius: 10px;
+  border-radius: var(--radius-control);
   overflow: hidden;
   background:
     radial-gradient(38% 34% at 68% 30%, #ffe6c7 0%, #ffd9b4 55%, transparent 60%),

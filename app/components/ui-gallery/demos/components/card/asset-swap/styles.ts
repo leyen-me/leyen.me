@@ -10,18 +10,16 @@ export const ASSET_SWAP_CSS = `
 .swp-stage {
   --swp-slab: var(--surface-0);
   --swp-on: #17181a;
-  --swp-edge: rgba(23, 24, 26, 0.08);
   --swp-pick: #0d99ff;
   --swp-muted: #868789;
   --swp-hover: rgba(23, 24, 26, 0.06);
   --swp-hover-strong: rgba(23, 24, 26, 0.2);
   --swp-flip: #f1f1f1;
-  --swp-r: 20px;
+  --swp-r: var(--radius-panel);
 }
 
 .dark .swp-stage {
   --swp-on: #ffffff;
-  --swp-edge: rgba(255, 255, 255, 0.08);
   --swp-pick: #3aa9ff;
   --swp-muted: #929292;
   --swp-hover: rgba(255, 255, 255, 0.06);
@@ -50,7 +48,6 @@ export const ASSET_SWAP_CSS = `
   overflow: hidden;
   border-radius: var(--swp-r);
   background: var(--swp-slab);
-  box-shadow: inset 0 0 0 1px var(--swp-edge);
   opacity: 1;
   transition:
     top 500ms cubic-bezier(0.22, 1.12, 0.36, 1),
@@ -202,10 +199,9 @@ export const ASSET_SWAP_CSS = `
   margin: -20px 0 0 -20px;
   padding: 0;
   border: 0;
-  border-radius: 20px;
+  border-radius: var(--radius-panel);
   background: var(--swp-flip);
   color: var(--swp-on);
-  box-shadow: inset 0 0 0 1px var(--swp-edge);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition:
@@ -296,7 +292,7 @@ export const ASSET_SWAP_CSS = `
   min-height: 0;
   padding: 0 12px;
   border: 0;
-  border-radius: 10px;
+  border-radius: var(--radius-control);
   background: transparent;
   color: inherit;
   font-family: inherit;

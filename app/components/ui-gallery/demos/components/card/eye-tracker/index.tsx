@@ -248,7 +248,7 @@ export default function EyeTracker() {
           type="button"
           onClick={speak}
           aria-label="A cube with two eyes that follows the cursor. Press to make it speak."
-          className="group h-[100px] w-[100px] cursor-pointer rounded-full border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f1f1f0] dark:focus-visible:ring-offset-[#171717] [-webkit-tap-highlight-color:transparent]"
+          className="group h-[100px] w-[100px] cursor-pointer rounded-full border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 [-webkit-tap-highlight-color:transparent]"
         >
           <svg
             viewBox="0 0 100 100"
@@ -260,7 +260,7 @@ export default function EyeTracker() {
                 <path d={CUBE_PATH} />
               </clipPath>
             </defs>
-            <path d={CUBE_PATH} className="fill-white dark:fill-[#262626]" />
+            <path d={CUBE_PATH} className="fill-surface-0" />
             <g clipPath={`url(#${clipId})`}>
               {[0, 1].map((index) => {
                 const eye = INITIAL_EYES[index];
@@ -305,7 +305,7 @@ export default function EyeTracker() {
           <span>{line}</span>
           <span
             aria-hidden="true"
-            className="eyet-caret h-[13px] w-[1.5px] rounded-[1px] bg-surface-0 dark:bg-[#262626]"
+            className="eyet-caret h-[13px] w-[1.5px] rounded-[1px] bg-surface-0"
           />
         </span>
       </div>

@@ -90,8 +90,8 @@ export function ToastRow({
       <div
         className={`h-full w-full transition-[opacity,transform,background-color,box-shadow] duration-[220ms] motion-reduce:transition-none ${
           tucked
-            ? "bg-surface-1 shadow-[0_0_0_1px_rgba(23,24,26,0.06)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.06)]"
-            : "bg-surface-0 shadow-[0_0_0_1px_rgba(255,255,255,0.4)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.2)]"
+            ? "bg-surface-1"
+            : "bg-surface-0"
         }`}
         style={{
           borderRadius: CORNER,

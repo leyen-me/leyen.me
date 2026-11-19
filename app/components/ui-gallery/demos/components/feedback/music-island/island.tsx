@@ -17,8 +17,8 @@ export type Tone = "Black" | "White";
 /** Compact pill from the source; 150 × 36 with an 18px corner. */
 const COMPACT = { width: 150, height: 36, radius: 18 };
 
-/** The opened music card; 300 × 150 with a 42px corner. */
-const OPEN = { width: 300, height: 150, radius: 42 };
+/** The opened music card; 300 × 150. Corner matches `--radius-shell`. */
+const OPEN = { width: 300, height: 150, radius: 28 };
 
 /** Damping is 34 − 16 × bounce/100 with the block's default bounce of 40. */
 const SPRING = { stiffness: 380, damping: 27.6, mass: 0.9 };

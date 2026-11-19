@@ -84,7 +84,7 @@ export default function Demo() {
     <div className="flex w-full justify-center py-6">
       <div
         ref={cardRef}
-        className="relative flex select-none flex-col gap-4 rounded-[20px] bg-surface-0 p-4 text-[13px] text-[#17181a] ring-1 ring-black/[0.08] [--stb-slab:var(--surface-0)] [--stb-mute:#8b8b8c] dark:text-white dark:ring-white/[0.08] dark:[--stb-mute:#979797]"
+        className="relative flex select-none flex-col gap-4 rounded-panel bg-surface-0 p-4 text-[13px] text-[#17181a] [--stb-slab:var(--surface-0)] [--stb-mute:#8b8b8c] dark:text-white dark:[--stb-mute:#979797]"
         style={cardWidth}
       >
         <div className="flex items-center gap-3">
@@ -101,7 +101,7 @@ export default function Demo() {
             role="tablist"
             aria-label="Traffic range"
             onKeyDown={onTabKeyDown}
-            className="relative grid grid-cols-2 rounded-[10px] bg-black/[0.06] p-0.5 dark:bg-white/[0.06]"
+            className="relative grid grid-cols-2 rounded-control bg-black/[0.06] p-0.5 dark:bg-white/[0.06]"
           >
             <span
               aria-hidden="true"

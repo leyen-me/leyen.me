@@ -17,7 +17,7 @@ export default function Demo() {
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      className="group relative w-full max-w-sm overflow-hidden rounded-2xl border border-zinc-200 bg-surface-0 p-7 text-left transition-colors duration-300 hover:border-emerald-300/70 dark:border-zinc-800 dark:hover:border-emerald-500/40"
+      className="group relative w-full max-w-sm overflow-hidden rounded-panel border border-zinc-200 bg-surface-0 p-7 text-left transition-colors duration-300 hover:border-emerald-300/70 dark:border-zinc-800 dark:hover:border-emerald-500/40"
     >
       <div
         aria-hidden="true"
@@ -28,7 +28,7 @@ export default function Demo() {
         }}
       />
       <div className="relative">
-        <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500">
+        <span className="inline-flex h-10 w-10 items-center justify-center rounded-item bg-emerald-500/10 text-emerald-500">
           <svg
             viewBox="0 0 24 24"
             fill="none"

@@ -183,7 +183,7 @@ export default function Huddle() {
       <div className="w-full max-w-[340px] p-5">
         <section
           aria-label="Design huddle voice room"
-          className="mx-auto w-full select-none rounded-[20px] bg-surface-0 p-4 text-zinc-900 ring-1 ring-zinc-200/80 dark:text-zinc-50 dark:ring-zinc-800"
+          className="mx-auto w-full select-none rounded-panel bg-surface-0 p-4 text-zinc-900 dark:text-zinc-50"
           style={{ maxWidth: CARD_WIDTH }}
         >
           <p className="text-base font-medium leading-[22px] tracking-[-0.01em]">
@@ -214,7 +214,7 @@ export default function Huddle() {
                       <span
                         aria-hidden="true"
                         title="Hand raised"
-                        className="absolute -right-1 -top-1 grid h-[18px] w-[18px] place-items-center rounded-full bg-surface-0 text-zinc-900 ring-1 ring-zinc-900/10 dark:bg-zinc-800 dark:text-zinc-50 dark:ring-white/15"
+                        className="absolute -right-1 -top-1 grid h-[18px] w-[18px] place-items-center rounded-full bg-surface-0 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
                       >
                         <HandIcon className="h-2.5 w-2.5" />
                       </span>
@@ -302,13 +302,13 @@ export default function Huddle() {
                 id={menuId}
                 role="group"
                 aria-label="Huddle options"
-                className="absolute bottom-full right-0 z-10 mb-2 w-44 rounded-xl border border-zinc-200 bg-surface-0 p-1 dark:border-zinc-700 dark:bg-zinc-800"
+                className="absolute bottom-full right-0 z-10 mb-2 w-44 rounded-panel border border-zinc-200 bg-surface-0 p-1 dark:border-zinc-700 dark:bg-zinc-800"
               >
                 <button
                   type="button"
                   aria-pressed={hand}
                   onClick={toggleHand}
-                  className={`${FOCUS_RING} flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-[13px] font-medium text-zinc-800 transition-colors hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-700 ${
+                  className={`${FOCUS_RING} flex h-9 w-full items-center gap-2 rounded-item px-2.5 text-[13px] font-medium text-zinc-800 transition-colors hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-700 ${
                     hand ? "bg-zinc-100 dark:bg-zinc-700" : ""
                   }`}
                 >

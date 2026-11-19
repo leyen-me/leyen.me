@@ -24,6 +24,12 @@ module.exports = {
           2: "var(--surface-2)",
         },
       },
+      borderRadius: {
+        shell: "var(--radius-shell)",
+        panel: "var(--radius-panel)",
+        item: "var(--radius-item)",
+        control: "var(--radius-control)",
+      },
       boxShadow: {
         "line-light": "rgba(17, 17, 26, 0.1) 0px 1px 0px",
         "line-dark": "rgb(29, 29, 32) 0px 1px 0px",

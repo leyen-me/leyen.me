@@ -43,7 +43,7 @@ export default function Demo() {
           aria-pressed={liked}
           aria-label={`${liked ? "Unlike" : "Like"}. ${count.toLocaleString("en-US")} likes`}
           onClick={handleClick}
-          className="like-button flex h-11 items-center gap-2 rounded-[22px] bg-surface-0 ring-1 ring-black/[0.08] pl-4 pr-5 dark:ring-white/[0.10] text-base font-medium tracking-[-0.01em] text-[#17181a] transition duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] [-webkit-tap-highlight-color:transparent] hover:bg-surface-1 active:scale-[0.96] dark:text-white"
+          className="like-button flex h-11 items-center gap-2 rounded-full bg-surface-0 pl-4 pr-5 text-base font-medium tracking-[-0.01em] text-[#17181a] transition duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] [-webkit-tap-highlight-color:transparent] hover:bg-surface-1 active:scale-[0.96] dark:text-white"
         >
           <span className="relative grid h-5 w-5 place-items-center">
             <span

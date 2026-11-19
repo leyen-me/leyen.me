@@ -295,7 +295,7 @@ export default function Demo() {
           data-phase={phase}
           data-armed={armed || undefined}
           style={shellStyle}
-          className="relative overflow-hidden rounded-[28px] bg-surface-0 ring-1 ring-black/[0.06] dark:ring-white/[0.08]"
+          className="relative overflow-hidden rounded-shell bg-surface-0"
         >
           <RefreshRing phase={phase} progress={progress} reduced={reduced} />
 

@@ -16,7 +16,7 @@ export default function Demo() {
       >
         <span
           aria-hidden="true"
-          className="absolute inset-y-1 rounded-full bg-surface-0 ring-1 ring-black/5 transition-transform duration-300 ease-out dark:bg-zinc-700 dark:ring-white/10"
+          className="absolute inset-y-1 rounded-full bg-surface-0 transition-transform duration-300 ease-out dark:bg-zinc-700"
           style={{
             width: "calc((100% - 0.5rem) / 3)",
             left: "0.25rem",
@@ -42,7 +42,7 @@ export default function Demo() {
       </div>
       <div
         role="tabpanel"
-        className="mt-4 rounded-2xl border border-dashed border-zinc-200 px-4 py-3 text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400"
+        className="mt-4 rounded-panel border border-dashed border-zinc-200 px-4 py-3 text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400"
       >
         {tabs[active]} 面板内容
       </div>

@@ -233,7 +233,7 @@ export default function StackedPlot({
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-0 top-0 z-30 flex flex-col gap-1 rounded-[10px] border border-black/10 bg-[var(--stb-slab)] px-2.5 py-2 text-[12px] leading-4 transition-opacity duration-[160ms] dark:border-white/10"
+        className="pointer-events-none absolute left-0 top-0 z-30 flex flex-col gap-1 rounded-control border border-black/10 bg-[var(--stb-slab)] px-2.5 py-2 text-[12px] leading-4 transition-opacity duration-[160ms] dark:border-white/10"
         style={{
           width: TIP_W,
           transform: `translate3d(${springs.tip}px, 0, 0)`,

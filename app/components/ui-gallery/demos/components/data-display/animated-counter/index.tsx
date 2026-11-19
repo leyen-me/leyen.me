@@ -53,7 +53,7 @@ export default function Demo() {
   return (
     <div
       ref={containerRef}
-      className="w-full max-w-sm rounded-2xl border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 p-7 text-center dark:border-zinc-800 dark:from-zinc-950 dark:to-zinc-900"
+      className="w-full max-w-sm rounded-panel border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 p-7 text-center dark:border-zinc-800 dark:from-zinc-950 dark:to-zinc-900"
     >
       <p className="text-[11px] uppercase tracking-[0.24em] text-zinc-500 dark:text-zinc-400">
         Monthly downloads

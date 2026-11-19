@@ -81,7 +81,7 @@ export default function Demo() {
             return (
               <div
                 key={plan.name}
-                className={`relative flex flex-col rounded-2xl border p-6 ${
+                className={`relative flex flex-col rounded-panel border p-6 ${
                   plan.highlighted
                     ? "border-emerald-400/70 bg-emerald-50/40 dark:border-emerald-500/40 dark:bg-emerald-500/5"
                     : "border-zinc-200 bg-surface-0 dark:border-zinc-800 dark:bg-zinc-900/40"
@@ -122,7 +122,7 @@ export default function Demo() {
                 </ul>
                 <button
                   type="button"
-                  className={`mt-6 w-full rounded-xl px-4 py-2.5 text-sm font-medium transition ${
+                  className={`mt-6 w-full rounded-item px-4 py-2.5 text-sm font-medium transition ${
                     plan.highlighted
                       ? "bg-emerald-500 text-white hover:bg-emerald-400"
                       : "border border-zinc-300 text-zinc-800 hover:border-zinc-400 dark:border-zinc-700 dark:text-zinc-200 dark:hover:border-zinc-500"

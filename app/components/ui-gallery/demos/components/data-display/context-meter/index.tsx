@@ -123,7 +123,7 @@ export default function Demo() {
       <style>{CONTEXT_METER_CSS}</style>
 
       <div
-        className="ctx-meter w-[309px] max-w-full rounded-[20px] bg-surface-0 p-4 text-[#17181a] ring-1 ring-black/[0.08] dark:text-white dark:ring-white/[0.08]"
+        className="ctx-meter w-[309px] max-w-full rounded-panel bg-surface-0 p-4 text-[#17181a] dark:text-white"
         onPointerLeave={() => setActive(null)}
       >
         <div className="flex items-center justify-between">
@@ -135,8 +135,8 @@ export default function Demo() {
             onClick={toggle}
             className={
               compacted
-                ? "ctx-act h-7 rounded-full bg-black/[0.05] px-3 text-[13px] font-medium text-zinc-500 hover:[scale:0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white active:[scale:0.96] dark:bg-white/[0.08] dark:text-white dark:focus-visible:ring-offset-[#18181b]"
-                : "ctx-act h-7 rounded-full bg-black/[0.10] px-3 text-[13px] font-medium text-[#17181a] hover:[scale:0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white active:[scale:0.96] dark:bg-white dark:text-[#18181b] dark:focus-visible:ring-offset-[#18181b]"
+                ? "ctx-act h-7 rounded-full bg-black/[0.05] px-3 text-[13px] font-medium text-zinc-500 hover:[scale:0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 active:[scale:0.96] dark:bg-white/[0.08] dark:text-white"
+                : "ctx-act h-7 rounded-full bg-black/[0.10] px-3 text-[13px] font-medium text-[#17181a] hover:[scale:0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 active:[scale:0.96] dark:bg-white dark:text-[#18181b]"
             }
           >
             {compacted ? "Undo" : "Compact"}
@@ -211,7 +211,7 @@ export default function Demo() {
             <button
               key={kind.id}
               type="button"
-              className={`ctx-chip inline-flex h-8 cursor-default items-center gap-2 rounded-full px-3 text-[13px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#18181b] ${
+              className={`ctx-chip inline-flex h-8 cursor-default items-center gap-2 rounded-full px-3 text-[13px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 ${
                 active === kind.id
                   ? "[scale:0.975] bg-black/[0.12] dark:bg-white/[0.12]"
                   : "bg-black/[0.06] dark:bg-white/[0.06]"

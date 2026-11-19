@@ -448,7 +448,7 @@ export default function Demo() {
 
       <div className="flex flex-col items-start gap-2">
         <div
-          className="rxn-morph relative flex h-12 items-center justify-center bg-surface-0 shadow-[0_0_0_1px_rgba(23,24,26,0.08)] transition-[width,border-radius] duration-[220ms] ease-[cubic-bezier(0.24,1.34,0.38,1)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
+          className="rxn-morph relative flex h-12 items-center justify-center bg-surface-0 transition-[width,border-radius] duration-[220ms] ease-[cubic-bezier(0.24,1.34,0.38,1)]"
           data-open={open ? "true" : "false"}
           style={{
             width: open ? pillWidth : (textWidth ?? undefined),
@@ -536,8 +536,8 @@ export default function Demo() {
               onClick={() => toggleReaction(reaction.e)}
               className={`rxn-chip-in flex h-9 items-center gap-2 rounded-full px-4 pl-3 text-sm font-medium tracking-[-0.01em] transition-[background-color,box-shadow,transform] duration-150 active:scale-[0.92] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 ${
                 reaction.mine
-                  ? "bg-surface-0 text-[#2231dd] shadow-[inset_0_0_0_1px_rgba(34,49,221,0.35)] dark:text-[#8c9bff] dark:shadow-[inset_0_0_0_1px_rgba(140,155,255,0.4)]"
-                  : "bg-surface-0 text-[#17181a] shadow-[inset_0_0_0_1px_rgba(23,24,26,0.06)] dark:text-white dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]"
+                  ? "bg-surface-0 text-[#2231dd] dark:text-[#8c9bff]"
+                  : "bg-surface-0 text-[#17181a] dark:text-white"
               }`}
             >
               <span
@@ -572,7 +572,7 @@ export default function Demo() {
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
           onContextMenu={(event) => event.preventDefault()}
-          className="rxn-add grid h-9 w-9 place-items-center rounded-full bg-surface-0 text-[#8a8a8c] shadow-[inset_0_0_0_1px_rgba(23,24,26,0.06)] transition-[color,transform,box-shadow] duration-150 hover:scale-[1.06] hover:text-[#17181a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:text-[#8c8c8f] dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)] dark:hover:text-white"
+          className="rxn-add grid h-9 w-9 place-items-center rounded-full bg-surface-0 text-[#8a8a8c] transition-[color,transform,box-shadow] duration-150 hover:scale-[1.06] hover:text-[#17181a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:text-[#8c8c8f] dark:hover:text-white"
         >
           <svg
             aria-hidden="true"

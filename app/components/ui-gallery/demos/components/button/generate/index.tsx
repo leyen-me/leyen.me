@@ -174,7 +174,7 @@ export default function Demo() {
       <div
         role="group"
         aria-label="AI image generator"
-        className="group relative h-[330px] w-full overflow-hidden rounded-[20px] bg-surface-0 shadow-[0_0_0_1px_rgba(23,24,26,0.08)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.08)]"
+        className="group relative h-[330px] w-full overflow-hidden rounded-panel bg-surface-0"
       >
         <FlowerDefs
           filterId={filterId}
@@ -229,7 +229,7 @@ export default function Demo() {
           tabIndex={loading ? -1 : 0}
           aria-label={made ? "Generate again" : "Generate"}
           style={{ scale: loading ? 0.9 : undefined }}
-          className={`absolute left-1/2 top-1/2 z-[2] flex h-[42px] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center gap-2 rounded-[20px] px-5 text-sm font-medium tracking-[-0.01em] transition-[opacity,scale] duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:[scale:0.97] active:[scale:0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17181a]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none dark:focus-visible:ring-white/45 dark:focus-visible:ring-offset-[#18181b] ${
+          className={`absolute left-1/2 top-1/2 z-[2] flex h-[42px] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center gap-2 rounded-panel px-5 text-sm font-medium tracking-[-0.01em] transition-[opacity,scale] duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:[scale:0.97] active:[scale:0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17181a]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 motion-reduce:transition-none dark:focus-visible:ring-white/45 ${
             made
               ? "bg-surface-0 text-[#17181a] dark:text-[#f4f3f1]"
               : "bg-surface-1 text-[#17181a] dark:text-[#f4f3f1]"

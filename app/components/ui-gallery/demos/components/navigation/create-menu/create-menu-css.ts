@@ -13,9 +13,9 @@ export const CREATE_MENU_CSS = `
   --pill-h: 38px;
   --panel-w: 212px;
   --panel-h: 166px;
-  --crt-r: 20px;
+  --crt-r: var(--radius-panel);
   --crt-shut-r: 19px;
-  --crt-row-r: 10px;
+  --crt-row-r: var(--radius-control);
   color: var(--crt-on-slab);
   -webkit-tap-highlight-color: transparent;
 }

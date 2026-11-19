@@ -10,7 +10,6 @@ export const ROLLING_COUNTER_CSS = `
 .roll-demo {
   --rct-slab: var(--surface-0);
   --rct-ink: #17181a;
-  --rct-edge: rgba(23, 24, 26, 0.08);
   --rct-signal: #2231dd;
   /* color-mix(in srgb, #17181a 6%, #ffffff) and 10% */
   --rct-btn: #f1f1f1;
@@ -19,7 +18,6 @@ export const ROLLING_COUNTER_CSS = `
 
 .dark .roll-demo {
   --rct-ink: #ffffff;
-  --rct-edge: rgba(255, 255, 255, 0.08);
   /* color-mix(in srgb, #ffffff 6%, #18181b) and 10% */
   --rct-btn: #333333;
   --rct-btn-hover: #3c3c3c;
@@ -35,7 +33,6 @@ export const ROLLING_COUNTER_CSS = `
   border-radius: var(--rct-r);
   background: var(--rct-slab);
   color: var(--rct-ink);
-  box-shadow: 0 0 0 1px var(--rct-edge);
 }
 
 .roll-demo .rct-btn {

@@ -10,12 +10,10 @@ export const SLIDE_CSS = `
 .slide-demo {
   --sld-slab: var(--surface-0);
   --sld-on: #17181a;
-  --sld-edge: rgba(23, 24, 26, 0.08);
   --sld-signal: #2231dd;
 }
 .dark .slide-demo {
   --sld-on: #ffffff;
-  --sld-edge: rgba(255, 255, 255, 0.08);
   --sld-signal: #8b96ff;
 }
 
@@ -31,7 +29,6 @@ export const SLIDE_CSS = `
   width: 100%;
   height: 100%;
   background: var(--sld-slab);
-  box-shadow: inset 0 0 0 1px var(--sld-edge);
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;

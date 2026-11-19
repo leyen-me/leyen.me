@@ -2,8 +2,8 @@
  * Bencho's `.nod-*` layer, scoped to this demo and resolved from the wall's
  * design tokens to concrete light/dark values.
  *
- * Light:  card #ffffff, ink #17181a, wash .06, edge rgba(23,24,26,.08)
- * Dark:   card #18181b, ink #ffffff, wash .053, edge rgba(255,255,255,.08)
+ * Light:  card #ffffff, ink #17181a, wash .06
+ * Dark:   card #18181b, ink #ffffff, wash .053
  *
  * `.an-act`'s `--pop` is written every animation frame by the spring, so it is
  * deliberately not transitioned; only `--zoom` (hover) is eased. `--zoom` needs
@@ -24,7 +24,6 @@ export const ACTION_NODE_CSS = `
   --an-ink-3: #5c5b56;
   --an-ink-4: #6f6e68;
   --an-wash: 0.06;
-  --an-edge: rgba(23, 24, 26, 0.08);
   --an-focus: 52, 211, 153;
   color: var(--an-ink);
 }
@@ -35,7 +34,6 @@ export const ACTION_NODE_CSS = `
   --an-ink-3: #9a9a9a;
   --an-ink-4: #828282;
   --an-wash: 0.053;
-  --an-edge: rgba(255, 255, 255, 0.08);
 }
 
 /* Below the width the fan needs (card 272 + 48 of fan), shrink the whole
@@ -57,10 +55,9 @@ export const ACTION_NODE_CSS = `
   box-sizing: border-box;
   width: 272px;
   padding: 20px;
-  border-radius: var(--an-r, 20px);
+  border-radius: var(--an-r, var(--radius-panel));
   background: var(--an-card);
   color: var(--an-ink);
-  box-shadow: 0 0 0 1px var(--an-edge);
   transition: translate 220ms cubic-bezier(0.24, 1.34, 0.38, 1);
 }
 
@@ -84,7 +81,7 @@ export const ACTION_NODE_CSS = `
   place-items: center;
   width: 30px;
   height: 30px;
-  border-radius: var(--an-mark-r, 14px);
+  border-radius: var(--an-mark-r, var(--radius-item));
   background: rgba(var(--an-ink-rgb), var(--an-wash));
   color: var(--an-ink);
 }
@@ -167,7 +164,6 @@ export const ACTION_NODE_CSS = `
   border-radius: 999px;
   background: var(--an-card);
   color: var(--an-ink);
-  box-shadow: 0 0 0 1px var(--an-edge);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   scale: calc(var(--pop, 1) * var(--zoom, 1));

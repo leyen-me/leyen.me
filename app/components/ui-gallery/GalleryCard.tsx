@@ -13,7 +13,7 @@ export function GalleryCard({ item }: { item: GalleryItem }) {
 
   return (
     <article className="group mb-5 break-inside-avoid">
-      <div className="relative overflow-hidden rounded-[28px] bg-zinc-100/70 ring-1 ring-inset ring-zinc-900/[0.04] transition-colors duration-300 hover:bg-zinc-100 focus-within:ring-zinc-900/10 dark:bg-white/[0.055] dark:ring-white/[0.06] dark:hover:bg-white/[0.075] dark:focus-within:ring-white/15">
+      <div className="relative overflow-hidden rounded-shell bg-zinc-100/70 ring-1 ring-inset ring-zinc-900/[0.04] transition-colors duration-300 hover:bg-zinc-100 focus-within:ring-zinc-900/10 dark:bg-white/[0.055] dark:ring-white/[0.06] dark:hover:bg-white/[0.075] dark:focus-within:ring-white/15">
         <div
           className="relative flex items-center justify-center px-5 py-8 sm:px-7"
           style={{ minHeight: item.previewHeight }}

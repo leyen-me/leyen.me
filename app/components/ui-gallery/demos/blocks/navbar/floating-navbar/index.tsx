@@ -17,7 +17,7 @@ export default function Demo() {
           className="flex items-center justify-between gap-4 rounded-full border border-zinc-200 bg-white/80 p-2 pl-4 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/70"
         >
           <a href="#" className="flex shrink-0 items-center gap-2">
-            <span className="grid h-7 w-7 place-items-center rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900">
+            <span className="grid h-7 w-7 place-items-center rounded-control bg-zinc-900 text-white dark:bg-white dark:text-zinc-900">
               <Command className="h-3.5 w-3.5" aria-hidden="true" />
             </span>
             <span className="text-sm font-semibold text-zinc-900 dark:text-white">
@@ -67,7 +67,7 @@ export default function Demo() {
         {open && (
           <ul
             id="floating-navbar-menu"
-            className="mt-3 space-y-1 rounded-2xl border border-zinc-200 bg-surface-0 p-2 md:hidden dark:border-zinc-800 dark:bg-zinc-900"
+            className="mt-3 space-y-1 rounded-panel border border-zinc-200 bg-surface-0 p-2 md:hidden dark:border-zinc-800 dark:bg-zinc-900"
           >
             {links.map((link) => (
               <li key={link}>
@@ -77,7 +77,7 @@ export default function Demo() {
                     setActive(link);
                     setOpen(false);
                   }}
-                  className="w-full rounded-xl px-3 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800"
+                  className="w-full rounded-item px-3 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800"
                 >
                   {link}
                 </button>

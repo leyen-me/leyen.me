@@ -16,7 +16,7 @@ export const UPLOAD_CSS = `
   --upl-signal: #2231dd;
   --upl-ok: #15803d;
   --upl-red: #e5484d;
-  --upl-r: 20px;
+  --upl-r: var(--radius-panel);
   --upl-spring: cubic-bezier(0.3, 1.36, 0.4, 1);
   position: relative;
   display: flex;
@@ -70,7 +70,6 @@ export const UPLOAD_CSS = `
   height: 176px;
   padding: 0 16px;
   border-radius: var(--upl-r);
-  border: 1px solid color-mix(in srgb, var(--upl-ink) 10%, transparent);
   background: var(--upl-slab);
   overflow: hidden;
   transition:
@@ -121,7 +120,7 @@ export const UPLOAD_CSS = `
   place-items: center;
   width: 38px;
   height: 38px;
-  border-radius: 10px;
+  border-radius: var(--radius-control);
   background: color-mix(in srgb, var(--upl-ink) 6%, var(--upl-slab));
   color: color-mix(in srgb, var(--upl-ink) 72%, var(--upl-slab));
   transition:

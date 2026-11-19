@@ -249,7 +249,7 @@ function CardSwap({ auto = false, every = 4 }: CardSwapProps) {
               data-front={isFront || undefined}
               aria-hidden={!isFront}
               style={{ ...cardStyle(index), borderRadius: cqw(20), padding: cqw(3) }}
-              className={`absolute inset-0 bg-surface-0 shadow-[0_0_0_1px_rgba(23,24,26,0.12)] [backface-visibility:hidden] [transform:var(--t)] transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none dark:shadow-[0_0_0_1px_rgba(255,255,255,0.12)] ${
+              className={`absolute inset-0 bg-surface-0 [backface-visibility:hidden] [transform:var(--t)] transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
                 isFront ? "pointer-events-auto" : "pointer-events-none"
               }`}
             >

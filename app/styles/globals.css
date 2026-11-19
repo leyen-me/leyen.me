@@ -17,6 +17,12 @@ html {
   --surface-0: #ffffff;
   --surface-1: #f2f2f3;
   --surface-2: #e9e9eb;
+
+  /* Concentric radii: item = panel − padding, control = small in-row button. */
+  --radius-shell: 28px;
+  --radius-panel: 20px;
+  --radius-item: 14px;
+  --radius-control: 10px;
 }
 
 html.dark {

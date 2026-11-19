@@ -48,7 +48,7 @@ const COMPACT = { width: 150, height: 36, radius: 18 };
 const OPEN = {
   Timer: { width: 300, height: 76, radius: 38 },
   Call: { width: 300, height: 76, radius: 38 },
-  Music: { width: 300, height: 150, radius: 42 },
+  Music: { width: 300, height: 150, radius: 28 },
   Flight: { width: 300, height: 116, radius: 40 },
 } as const;
 

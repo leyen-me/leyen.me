@@ -1,7 +1,7 @@
 /**
  * Bencho's `.sig-*` layer, scoped under `.sig-demo`. Bencho feeds `--fill-slab`,
- * `--fill-on`, `--pane-edge` and `--signal` from its theme; here they are
- * resolved to the same light/dark values used elsewhere in the gallery. The
+ * `--fill-on`, `--pane-edge` and `--signal` from its theme; here the slab comes
+ * from the shared surface token and the rest are fixed light/dark values. The
  * nib radius and inner radius stay inline custom properties because they are
  * driven by the `corner` option.
  */
@@ -11,14 +11,12 @@ export const SIGNATURE_CSS = `
   --sig-ink: #17181a;
   --sig-blue: #2446d8;
   --sig-signal: #2231dd;
-  --sig-edge: rgba(23, 24, 26, 0.14);
   --sig-green: #1f9d55;
 }
 .dark .sig-demo {
   --sig-ink: #ffffff;
   --sig-blue: #7d95ff;
   --sig-signal: #8b96ff;
-  --sig-edge: rgba(255, 255, 255, 0.1);
   --sig-green: #1f9d55;
 }
 
@@ -36,7 +34,7 @@ export const SIGNATURE_CSS = `
   width: 300px;
   height: 180px;
   overflow: hidden;
-  border-radius: var(--sig-r, 20px);
+  border-radius: var(--sig-r, var(--radius-panel));
   background: var(--sig-slab);
   color: var(--sig-ink);
   font-family: inherit;
@@ -45,7 +43,6 @@ export const SIGNATURE_CSS = `
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
-  box-shadow: inset 0 0 0 1px var(--sig-edge);
   transition:
     width 0.6s cubic-bezier(0.22, 1, 0.36, 1),
     height 0.6s cubic-bezier(0.22, 1, 0.36, 1),
@@ -54,7 +51,7 @@ export const SIGNATURE_CSS = `
 .sig-demo .sig[data-signed] {
   width: 112px;
   height: 40px;
-  border-radius: 20px;
+  border-radius: var(--radius-panel);
   cursor: default;
 }
 .sig-demo .sig:focus-visible {
