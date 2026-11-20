@@ -18,18 +18,24 @@ export function GalleryCard({ item }: { item: GalleryItem }) {
         <div
           className={
             isBlock
-              ? "relative aspect-[16/9] min-h-[380px] w-full overflow-hidden bg-surface-0"
+              ? "relative w-full overflow-hidden bg-surface-0 sm:aspect-[16/9]"
               : "relative flex items-center justify-center px-5 py-8 sm:px-7"
           }
           style={isBlock ? undefined : { minHeight: item.previewHeight }}
         >
           {item.status === "wip" && (
-            <span className="absolute right-4 top-4 rounded-full bg-amber-500/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white">
+            <span className="absolute right-4 top-4 z-10 rounded-full bg-amber-500/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white">
               WIP
             </span>
           )}
 
-          <CardPreview id={item.id} />
+          {isBlock ? (
+            <div className="[&>div>div]:block sm:absolute sm:inset-0 sm:[&>div]:h-full sm:[&>div>div]:h-full sm:[&_section]:h-full sm:[&_section]:min-h-0 sm:[&_section>div]:h-full sm:[&_section>div]:min-h-0 sm:[&_section>div>div]:h-full sm:[&_section>div>div]:min-h-0">
+              <CardPreview id={item.id} />
+            </div>
+          ) : (
+            <CardPreview id={item.id} />
+          )}
 
           <GalleryNameCopy name={item.title} />
 

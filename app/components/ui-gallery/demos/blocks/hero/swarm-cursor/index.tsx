@@ -31,12 +31,10 @@ export default function Demo() {
         accentColor="#33E092"
         className="min-h-[600px]"
         color={dark ? "#fafafa" : "#18181b"}
+        dpr={1}
         lightMode={!dark}
       >
         <div className="relative mx-auto flex min-h-[600px] w-full max-w-3xl flex-col items-center justify-center px-6 py-20 text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-surface-1 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
-            WebGL · 800 agents
-          </span>
 
           <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight text-[#17181a] dark:text-white sm:text-5xl">
             A swarm that follows
@@ -61,10 +59,6 @@ export default function Demo() {
               See how it works
             </a>
           </div>
-
-          <p className="mt-12 font-mono text-[11px] uppercase tracking-[0.28em] text-zinc-400 dark:text-zinc-500">
-            move · swirl · click
-          </p>
         </div>
       </SwarmCursor>
     </section>
