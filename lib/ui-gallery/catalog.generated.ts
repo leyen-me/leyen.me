@@ -59,6 +59,36 @@ export const galleryCatalog: GalleryItem[] = [
     ]
   },
   {
+    "id": "blocks/gallery/lanyard",
+    "kind": "blocks",
+    "category": "gallery",
+    "slug": "lanyard",
+    "title": "Lanyard",
+    "summary": "可拖拽摆动的 3D 挂绳徽章，带真实重力与惯性。",
+    "tags": [
+      "webgl",
+      "motion",
+      "mouse",
+      "interaction"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "React Bits",
+      "url": "https://www.reactbits.dev/components/lanyard",
+      "license": "MIT + Commons Clause (permission granted)"
+    },
+    "dependencies": [
+      "three"
+    ],
+    "files": [
+      "index.tsx",
+      "Lanyard.tsx"
+    ]
+  },
+  {
     "id": "components/typography/logo-draw",
     "kind": "components",
     "category": "typography",
