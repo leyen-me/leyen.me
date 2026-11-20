@@ -14,6 +14,9 @@ export const galleryLoaders: Record<string, ComponentType> = {
   "blocks/hero/flight-booking-hero": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/flight-booking-hero/index")
   ),
+  "blocks/hero/flip-words": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/blocks/hero/flip-words/index")
+  ),
   "blocks/hero/fluid-glass": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/fluid-glass/index")
   ),
@@ -22,6 +25,9 @@ export const galleryLoaders: Record<string, ComponentType> = {
   ),
   "blocks/hero/following-pointer": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/following-pointer/index")
+  ),
+  "blocks/hero/github-globe": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/blocks/hero/github-globe/index")
   ),
   "blocks/gallery/lanyard": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/gallery/lanyard/index")
@@ -35,8 +41,14 @@ export const galleryLoaders: Record<string, ComponentType> = {
   "components/typography/logo-draw": dynamic(() =>
     import("@/app/components/ui-gallery/demos/components/typography/logo-draw/index")
   ),
+  "blocks/hero/spotlight": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/blocks/hero/spotlight/index")
+  ),
   "blocks/hero/swarm-cursor": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/swarm-cursor/index")
+  ),
+  "blocks/hero/typewriter-effect": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/blocks/hero/typewriter-effect/index")
   ),
   "blocks/hero/webcam-pixel-grid": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/webcam-pixel-grid/index")

@@ -88,6 +88,35 @@ export const galleryCatalog: GalleryItem[] = [
     ]
   },
   {
+    "id": "blocks/hero/flip-words",
+    "kind": "blocks",
+    "category": "hero",
+    "slug": "flip-words",
+    "title": "Flip Words",
+    "summary": "按节奏逐字翻转的标题词，保留原文案与字符级模糊入场。",
+    "tags": [
+      "text",
+      "motion",
+      "hero",
+      "typography"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Inspired by Aceternity",
+      "url": "https://ui.aceternity.com/components/flip-words",
+      "license": "See https://ui.aceternity.com/licence"
+    },
+    "dependencies": [
+      "framer-motion"
+    ],
+    "files": [
+      "index.tsx"
+    ]
+  },
+  {
     "id": "blocks/hero/fluid-glass",
     "kind": "blocks",
     "category": "hero",
@@ -168,6 +197,40 @@ export const galleryCatalog: GalleryItem[] = [
     "dependencies": [],
     "files": [
       "index.tsx"
+    ]
+  },
+  {
+    "id": "blocks/hero/github-globe",
+    "kind": "blocks",
+    "category": "hero",
+    "slug": "github-globe",
+    "title": "GitHub Globe",
+    "summary": "Three.js 与 three-globe 构建的可交互地球，包含弧线、点位与自动旋转。",
+    "tags": [
+      "globe",
+      "webgl",
+      "three",
+      "hero"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Inspired by Aceternity",
+      "url": "https://ui.aceternity.com/components/github-globe",
+      "license": "See https://ui.aceternity.com/licence"
+    },
+    "dependencies": [
+      "@react-three/drei",
+      "@react-three/fiber",
+      "three",
+      "three-globe"
+    ],
+    "files": [
+      "index.tsx",
+      "data.ts",
+      "GlobeCanvas.tsx"
     ]
   },
   {
@@ -283,6 +346,33 @@ export const galleryCatalog: GalleryItem[] = [
     ]
   },
   {
+    "id": "blocks/hero/spotlight",
+    "kind": "blocks",
+    "category": "hero",
+    "slug": "spotlight",
+    "title": "Spotlight",
+    "summary": "SVG 模糊光斑扫入的首屏区块，网格背景与渐变标题共同聚焦正文。",
+    "tags": [
+      "gradient",
+      "hero",
+      "motion",
+      "landing"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Inspired by Aceternity",
+      "url": "https://ui.aceternity.com/components/spotlight",
+      "license": "See https://ui.aceternity.com/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx"
+    ]
+  },
+  {
     "id": "blocks/hero/swarm-cursor",
     "kind": "blocks",
     "category": "hero",
@@ -308,6 +398,33 @@ export const galleryCatalog: GalleryItem[] = [
     "files": [
       "index.tsx",
       "SwarmCursor.tsx"
+    ]
+  },
+  {
+    "id": "blocks/hero/typewriter-effect",
+    "kind": "blocks",
+    "category": "hero",
+    "slug": "typewriter-effect",
+    "title": "Typewriter Effect",
+    "summary": "逐字淡入的打字机标题与闪烁光标，配合首屏的行动按钮。",
+    "tags": [
+      "animation",
+      "hero",
+      "motion",
+      "typography"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Inspired by Aceternity",
+      "url": "https://ui.aceternity.com/components/typewriter-effect",
+      "license": "See https://ui.aceternity.com/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx"
     ]
   },
   {
