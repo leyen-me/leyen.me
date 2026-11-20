@@ -25,6 +25,7 @@ import { TypewriterConsole } from "./TypewriterConsole";
 import {
   COLORS,
   DEFAULT_CARD_WIDTH,
+  SCENE_SCALE,
   STAGE,
   Z_INDEX,
 } from "./constants";
@@ -59,6 +60,17 @@ const clampToStage = (position: Coordinates, stage: StageSize): Coordinates => (
   y: clamp(position.y, -24, Math.max(stage.height - STAGE.MIN_VISIBLE_Y, 0)),
 });
 
+/**
+ * Gallery-only: the paper cards and console share one scene layer that is
+ * scaled down as a unit. The desk stays full-bleed. The layer is anchored to
+ * the bottom-centre of the stage, so card coordinates keep the original
+ * (unscaled) layout values and the whole composition simply gains margins.
+ */
+const SCENE_STYLE = {
+  transform: `scale(${SCENE_SCALE})`,
+  transformOrigin: "50% 100%",
+} as const;
+
 export default function Demo() {
   const [cards, setCards] = useState<PaperCardData[]>([]);
   const stageRef = useRef<HTMLElement | null>(null);
@@ -69,6 +81,24 @@ export default function Demo() {
     if (!stage) return null;
     return { width: stage.clientWidth, height: stage.clientHeight };
   }, []);
+
+  /**
+   * Inverse of the scene layer transform (scale about bottom-centre), so a
+   * pointer move of N screen pixels also moves the card N pixels on screen.
+   * Card data stays in stage coordinates.
+   */
+  const clientToStage = useCallback(
+    (clientX: number, clientY: number): Coordinates => {
+      const stage = stageRef.current;
+      if (!stage) return { x: clientX, y: clientY };
+      const rect = stage.getBoundingClientRect();
+      return {
+        x: rect.width / 2 + (clientX - rect.left - rect.width / 2) / SCENE_SCALE,
+        y: rect.height + (clientY - rect.top - rect.height) / SCENE_SCALE,
+      };
+    },
+    []
+  );
 
   const handlePrint = useCallback(
     (text: string) => {
@@ -153,27 +183,31 @@ export default function Demo() {
         }}
       />
 
-      {/* 卡片渲染区域 */}
-      <div className="absolute inset-0 w-full h-full">
-        {cards.map((card, index) => (
-          <DraggablePaper
-            key={card.id}
-            data={card}
-            zIndex={index + Z_INDEX.BASE}
-            onUpdate={handleUpdateCard}
-            onDelete={handleDeleteCard}
-            onFocus={() => handleFocus(card.id)}
-            reducedMotion={reducedMotion}
-          />
-        ))}
-      </div>
+      {/* 场景层：纸卡 + 控制台统一缩放，底边中点为锚点 */}
+      <div className="absolute inset-0" style={SCENE_STYLE}>
+        {/* 卡片渲染区域 */}
+        <div className="absolute inset-0 w-full h-full">
+          {cards.map((card, index) => (
+            <DraggablePaper
+              key={card.id}
+              data={card}
+              zIndex={index + Z_INDEX.BASE}
+              onUpdate={handleUpdateCard}
+              onDelete={handleDeleteCard}
+              onFocus={() => handleFocus(card.id)}
+              reducedMotion={reducedMotion}
+              clientToStage={clientToStage}
+            />
+          ))}
+        </div>
 
-      {/* 控制台 UI - 底部居中 */}
-      <div
-        className="absolute bottom-0 left-0 w-full flex justify-center pointer-events-none"
-        style={{ zIndex: Z_INDEX.MACHINE }}
-      >
-        <TypewriterConsole onPrint={handlePrint} onClearAll={handleClearAll} />
+        {/* 控制台 UI - 底部居中 */}
+        <div
+          className="absolute bottom-0 left-0 w-full flex justify-center pointer-events-none"
+          style={{ zIndex: Z_INDEX.MACHINE }}
+        >
+          <TypewriterConsole onPrint={handlePrint} onClearAll={handleClearAll} />
+        </div>
       </div>
     </section>
   );

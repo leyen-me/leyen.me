@@ -73,5 +73,10 @@ export const STAGE = {
   MIN_VISIBLE_Y: 48,
 } as const;
 
+// Gallery-only: 桌面、纸卡与控制台按此比例整体缩放（以底边中点为锚点）。
+// 舞台仍是全幅背景，缩放只作用于纸卡/控制台的场景层；
+// 拖动坐标会按该比例反算，保证指针与纸卡 1:1 跟随。
+export const SCENE_SCALE = 0.84;
+
 // 纸卡聚焦后用方向键移动的步长（无障碍）
 export const KEYBOARD_STEP = 16;

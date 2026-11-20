@@ -27,7 +27,7 @@ export const DeviceScreen: React.FC<DeviceScreenProps> = ({
         <textarea
           value={input}
           onChange={(e) => onInputChange(e.target.value)}
-          className="w-full h-20 bg-transparent resize-none outline-none tw-lcd text-xl text-[#4aff4a] placeholder-[#1a5c1a] uppercase tracking-wider leading-tight focus-visible:ring-1 focus-visible:ring-[#4aff4a]/40 rounded-sm"
+          className="w-full h-20 bg-transparent resize-none outline-none tw-lcd text-xl text-[#4aff4a] placeholder-[#1a5c1a] uppercase tracking-wider leading-tight rounded-sm"
           placeholder="TYPE MESSAGE HERE..."
           spellCheck={false}
           aria-label="Compose message"

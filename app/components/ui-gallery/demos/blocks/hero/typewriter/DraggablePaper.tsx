@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { PaperCardData } from './types';
+import { PaperCardData, Coordinates } from './types';
 import { X } from 'lucide-react';
 import { useTypingAnimation } from './useTypingAnimation';
 import { useCardPosition } from './useCardPosition';
@@ -15,6 +15,7 @@ interface DraggablePaperProps {
   zIndex: number;
   onFocus: () => void;
   reducedMotion: boolean;
+  clientToStage: (clientX: number, clientY: number) => Coordinates;
 }
 
 const formatTimestamp = (timestamp: number) => {
@@ -64,6 +65,7 @@ export const DraggablePaper: React.FC<DraggablePaperProps> = ({
   zIndex,
   onFocus,
   reducedMotion,
+  clientToStage,
 }) => {
   const { displayedText, progress } = useTypingAnimation({
     text: data.text,
@@ -77,6 +79,7 @@ export const DraggablePaper: React.FC<DraggablePaperProps> = ({
 
   const { startDrag, scale } = useDrag({
     initialPosition: { x: data.x, y: data.y },
+    clientToStage,
     onUpdate: useCallback(
       (position) => {
         onUpdate(data.id, position);
