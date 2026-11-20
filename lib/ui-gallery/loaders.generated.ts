@@ -8,6 +8,9 @@ export const galleryLoaders: Record<string, ComponentType> = {
   "blocks/hero/fluid-glass": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/fluid-glass/index")
   ),
+  "blocks/gallery/folder": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/blocks/gallery/folder/index")
+  ),
   "components/typography/logo-draw": dynamic(() =>
     import("@/app/components/ui-gallery/demos/components/typography/logo-draw/index")
   ),

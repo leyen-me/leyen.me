@@ -31,6 +31,34 @@ export const galleryCatalog: GalleryItem[] = [
     ]
   },
   {
+    "id": "blocks/gallery/folder",
+    "kind": "blocks",
+    "category": "gallery",
+    "slug": "folder",
+    "title": "Folder",
+    "summary": "可拖拽的文件夹：翻开后抽出页面、自由摆放；纯浏览器 API 实现，无额外依赖。",
+    "tags": [
+      "interaction",
+      "motion",
+      "mouse",
+      "drag"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "React Bits",
+      "url": "https://www.reactbits.dev/components/folder",
+      "license": "MIT + Commons Clause (permission granted)"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "Folder.tsx"
+    ]
+  },
+  {
     "id": "components/typography/logo-draw",
     "kind": "components",
     "category": "typography",
