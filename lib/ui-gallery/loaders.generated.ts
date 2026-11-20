@@ -20,6 +20,9 @@ export const galleryLoaders: Record<string, ComponentType> = {
   "blocks/gallery/folder": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/gallery/folder/index")
   ),
+  "blocks/hero/following-pointer": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/blocks/hero/following-pointer/index")
+  ),
   "blocks/gallery/lanyard": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/gallery/lanyard/index")
   ),
@@ -34,6 +37,9 @@ export const galleryLoaders: Record<string, ComponentType> = {
   ),
   "blocks/hero/swarm-cursor": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/swarm-cursor/index")
+  ),
+  "blocks/hero/webcam-pixel-grid": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/blocks/hero/webcam-pixel-grid/index")
   ),
   "components/card/action-node": dynamic(() =>
     import("@/app/components/ui-gallery/demos/components/card/action-node/index")

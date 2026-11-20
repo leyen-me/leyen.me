@@ -144,6 +144,33 @@ export const galleryCatalog: GalleryItem[] = [
     ]
   },
   {
+    "id": "blocks/hero/following-pointer",
+    "kind": "blocks",
+    "category": "hero",
+    "slug": "following-pointer",
+    "title": "Following Pointer",
+    "summary": "指针跟随的卡片浮层，在条目上滑过时展开跟随光标。",
+    "tags": [
+      "mouse",
+      "interaction",
+      "motion",
+      "hero"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Inspired by Aceternity",
+      "url": "https://ui.aceternity.com/components/following-pointer",
+      "license": "See https://ui.aceternity.com/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx"
+    ]
+  },
+  {
     "id": "blocks/gallery/lanyard",
     "kind": "blocks",
     "category": "gallery",
@@ -281,6 +308,36 @@ export const galleryCatalog: GalleryItem[] = [
     "files": [
       "index.tsx",
       "SwarmCursor.tsx"
+    ]
+  },
+  {
+    "id": "blocks/hero/webcam-pixel-grid",
+    "kind": "blocks",
+    "category": "hero",
+    "slug": "webcam-pixel-grid",
+    "title": "Webcam Pixel Grid",
+    "summary": "摄像头画面实时像素化，指针可扰动像素网格；全程本地处理。",
+    "tags": [
+      "webcam",
+      "canvas",
+      "mouse",
+      "interaction"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Inspired by Aceternity",
+      "url": "https://ui.aceternity.com/components/webcam-pixel-grid",
+      "license": "See https://ui.aceternity.com/licence"
+    },
+    "dependencies": [
+      "lucide-react"
+    ],
+    "files": [
+      "index.tsx",
+      "WebcamPixelGrid.tsx"
     ]
   },
   {
