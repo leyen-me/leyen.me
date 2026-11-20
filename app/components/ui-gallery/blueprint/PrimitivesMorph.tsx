@@ -1,0 +1,332 @@
+"use client";
+
+import { useEffect, useId, useRef } from "react";
+import { DrawingSvg } from "./DrawingSvg";
+import { ConstructionStage } from "./ConstructionMotion";
+import { GridLabelMask } from "./GridLabelMask";
+import { MorphDetails, morphDetailIds } from "./MorphDetails";
+import { secondaryLine } from "./style";
+import { MorphTransitions } from "./MorphTransitions";
+import {
+  morphCycleDuration,
+  morphHoldDuration,
+  morphKeyTimes,
+  morphStageDuration,
+} from "./timing";
+import { SliderGridMask } from "./Slider";
+import { SwitchThumb } from "./Switch";
+
+/**
+ * Ported from coss.com/ui (MIT, © 2025 coss.com and Origin UI).
+ * See ./LICENSE for the full license text.
+ */
+type Shape = { width: number; height: number; corner: number };
+
+// All stages share four straight edges and four cubic corners, including the
+// circle's zero-length edges. Matching topology keeps every point continuous.
+function construct({ width, height, corner: r }: Shape) {
+  const left = 284 - width / 2;
+  const right = 284 + width / 2;
+  const top = 204 - height / 2;
+  const bottom = 204 + height / 2;
+  const a = r * 0.55228475;
+  const guideGapStart = height < 40 ? 298 : 348;
+  const guideGapEnd = height < 40 ? 320 : 348;
+  const points = {
+    "top-left": [left + r, top],
+    "top-right": [right - r, top],
+    "right-top": [right, top + r],
+    "right-bottom": [right, bottom - r],
+    "bottom-right": [right - r, bottom],
+    "bottom-left": [left + r, bottom],
+    "left-bottom": [left, bottom - r],
+    "left-top": [left, top + r],
+  } as const;
+  return {
+    points,
+    showHeight: height >= 40 ? 1 : 0,
+    outline: `M${left + r} ${top} L${right - r} ${top}
+      C${right - r + a} ${top} ${right} ${top + r - a} ${right} ${top + r}
+      L${right} ${bottom - r}
+      C${right} ${bottom - r + a} ${right - r + a} ${bottom} ${right - r} ${bottom}
+      L${left + r} ${bottom}
+      C${left + r - a} ${bottom} ${left} ${bottom - r + a} ${left} ${bottom - r}
+      L${left} ${top + r}
+      C${left} ${top + r - a} ${left + r - a} ${top} ${left + r} ${top} Z`,
+    // Each extension has one guide owner; measurement marks do not retrace it.
+    guides: `M${left} 38V${guideGapStart} M${left} ${guideGapEnd}V348
+      M${right} 38V${guideGapStart} M${right} ${guideGapEnd}V348
+      M${left - 24} ${top}H490 M${left - 24} ${bottom}H490
+      M164 348V372 M204 348V372`,
+    dimensions: `M${left} 46H264 M304 46H${right}
+      M${left - 4} 50l8-8 M${right - 4} 50l8-8`,
+    heightDimension: `M482 ${top}V190 M482 218V${bottom}
+      M478 ${top + 4}l8-8 M478 ${bottom + 4}l8-8`,
+  };
+}
+
+const circle = construct({ width: 240, height: 240, corner: 120 });
+const pill = construct({ width: 320, height: 160, corner: 80 });
+const stages = [
+  circle,
+  pill,
+  pill,
+  construct({ width: 320, height: 160, corner: 24 }),
+  construct({ width: 240, height: 240, corner: 40 }),
+  construct({ width: 320, height: 12, corner: 6 }),
+  circle,
+];
+
+// Every 3.2s: hold the finished form for 2.4s, then morph over 0.8s.
+// Repeated frames share the same SVG clock with their construction details.
+function Morph({
+  attributeName,
+  values,
+}: {
+  attributeName: string;
+  values: (string | number)[];
+}) {
+  return (
+    <animate
+      attributeName={attributeName}
+      calcMode="spline"
+      dur={`${morphCycleDuration}s`}
+      keySplines={values
+        .slice(0, -1)
+        .flatMap(() => ["0 0 1 1", "0.4 0 0.2 1"])
+        .join(";")}
+      keyTimes={morphKeyTimes(
+        ...values.flatMap((_, index) =>
+          index === values.length - 1
+            ? [morphCycleDuration]
+            : [
+                index * morphStageDuration,
+                index * morphStageDuration + morphHoldDuration,
+              ]
+        )
+      )}
+      repeatCount="indefinite"
+      values={values
+        .flatMap((value, index) =>
+          index === values.length - 1 ? [value] : [value, value]
+        )
+        .join(";")}
+    />
+  );
+}
+
+const tangentIds = [
+  "top-left",
+  "top-right",
+  "right-top",
+  "right-bottom",
+  "bottom-right",
+  "bottom-left",
+  "left-bottom",
+  "left-top",
+] as const;
+
+const gridPaths = [
+  ...Array.from({ length: 9 }, (_, index) => `M${124 + index * 40} 68V348`),
+  ...Array.from({ length: 7 }, (_, index) => `M104 ${84 + index * 40}H464`),
+];
+
+export function PrimitivesMorph({ paused }: { paused: boolean }) {
+  const root = useRef<HTMLDivElement>(null);
+  const widthLabel = useRef<SVGTextElement>(null);
+  const heightLabel = useRef<SVGTextElement>(null);
+  const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  const hatchId = `bp-hatch-${uid}`;
+  const guideId = `bp-guide-${uid}`;
+  const gridMaskId = `bp-grid-${uid}`;
+
+  useEffect(() => {
+    const svg = root.current?.querySelector("svg");
+    if (!svg) return;
+    // Firefox has no SMIL pause API; the drawing still renders, it just keeps
+    // playing while offscreen.
+    const supportsPause = typeof svg.pauseAnimations === "function";
+    if (supportsPause) {
+      if (paused) svg.pauseAnimations();
+      else svg.unpauseAnimations();
+    }
+
+    const left = svg.querySelector<SVGCircleElement>(
+      '[data-anchor="left-bottom"]'
+    );
+    const right = svg.querySelector<SVGCircleElement>(
+      '[data-anchor="right-top"]'
+    );
+    const top = svg.querySelector<SVGCircleElement>('[data-anchor="top-left"]');
+    const bottom = svg.querySelector<SVGCircleElement>(
+      '[data-anchor="bottom-right"]'
+    );
+    let frame = 0;
+
+    function updateMeasurements() {
+      if (left && right && top && bottom) {
+        // Read the animated anchor coordinates, so numerical labels use exactly
+        // the same eased geometry as the SVG, including after pause/resume.
+        const width = `${Number(
+          ((right.cx.animVal.value - left.cx.animVal.value) / 40).toFixed(1)
+        )}u`;
+        const height = `${Number(
+          ((bottom.cy.animVal.value - top.cy.animVal.value) / 40).toFixed(1)
+        )}u`;
+        if (widthLabel.current && widthLabel.current.textContent !== width)
+          widthLabel.current.textContent = width;
+        if (heightLabel.current && heightLabel.current.textContent !== height)
+          heightLabel.current.textContent = height;
+      }
+      if (!paused) frame = requestAnimationFrame(updateMeasurements);
+    }
+
+    updateMeasurements();
+    return () => cancelAnimationFrame(frame);
+  }, [paused]);
+
+  return (
+    <div className="absolute inset-0" ref={root}>
+      <DrawingSvg>
+        <defs>
+          <path d={circle.guides} id={guideId}>
+            <Morph
+              attributeName="d"
+              values={stages.map((stage) => stage.guides)}
+            />
+          </path>
+          {/* Keep coincident grid lines from darkening the continuous guides. */}
+          <mask
+            height="440"
+            id={gridMaskId}
+            maskUnits="userSpaceOnUse"
+            style={{ maskType: "luminance" }}
+            width="560"
+            x="0"
+            y="0"
+          >
+            <rect fill="white" height="440" stroke="none" width="560" />
+            <use
+              href={`#${guideId}`}
+              stroke="black"
+              strokeOpacity="1"
+              strokeWidth="1.3"
+            />
+            <SliderGridMask />
+            <GridLabelMask />
+          </mask>
+          {/* Origin at the circle center aligns a hatch line with its 45° radius. */}
+          <pattern
+            height="10"
+            id={hatchId}
+            patternTransform="translate(284 204)"
+            patternUnits="userSpaceOnUse"
+            width="10"
+          >
+            <path
+              d="M0 10 10 0"
+              opacity="0.27"
+              strokeOpacity="0.65"
+              strokeWidth="1"
+            />
+          </pattern>
+        </defs>
+        <g
+          mask={`url(#${gridMaskId})`}
+          opacity="0.08"
+          strokeOpacity="0.6"
+          strokeWidth="1"
+        >
+          {gridPaths.map((d) => (
+            <path d={d} key={d} />
+          ))}
+        </g>
+        <use
+          href={`#${guideId}`}
+          opacity="0.24"
+          strokeOpacity="0.65"
+          strokeWidth="1"
+        />
+        <path {...secondaryLine} d={circle.dimensions}>
+          <Morph
+            attributeName="d"
+            values={stages.map((stage) => stage.dimensions)}
+          />
+        </path>
+        <g>
+          <Morph
+            attributeName="opacity"
+            values={stages.map((stage) => stage.showHeight)}
+          />
+          <path {...secondaryLine} d={circle.heightDimension}>
+            <Morph
+              attributeName="d"
+              values={stages.map((stage) => stage.heightDimension)}
+            />
+          </path>
+        </g>
+        <path d={circle.outline} strokeOpacity="1" strokeWidth="1">
+          <Morph
+            attributeName="d"
+            values={stages.map((stage) => stage.outline)}
+          />
+        </path>
+        <g strokeOpacity="0.8" strokeWidth="1">
+          <Morph
+            attributeName="opacity"
+            values={stages.map((stage) => stage.showHeight)}
+          />
+          {tangentIds.map((id) => (
+            <circle
+              cx={circle.points[id][0]}
+              cy={circle.points[id][1]}
+              data-anchor={id}
+              key={id}
+              r="2.5"
+            >
+              <Morph
+                attributeName="cx"
+                values={stages.map((stage) => stage.points[id][0])}
+              />
+              <Morph
+                attributeName="cy"
+                values={stages.map((stage) => stage.points[id][1])}
+              />
+            </circle>
+          ))}
+        </g>
+        <MorphTransitions />
+        {morphDetailIds.map((stage, index) => (
+          <g data-construction={stage} key={stage}>
+            <ConstructionStage stage={index}>
+              <MorphDetails hatchId={hatchId} stage={stage} />
+            </ConstructionStage>
+          </g>
+        ))}
+        <g fill="currentColor" fontSize="10" opacity="0.52" stroke="none">
+          <text ref={widthLabel} textAnchor="middle" x="284" y="49">
+            6u
+          </text>
+          <g>
+            <Morph
+              attributeName="opacity"
+              values={stages.map((stage) => stage.showHeight)}
+            />
+            <text ref={heightLabel} textAnchor="middle" x="482" y="207">
+              6u
+            </text>
+          </g>
+          <text textAnchor="middle" x="184" y="384">
+            u
+          </text>
+        </g>
+        <g {...secondaryLine}>
+          <path d="M164 364H204 m-44 4 8-8 m32 8 8-8" />
+          <path d="M76 82h12 M82 76v12 M470 340h12 M476 334v12 M278 204h12 M284 198v12" />
+          <path d="M266 401h36 M284 395v12" />
+        </g>
+        <SwitchThumb />
+      </DrawingSvg>
+    </div>
+  );
+}
