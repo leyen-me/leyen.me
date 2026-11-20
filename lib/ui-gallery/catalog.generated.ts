@@ -33,6 +33,34 @@ export const galleryCatalog: GalleryItem[] = [
     ]
   },
   {
+    "id": "blocks/hero/dot-distortion-shader",
+    "kind": "blocks",
+    "category": "hero",
+    "slug": "dot-distortion-shader",
+    "title": "Dot Distortion",
+    "summary": "指针驱动的点阵扭曲 shader 区块。",
+    "tags": [
+      "canvas",
+      "shader",
+      "mouse",
+      "motion"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Inspired by Aceternity",
+      "url": "https://ui.aceternity.com/blocks/shaders/dot-distortion-shader",
+      "license": "See https://ui.aceternity.com/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "DotGrid.tsx"
+    ]
+  },
+  {
     "id": "blocks/hero/flight-booking-hero",
     "kind": "blocks",
     "category": "hero",
@@ -171,6 +199,33 @@ export const galleryCatalog: GalleryItem[] = [
     "files": [
       "index.tsx",
       "LiquidGlassLens.tsx"
+    ]
+  },
+  {
+    "id": "blocks/testimonial/logo-cloud-marquee",
+    "kind": "blocks",
+    "category": "testimonial",
+    "slug": "logo-cloud-marquee",
+    "title": "Logo Cloud",
+    "summary": "双行反向无限滚动的客户 logo 跑马灯，悬停暂停并在两端渐隐。",
+    "tags": [
+      "logo",
+      "marquee",
+      "motion",
+      "landing"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Inspired by Aceternity",
+      "url": "https://ui.aceternity.com/blocks/logo-clouds/logo-cloud-marquee",
+      "license": "See https://ui.aceternity.com/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx"
     ]
   },
   {

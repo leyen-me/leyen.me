@@ -8,6 +8,9 @@ export const galleryLoaders: Record<string, ComponentType> = {
   "blocks/hero/background-cubes-grid": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/background-cubes-grid/index")
   ),
+  "blocks/hero/dot-distortion-shader": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/blocks/hero/dot-distortion-shader/index")
+  ),
   "blocks/hero/flight-booking-hero": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/flight-booking-hero/index")
   ),
@@ -22,6 +25,9 @@ export const galleryLoaders: Record<string, ComponentType> = {
   ),
   "blocks/hero/liquid-glass": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/liquid-glass/index")
+  ),
+  "blocks/testimonial/logo-cloud-marquee": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/blocks/testimonial/logo-cloud-marquee/index")
   ),
   "components/typography/logo-draw": dynamic(() =>
     import("@/app/components/ui-gallery/demos/components/typography/logo-draw/index")
