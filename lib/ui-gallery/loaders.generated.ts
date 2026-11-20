@@ -41,6 +41,9 @@ export const galleryLoaders: Record<string, ComponentType> = {
   "components/typography/logo-draw": dynamic(() =>
     import("@/app/components/ui-gallery/demos/components/typography/logo-draw/index")
   ),
+  "components/data-display/preview-slider": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/components/data-display/preview-slider/index")
+  ),
   "blocks/hero/spotlight": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/spotlight/index")
   ),
