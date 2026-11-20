@@ -96,6 +96,18 @@ function clampToLimit(value: number, limit: number): number {
   return Math.max(-limit, Math.min(limit, value));
 }
 
+/** 记录指针采样，用于松手时估算甩出速度。 */
+function pushSample(state: DragState, x: number, y: number, time: number) {
+  state.samples.push({ x, y, t: time });
+  if (state.samples.length > MAX_SAMPLES) state.samples.shift();
+  while (
+    state.samples.length > 2 &&
+    time - state.samples[0].t > SAMPLE_WINDOW
+  ) {
+    state.samples.shift();
+  }
+}
+
 /**
  * 位置与缩放都写在 transform 上，不触发布局。直接操作 style 以避免每帧
  * 触发 React 渲染。
@@ -145,16 +157,6 @@ export function LiquidGlassLens() {
     media.addEventListener("change", sync);
     return () => media.removeEventListener("change", sync);
   }, []);
-
-  useEffect(
-    () => () => {
-      if (frame.current !== null) {
-        window.cancelAnimationFrame(frame.current);
-        frame.current = null;
-      }
-    },
-    []
-  );
 
   /** 读取 section 尺寸并以此约束位置，同时把越界的当前值拉回边界。 */
   const measure = useCallback(() => {
@@ -277,6 +279,102 @@ export function LiquidGlassLens() {
     frame.current = window.requestAnimationFrame(step);
   }, [step]);
 
+  /** 结束拖拽；pointercancel 或丢失捕获时不再追加甩出速度。 */
+  const endDrag = useCallback(
+    (withInertia: boolean) => {
+      const state = drag.current;
+      if (!state) return;
+      drag.current = null;
+      dragging.current = false;
+      scaleTarget.current = 1;
+
+      if (withInertia && !reducedMotion.current && state.samples.length >= 2) {
+        const first = state.samples[0];
+        const last = state.samples[state.samples.length - 1];
+        const elapsed = (last.t - first.t) / 1000;
+        const age = performance.now() - last.t;
+
+        // 指针停顿过久时速度为 0，避免松手后再“弹射”。
+        if (elapsed >= 0.02 && age < 100) {
+          let vx = ((last.x - first.x) / elapsed) * INERTIA_RATIO;
+          let vy = ((last.y - first.y) / elapsed) * INERTIA_RATIO;
+          const speed = Math.hypot(vx, vy);
+          if (speed > MAX_RELEASE_SPEED) {
+            const factor = MAX_RELEASE_SPEED / speed;
+            vx *= factor;
+            vy *= factor;
+          }
+          velocity.current.x += vx;
+          velocity.current.y += vy;
+        }
+      }
+
+      startLoop();
+    },
+    [startLoop]
+  );
+
+  /**
+   * 拖拽期间监听 window：指针捕获在部分环境（包括 iframe 合成事件）里
+   * 不会把元素外的移动回传给镜头，window 监听保证跟上并能在任意位置松手。
+   */
+  const handleWindowPointerMove = useCallback(
+    (event: PointerEvent) => {
+      const state = drag.current;
+      if (!state || state.pointerId !== event.pointerId) return;
+
+      // 松手发生在 iframe 外时收不到 pointerup，靠按键状态兜底结束拖拽。
+      if (event.buttons === 0) {
+        endDrag(true);
+        return;
+      }
+
+      const limit = bounds.current;
+      target.current.x = clampToLimit(
+        state.originX + event.clientX - state.startX,
+        limit.x
+      );
+      target.current.y = clampToLimit(
+        state.originY + event.clientY - state.startY,
+        limit.y
+      );
+      pushSample(state, event.clientX, event.clientY, performance.now());
+      startLoop();
+    },
+    [endDrag, startLoop]
+  );
+
+  const handleWindowPointerUp = useCallback(
+    (event: PointerEvent) => {
+      if (drag.current?.pointerId !== event.pointerId) return;
+      endDrag(true);
+    },
+    [endDrag]
+  );
+
+  const handleWindowPointerCancel = useCallback(
+    (event: PointerEvent) => {
+      if (drag.current?.pointerId !== event.pointerId) return;
+      endDrag(false);
+    },
+    [endDrag]
+  );
+
+  useEffect(() => {
+    window.addEventListener("pointermove", handleWindowPointerMove);
+    window.addEventListener("pointerup", handleWindowPointerUp);
+    window.addEventListener("pointercancel", handleWindowPointerCancel);
+    return () => {
+      window.removeEventListener("pointermove", handleWindowPointerMove);
+      window.removeEventListener("pointerup", handleWindowPointerUp);
+      window.removeEventListener("pointercancel", handleWindowPointerCancel);
+      if (frame.current !== null) {
+        window.cancelAnimationFrame(frame.current);
+        frame.current = null;
+      }
+    };
+  }, [handleWindowPointerMove, handleWindowPointerUp, handleWindowPointerCancel]);
+
   useEffect(() => {
     measure();
     const parent = lensRef.current?.parentElement;
@@ -291,17 +389,6 @@ export function LiquidGlassLens() {
     observer.observe(parent);
     return () => observer.disconnect();
   }, [measure]);
-
-  function pushSample(state: DragState, x: number, y: number, time: number) {
-    state.samples.push({ x, y, t: time });
-    if (state.samples.length > MAX_SAMPLES) state.samples.shift();
-    while (
-      state.samples.length > 2 &&
-      time - state.samples[0].t > SAMPLE_WINDOW
-    ) {
-      state.samples.shift();
-    }
-  }
 
   function handlePointerDown(event: ReactPointerEvent<HTMLDivElement>) {
     if (drag.current) return;
@@ -324,78 +411,15 @@ export function LiquidGlassLens() {
     try {
       event.currentTarget.setPointerCapture(event.pointerId);
     } catch {
-      // 指针已经释放时捕获会失败，此时拖拽逻辑照常工作。
+      // 指针已经释放时捕获会失败，window 监听仍然能继续拖拽。
     }
 
     startLoop();
-  }
-
-  function handlePointerUp(event: ReactPointerEvent<HTMLDivElement>) {
-    if (drag.current?.pointerId !== event.pointerId) return;
-    endDrag(true);
-  }
-
-  function handlePointerCancel(event: ReactPointerEvent<HTMLDivElement>) {
-    if (drag.current?.pointerId !== event.pointerId) return;
-    endDrag(false);
   }
 
   function handleLostPointerCapture(event: ReactPointerEvent<HTMLDivElement>) {
     if (drag.current?.pointerId !== event.pointerId) return;
     endDrag(false);
-  }
-
-  function handlePointerMove(event: ReactPointerEvent<HTMLDivElement>) {
-    const state = drag.current;
-    if (!state || state.pointerId !== event.pointerId) return;
-
-    const limit = bounds.current;
-    target.current.x = clampToLimit(
-      state.originX + event.clientX - state.startX,
-      limit.x
-    );
-    target.current.y = clampToLimit(
-      state.originY + event.clientY - state.startY,
-      limit.y
-    );
-    pushSample(state, event.clientX, event.clientY, performance.now());
-    startLoop();
-  }
-
-  /** 结束拖拽；pointercancel 或丢失捕获时不再追加甩出速度。 */
-  function endDrag(withInertia: boolean) {
-    const state = drag.current;
-    if (!state) return;
-    drag.current = null;
-    dragging.current = false;
-    scaleTarget.current = 1;
-
-    if (
-      withInertia &&
-      !reducedMotion.current &&
-      state.samples.length >= 2
-    ) {
-      const first = state.samples[0];
-      const last = state.samples[state.samples.length - 1];
-      const elapsed = (last.t - first.t) / 1000;
-      const age = performance.now() - last.t;
-
-      // 指针停顿过久时速度为 0，避免松手后再“弹射”。
-      if (elapsed >= 0.02 && age < 100) {
-        let vx = ((last.x - first.x) / elapsed) * INERTIA_RATIO;
-        let vy = ((last.y - first.y) / elapsed) * INERTIA_RATIO;
-        const speed = Math.hypot(vx, vy);
-        if (speed > MAX_RELEASE_SPEED) {
-          const factor = MAX_RELEASE_SPEED / speed;
-          vx *= factor;
-          vy *= factor;
-        }
-        velocity.current.x += vx;
-        velocity.current.y += vy;
-      }
-    }
-
-    startLoop();
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -443,9 +467,6 @@ export function LiquidGlassLens() {
       }}
       onKeyDown={handleKeyDown}
       onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerCancel}
       onLostPointerCapture={handleLostPointerCapture}
     >
       <svg
