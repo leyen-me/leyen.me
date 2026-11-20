@@ -53,6 +53,9 @@ export const galleryLoaders: Record<string, ComponentType> = {
   "blocks/hero/swarm-cursor": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/swarm-cursor/index")
   ),
+  "blocks/hero/typewriter": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/blocks/hero/typewriter/index")
+  ),
   "blocks/hero/typewriter-effect": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/typewriter-effect/index")
   ),

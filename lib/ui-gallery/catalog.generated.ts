@@ -464,6 +464,44 @@ export const galleryCatalog: GalleryItem[] = [
     ]
   },
   {
+    "id": "blocks/hero/typewriter",
+    "kind": "blocks",
+    "category": "hero",
+    "slug": "typewriter",
+    "title": "Typewriter",
+    "summary": "桌面上的可拖动纸卡与打字机控制台，键入内容后打印成纸张。",
+    "tags": [
+      "typewriter",
+      "text",
+      "interaction",
+      "motion"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Original",
+      "license": "MIT"
+    },
+    "dependencies": [
+      "lucide-react"
+    ],
+    "files": [
+      "index.tsx",
+      "constants.ts",
+      "ControlPanel.tsx",
+      "DeviceScreen.tsx",
+      "DraggablePaper.tsx",
+      "types.ts",
+      "TypewriterConsole.tsx",
+      "useCardPosition.ts",
+      "useDrag.ts",
+      "usePrefersReducedMotion.ts",
+      "useTypingAnimation.ts"
+    ]
+  },
+  {
     "id": "blocks/hero/typewriter-effect",
     "kind": "blocks",
     "category": "hero",
