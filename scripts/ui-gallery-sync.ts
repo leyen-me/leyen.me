@@ -255,7 +255,12 @@ async function buildGallery(): Promise<BuildResult> {
             return {
               path: filePath,
               language: LANGUAGE_BY_EXTENSION[extension] ?? "markdown",
-              code: await readFile(path.join(itemDir, filePath), "utf8"),
+              // 统一换行符：生成快照必须与平台无关，否则 Windows 检出的
+              // CRLF 工作区会让 CI 上的 --check 永远判定过期。
+              code: (await readFile(path.join(itemDir, filePath), "utf8")).replace(
+                /\r\n?/g,
+                "\n"
+              ),
             };
           })
         );
