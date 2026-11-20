@@ -70,7 +70,7 @@ export function PreviewFrame({ src, title, reloadKey }: PreviewFrameProps) {
       title={title}
       loading="lazy"
       onLoad={sendTheme}
-      allow="clipboard-write"
+      allow="clipboard-write; camera"
       className="block w-full border-0 bg-transparent"
       style={{ height }}
     />

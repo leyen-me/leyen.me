@@ -35,7 +35,7 @@ export function BlockPreview({ id, title }: { id: string; title: string }) {
       fallback={<div className="h-full w-full bg-surface-0" />}
     >
       <iframe
-        allow="clipboard-write"
+        allow="clipboard-write; camera"
         className="block h-full w-full border-0 bg-transparent"
         loading="lazy"
         onLoad={sendTheme}
