@@ -3,6 +3,34 @@ import type { GalleryItem } from "./types";
 
 export const galleryCatalog: GalleryItem[] = [
   {
+    "id": "blocks/hero/fluid-glass",
+    "kind": "blocks",
+    "category": "hero",
+    "slug": "fluid-glass",
+    "title": "Fluid Glass",
+    "summary": "WebGL 光线追踪玻璃体：折射背后的字标、跟随指针流动，点击在多种形态间融化切换。",
+    "tags": [
+      "webgl",
+      "glass",
+      "hero",
+      "motion"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "React Bits",
+      "url": "https://www.reactbits.dev/components/fluid-glass",
+      "license": "MIT + Commons Clause (permission granted)"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "FluidGlass.tsx"
+    ]
+  },
+  {
     "id": "components/typography/logo-draw",
     "kind": "components",
     "category": "typography",

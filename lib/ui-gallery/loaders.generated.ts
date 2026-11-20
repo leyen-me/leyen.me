@@ -5,6 +5,9 @@ import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
 
 export const galleryLoaders: Record<string, ComponentType> = {
+  "blocks/hero/fluid-glass": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/blocks/hero/fluid-glass/index")
+  ),
   "components/typography/logo-draw": dynamic(() =>
     import("@/app/components/ui-gallery/demos/components/typography/logo-draw/index")
   ),
