@@ -33,6 +33,33 @@ export const galleryCatalog: GalleryItem[] = [
     ]
   },
   {
+    "id": "blocks/hero/flight-booking-hero",
+    "kind": "blocks",
+    "category": "hero",
+    "slug": "flight-booking-hero",
+    "title": "Flight Booking",
+    "summary": "云层着色器背景上的机票预订首屏，含品牌导航、主标题与预订入口。",
+    "tags": [
+      "hero",
+      "webgl",
+      "landing"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Inspired by Aceternity",
+      "url": "https://ui.aceternity.com/components/cloud-shader",
+      "license": "See https://ui.aceternity.com/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "CloudShader.tsx"
+    ]
+  },
+  {
     "id": "blocks/hero/fluid-glass",
     "kind": "blocks",
     "category": "hero",

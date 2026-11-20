@@ -8,6 +8,9 @@ export const galleryLoaders: Record<string, ComponentType> = {
   "blocks/hero/background-cubes-grid": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/background-cubes-grid/index")
   ),
+  "blocks/hero/flight-booking-hero": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/blocks/hero/flight-booking-hero/index")
+  ),
   "blocks/hero/fluid-glass": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/hero/fluid-glass/index")
   ),
