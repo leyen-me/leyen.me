@@ -380,6 +380,35 @@ export const galleryCatalog: GalleryItem[] = [
     ]
   },
   {
+    "id": "blocks/hero/shape-hero",
+    "kind": "blocks",
+    "category": "hero",
+    "slug": "shape-hero",
+    "title": "Shape Hero",
+    "summary": "可抓取抛掷的胶囊刚体堆，形状落下后堆叠、休眠，再次拖动即唤醒。",
+    "tags": [
+      "physics",
+      "drag",
+      "shapes",
+      "background"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Inspired by KokonutUI",
+      "url": "https://kokonutui.com/docs/backgrounds/shape-hero",
+      "license": "MIT"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "physics.ts",
+      "shapes.ts"
+    ]
+  },
+  {
     "id": "blocks/hero/spotlight",
     "kind": "blocks",
     "category": "hero",
