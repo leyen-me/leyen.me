@@ -63,10 +63,7 @@ export default function UiOverviewPage({
   return (
     <div className="mx-auto max-w-7xl px-6 pb-16 md:px-16">
       <header className="mb-10 pt-4 sm:pt-8">
-        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-emerald-500">
-          Collection
-        </p>
-        <div className="mt-3 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
           <div className="min-w-0">
             <h1 className="font-incognito text-5xl font-semibold leading-none tracking-[-0.035em] text-zinc-900 dark:text-white sm:text-7xl">
               UI
