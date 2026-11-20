@@ -14,6 +14,9 @@ export const galleryLoaders: Record<string, ComponentType> = {
   "blocks/gallery/lanyard": dynamic(() =>
     import("@/app/components/ui-gallery/demos/blocks/gallery/lanyard/index")
   ),
+  "blocks/hero/liquid-glass": dynamic(() =>
+    import("@/app/components/ui-gallery/demos/blocks/hero/liquid-glass/index")
+  ),
   "components/typography/logo-draw": dynamic(() =>
     import("@/app/components/ui-gallery/demos/components/typography/logo-draw/index")
   ),

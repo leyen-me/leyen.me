@@ -89,6 +89,34 @@ export const galleryCatalog: GalleryItem[] = [
     ]
   },
   {
+    "id": "blocks/hero/liquid-glass",
+    "kind": "blocks",
+    "category": "hero",
+    "slug": "liquid-glass",
+    "title": "Liquid Glass",
+    "summary": "用 SVG 位移滤镜折射背景照片的液态玻璃镜片，带边缘色散、内侧高光，可拖拽移动。",
+    "tags": [
+      "glass",
+      "svg-filter",
+      "interaction",
+      "mouse"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Inspired by Aceternity",
+      "url": "https://ui.aceternity.com/components/liquid-glass",
+      "license": "See https://ui.aceternity.com/licence"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "LiquidGlassLens.tsx"
+    ]
+  },
+  {
     "id": "components/typography/logo-draw",
     "kind": "components",
     "category": "typography",
