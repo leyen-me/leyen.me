@@ -3,6 +3,36 @@ import type { GalleryItem } from "./types";
 
 export const galleryCatalog: GalleryItem[] = [
   {
+    "id": "blocks/hero/background-cubes-grid",
+    "kind": "blocks",
+    "category": "hero",
+    "slug": "background-cubes-grid",
+    "title": "Cubes Grid",
+    "summary": "立体方块阵列随指针涌动、点击扩散涟漪的 WebGL 背景效果。",
+    "tags": [
+      "webgl",
+      "motion",
+      "mouse",
+      "background"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 600,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Inspired by Aceternity",
+      "url": "https://ui.aceternity.com/components/background-cubes-grid",
+      "license": "See https://ui.aceternity.com/licence"
+    },
+    "dependencies": [
+      "three"
+    ],
+    "files": [
+      "index.tsx",
+      "CubesGrid.tsx"
+    ]
+  },
+  {
     "id": "blocks/hero/fluid-glass",
     "kind": "blocks",
     "category": "hero",
