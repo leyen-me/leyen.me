@@ -7,7 +7,7 @@ const meta = {
   tags: ["ai", "progress", "svg-filter", "halftone", "loading"],
   status: "ready",
   featured: false,
-  previewHeight: 380,
+  previewHeight: 440,
   createdAt: "2026-11-19",
   source: {
     label: "Inspired by Bencho",
