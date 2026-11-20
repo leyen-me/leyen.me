@@ -3,6 +3,33 @@ import type { GalleryItem } from "./types";
 
 export const galleryCatalog: GalleryItem[] = [
   {
+    "id": "components/typography/logo-draw",
+    "kind": "components",
+    "category": "typography",
+    "slug": "logo-draw",
+    "title": "Logo Draw",
+    "summary": "悬停或聚焦时字标由实心切换为逐笔描边，路径长度动画由纯 CSS 关键帧驱动。",
+    "tags": [
+      "animation",
+      "hover",
+      "svg",
+      "motion"
+    ],
+    "status": "ready",
+    "featured": false,
+    "previewHeight": 280,
+    "createdAt": "2026-11-20",
+    "source": {
+      "label": "Original",
+      "license": "MIT"
+    },
+    "dependencies": [],
+    "files": [
+      "index.tsx",
+      "logo-paths.ts"
+    ]
+  },
+  {
     "id": "components/card/action-node",
     "kind": "components",
     "category": "card",
