@@ -89,7 +89,6 @@ export default function UiOverviewPage({
         activeCategory={activeCategory}
         q={searchParams.q}
         tag={searchParams.tag}
-        kindCounts={kindCounts}
         categories={categories}
         tags={tags}
         resultCount={items.length}

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Search, X } from "lucide-react";
-import { galleryKindMeta } from "@/lib/ui-gallery/categories";
+import { galleryKindMeta, galleryKinds } from "@/lib/ui-gallery/categories";
 import type { GalleryKind as GalleryKindType } from "@/lib/ui-gallery/types";
+import { GalleryKindTabs } from "./GalleryKindTabs";
 
 type CategoryChip = {
   id: string;
@@ -16,7 +17,6 @@ type GalleryFiltersProps = {
   activeCategory?: string;
   q?: string;
   tag?: string;
-  kindCounts?: Record<GalleryKindType, number>;
   categories?: CategoryChip[];
   tags?: string[];
   resultCount: number;
@@ -64,12 +64,18 @@ export function GalleryFilters({
   activeCategory,
   q,
   tag,
-  kindCounts,
   categories,
   tags,
   resultCount,
 }: GalleryFiltersProps) {
-  const kinds: GalleryKindType[] = ["components", "blocks"];
+  const tabs = [
+    { id: "all", label: "All", href: buildHref("/ui", { q, tag }) },
+    ...galleryKinds.map((item) => ({
+      id: item,
+      label: galleryKindMeta[item].label,
+      href: buildHref("/ui", { kind: item, q, tag }),
+    })),
+  ];
   const hasFilters = Boolean(q || tag || activeCategory);
   const visibleCategories =
     categories?.filter(
@@ -80,54 +86,7 @@ export function GalleryFilters({
   return (
     <div className="mb-8 space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        {kindCounts && (
-          <div
-            role="tablist"
-            aria-label="作品类型"
-            className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-zinc-900/[0.045] p-1 dark:bg-white/[0.055]"
-          >
-            {[
-              {
-                id: "all" as const,
-                label: "All",
-                count: kindCounts.components + kindCounts.blocks,
-                href: buildHref("/ui", { q, tag }),
-              },
-              ...kinds.map((item) => ({
-                id: item,
-                label: galleryKindMeta[item].label,
-                count: kindCounts[item],
-                href: buildHref("/ui", { kind: item, q, tag }),
-              })),
-            ].map((tab) => {
-              const active = tab.id === "all" ? !kind : kind === tab.id;
-              return (
-                <Link
-                  key={tab.id}
-                  href={tab.href}
-                  role="tab"
-                  aria-selected={active}
-                  className={`inline-flex h-8 items-center rounded-full px-4 text-sm transition-colors ${
-                    active
-                      ? "bg-white font-medium text-zinc-900 dark:bg-zinc-800 dark:text-white"
-                      : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
-                  }`}
-                >
-                  {tab.label}
-                  <span
-                    className={`ml-1.5 font-mono text-[11px] ${
-                      active
-                        ? "text-zinc-400 dark:text-zinc-500"
-                        : "text-zinc-400/80 dark:text-zinc-500"
-                    }`}
-                  >
-                    {tab.count}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        )}
+        <GalleryKindTabs tabs={tabs} activeId={kind ?? "all"} label="作品类型" />
 
         <form
           action={basePath}
