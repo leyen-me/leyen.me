@@ -40,7 +40,7 @@ export default function UiOverviewPage({
 }) {
   const kind = searchParams.kind && isGalleryKind(searchParams.kind)
     ? searchParams.kind
-    : undefined;
+    : "components";
 
   const kindCounts = getGalleryKindCounts();
   const baseItems = kind ? getGalleryItemsByKind(kind) : getAllGalleryItems();

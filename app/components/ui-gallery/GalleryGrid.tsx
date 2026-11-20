@@ -15,8 +15,16 @@ export function GalleryGrid({
     return <EmptyState title={emptyTitle} message={emptyMessage} />;
   }
 
+  const isBlocks = items[0]?.kind === "blocks";
+
   return (
-    <div className="columns-1 gap-5 sm:columns-2 lg:columns-3">
+    <div
+      className={
+        isBlocks
+          ? "grid grid-cols-1 gap-6"
+          : "columns-1 gap-5 sm:columns-2 lg:columns-3"
+      }
+    >
       {items.map((item) => (
         <GalleryCard key={item.id} item={item} />
       ))}

@@ -10,13 +10,18 @@ import { GalleryNameCopy } from "./GalleryNameCopy";
  */
 export function GalleryCard({ item }: { item: GalleryItem }) {
   const href = `/ui/${item.id}`;
+  const isBlock = item.kind === "blocks";
 
   return (
-    <article className="group mb-5 break-inside-avoid">
+    <article className={isBlock ? "group break-inside-avoid" : "group mb-5 break-inside-avoid"}>
       <div className="relative overflow-hidden rounded-shell bg-zinc-100/70 ring-1 ring-inset ring-zinc-900/[0.04] transition-colors duration-300 hover:bg-zinc-100 focus-within:ring-zinc-900/10 dark:bg-white/[0.055] dark:ring-white/[0.06] dark:hover:bg-white/[0.075] dark:focus-within:ring-white/15">
         <div
-          className="relative flex items-center justify-center px-5 py-8 sm:px-7"
-          style={{ minHeight: item.previewHeight }}
+          className={
+            isBlock
+              ? "relative aspect-[16/9] min-h-[380px] w-full overflow-hidden bg-surface-0"
+              : "relative flex items-center justify-center px-5 py-8 sm:px-7"
+          }
+          style={isBlock ? undefined : { minHeight: item.previewHeight }}
         >
           {item.status === "wip" && (
             <span className="absolute right-4 top-4 rounded-full bg-amber-500/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white">

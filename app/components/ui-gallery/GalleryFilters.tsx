@@ -68,14 +68,11 @@ export function GalleryFilters({
   tags,
   resultCount,
 }: GalleryFiltersProps) {
-  const tabs = [
-    { id: "all", label: "All", href: buildHref("/ui", { q, tag }) },
-    ...galleryKinds.map((item) => ({
-      id: item,
-      label: galleryKindMeta[item].label,
-      href: buildHref("/ui", { kind: item, q, tag }),
-    })),
-  ];
+  const tabs = galleryKinds.map((item) => ({
+    id: item,
+    label: galleryKindMeta[item].label,
+    href: buildHref("/ui", { kind: item, q, tag }),
+  }));
   const hasFilters = Boolean(q || tag || activeCategory);
   const visibleCategories =
     categories?.filter(
@@ -86,7 +83,11 @@ export function GalleryFilters({
   return (
     <div className="mb-8 space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <GalleryKindTabs tabs={tabs} activeId={kind ?? "all"} label="作品类型" />
+        <GalleryKindTabs
+          activeId={kind ?? "components"}
+          label="作品类型"
+          tabs={tabs}
+        />
 
         <form
           action={basePath}
