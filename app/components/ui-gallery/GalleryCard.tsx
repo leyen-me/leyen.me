@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { GalleryItem } from "@/lib/ui-gallery/types";
+import { BlockPreview } from "./BlockPreview";
 import { CardPreview } from "./CardPreview";
 import { GalleryNameCopy } from "./GalleryNameCopy";
 
@@ -18,7 +19,7 @@ export function GalleryCard({ item }: { item: GalleryItem }) {
         <div
           className={
             isBlock
-              ? "relative w-full overflow-hidden bg-surface-0 sm:aspect-[16/9]"
+              ? "relative h-[600px] w-full overflow-hidden bg-surface-0 sm:h-auto sm:aspect-[16/9]"
               : "relative flex items-center justify-center px-5 py-8 sm:px-7"
           }
           style={isBlock ? undefined : { minHeight: item.previewHeight }}
@@ -30,9 +31,7 @@ export function GalleryCard({ item }: { item: GalleryItem }) {
           )}
 
           {isBlock ? (
-            <div className="[&>div>div]:block sm:absolute sm:inset-0 sm:[&>div]:h-full sm:[&>div>div]:h-full sm:[&_section]:h-full sm:[&_section]:min-h-0 sm:[&_section>div]:h-full sm:[&_section>div]:min-h-0 sm:[&_section>div>div]:h-full sm:[&_section>div>div]:min-h-0">
-              <CardPreview id={item.id} />
-            </div>
+            <BlockPreview id={item.id} title={item.title} />
           ) : (
             <CardPreview id={item.id} />
           )}
